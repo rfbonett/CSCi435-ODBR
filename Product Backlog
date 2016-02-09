@@ -3,3 +3,7 @@ Create Application States
   —EndRecordState
   —SubmitReportState
   
+Program Data Collection Task
+  —Collects Data of the following types:
+    —User inputs
+    —Sensor Data (http://developer.android.com/guide/topics/sensors/sensors_overview.html)
