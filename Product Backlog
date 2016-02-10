@@ -5,5 +5,8 @@ Create Application States
   
 Program Data Collection Task
   —Collects Data of the following types:
-    —User inputs
+    —User inputs (http://developer.android.com/reference/android/accessibilityservice/AccessibilityService.html)
     —Sensor Data (http://developer.android.com/guide/topics/sensors/sensors_overview.html)
+
+Program Data Logging Task
+  —Parses the data into JSON to be sent to the server
