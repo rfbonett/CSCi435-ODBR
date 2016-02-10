@@ -1,12 +1,22 @@
 Create Application States
   —LaunchAppState
+    —Display list of applications installed on device
+    —Allow user to select an application -> launch the application
   —EndRecordState
+    —Presents button to end the recording
+    —*Option to add a benchmark description
+    —*Ending the recording terminates the recorded app if running
   —SubmitReportState
+    —Provides option to enter reporter name, report title and description
+    —Submit button sends the logged data to the server
   
 Program Data Collection Task
   —Collects Data of the following types:
     —User inputs (http://developer.android.com/reference/android/accessibilityservice/AccessibilityService.html)
     —Sensor Data (http://developer.android.com/guide/topics/sensors/sensors_overview.html)
+  —Modules/Functions:
+    —TakeScreenshot() : saves a screenshot 
+    —
 
 Program Data Logging Task
   —Parses the data into JSON to be sent to the server
