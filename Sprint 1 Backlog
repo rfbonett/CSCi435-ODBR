@@ -1,0 +1,75 @@
+Design App Activities and Flow
+  -Prototype Design A
+    --Complete LaunchActivity
+      ---Design ListView XML
+      ---Code ListAdapter
+      ---Design LaunchAppActivity XML
+      ---Implement search-for-app tool
+      ---Implement Confirm Selection Dialog
+      ---Implement Launch of Recording Task
+      ---Implement Intent creation for EndRecordActivity
+
+    --Complete EndRecordActivity
+      ---Design EndRecordActivity XML
+      ---Implement functionality to save descriptions
+        ----Description TextEdit & Benchmark Button
+      ---Implement Stop Recording Button
+        ----Stops Record Task
+        ----Starts Intent for SubmitReportActivity
+
+    --Complete SubmitReportActivity
+      ---Design SubmitReportActivity XML
+      ---Implement Reporter Name TextEdit
+      ---Implement Report Description TextEdit
+      ---Implement Report Title TextEdit
+      ---Implement Submit Report Button
+        ----Pulls Data from TextEdits, saving it to BugReport
+        ----Sends Report to Server
+
+  -Present Prototype to Client
+    --Gather observations
+    --Refine requirements
+
+Write BugReport Class
+  **This class contains the data for the final report
+  **Is a Singleton; can only create one bug report at a time
+
+  -Write functions for storing new data
+    --addUserEvent(Event e)
+      ---Records the event, stores in a list
+      ---Increments the event counter
+    --addSensorData(Sensor s, Data d)
+      ---Adds the data point to the list corresponding to s
+      ---data should include a timestamp
+    --addScreenshot(Screenshot s)
+      ---adds capture to a list with the benchmark counter
+    --addBenchmarkDescription(String s)
+      ---adds entry for the description with the benchmark counter
+    --addTitle(String s)
+      ---sets the report title to s
+    --addReporter(String s)
+      ---sets the reporter name to s
+
+  -Write Getters
+
+  -Write toJSON() function
+    --Returns the data in the BugReport as a .JSON file
+
+Write Data-Collection Asynchronous Task
+  **Uses BugReport class to store data
+  **Queries sensor data periodically and listens for user events
+  -Write userEventListener
+    --listens for user events from Accessibility Services
+    --calls addUserEvent() in BugReport class on event
+    --takes a screenshot and calls addScreenshot() in ...
+
+  -Write logSensors() function
+    --gathers sensor data periodically and calls addSensorData()
+
+Test functionality
+  -Black-Box testing of functionality
+    --Does the app appear to work?
+    --Are the XMLs properly displayed
+  -Write white-box tests for tasks
+    --ensure data collection is accurate
+    --ensure BugReport class is functional
