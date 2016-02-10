@@ -17,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EndRecordState"
+            android:label="@string/title_activity_end_record_state"></activity>
     </application>
 
 </manifest>
