@@ -19,7 +19,7 @@
         </activity>
         <activity
             android:name=".EndRecordState"
-            android:label="@string/title_activity_end_record_state"></activity>
+            android:label="@string/title_activity_end_record_state" />
     </application>
 
 </manifest>

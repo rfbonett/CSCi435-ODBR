@@ -9,10 +9,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="csci435.csci435_odbr.LaunchAppActivity">
 
-    <ListView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/installedAppsListView"
-        android:layout_alignParentStart="true" />
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/magnifying_glass"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchBar"
+            android:layout_toEndOf="@+id/searchIcon"
+            android:layout_alignParentTop="true" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/installedAppsListView"
+            android:layout_below="@+id/searchBar" />
+    </RelativeLayout>
 </RelativeLayout>

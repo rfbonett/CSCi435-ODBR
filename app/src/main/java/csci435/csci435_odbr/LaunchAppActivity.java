@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,14 +19,16 @@ import android.graphics.drawable.Drawable;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.widget.RelativeLayout;
 import android.content.Intent;
 
-public class LaunchAppActivity extends ListActivity {
+public class LaunchAppActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_launch_app);
 
         ArrayList<RowData> installedApps = new ArrayList<RowData>();
         PackageManager pm = getPackageManager();
@@ -41,16 +42,16 @@ public class LaunchAppActivity extends ListActivity {
                 installedApps.add(new RowData(icon, appName));
             } catch (PackageManager.NameNotFoundException e) {}
         }
+        //Sort the list of installed applications before displaying
         Collections.sort(installedApps, new Comparator<RowData>() {
             public int compare(RowData app1, RowData app2) {
                 return app1.getTitle().compareTo(app2.getTitle());
             }
         });
 
+        ListView lv = (ListView) findViewById(R.id.installedAppsListView);
         CustomAdapter adapter = new CustomAdapter(this, installedApps);
-        setListAdapter(adapter);
-
-        ListView lv = getListView();
+        lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,6 +74,7 @@ public class LaunchAppActivity extends ListActivity {
                 startRecording(appName);
             }
         });
+        prompt.setNegativeButton("Cancel", null);
         prompt.show();
     }
 
