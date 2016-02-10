@@ -1,5 +1,6 @@
 package csci435.csci435_odbr;
 
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,10 +80,17 @@ public class LaunchAppActivity extends Activity {
     }
 
     private void startRecording(String appName) {
-        Intent intent = new Intent(this, EndRecordState.class);
+        Globals.appName = appName;
+        PackageManager pm = getPackageManager();
+        for (ApplicationInfo app : pm.getInstalledApplications(PackageManager.GET_META_DATA)) {
+            if (app.loadLabel(pm).equals(appName)) {
+                Globals.packageName = app.packageName;
+            }
+        }
+        Intent intent = new Intent(this, EndRecordActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra("APP_NAME", appName);
         startActivity(intent);
+        finish();
     }
 }
 

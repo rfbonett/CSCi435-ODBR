@@ -19,7 +19,7 @@
             android:id="@+id/searchIcon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/magnifying_glass"/>
+            android:src="@drawable/magnifying_glass" />
 
         <EditText
             android:layout_width="match_parent"

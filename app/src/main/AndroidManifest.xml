@@ -18,8 +18,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EndRecordState"
+            android:name=".EndRecordActivity"
             android:label="@string/title_activity_end_record_state" />
+        <activity
+            android:name=".SubmitReportActivity"
+            android:label="@string/title_activity_submit_report"></activity>
     </application>
 
 </manifest>
