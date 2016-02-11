@@ -38,9 +38,11 @@ public class LaunchAppActivity extends Activity {
         List<ApplicationInfo> allApps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
         for (ApplicationInfo app : allApps) {
             try {
-                String appName = (String) app.loadLabel(pm);
-                Drawable icon = pm.getApplicationIcon(app.packageName);
-                installedApps.add(new RowData(icon, appName));
+                if (pm.getLaunchIntentForPackage(app.packageName) != null) {
+                    String appName = (String) app.loadLabel(pm);
+                    Drawable icon = pm.getApplicationIcon(app.packageName);
+                    installedApps.add(new RowData(icon, appName));
+                }
             } catch (PackageManager.NameNotFoundException e) {}
         }
         //Sort the list of installed applications before displaying
@@ -87,8 +89,7 @@ public class LaunchAppActivity extends Activity {
                 Globals.packageName = app.packageName;
             }
         }
-        Intent intent = new Intent(this, EndRecordActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        Intent intent = new Intent(this, RecordActivity.class);
         startActivity(intent);
         finish();
     }

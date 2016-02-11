@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 
-public class EndRecordActivity extends ActionBarActivity {
+public class RecordActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +25,19 @@ public class EndRecordActivity extends ActionBarActivity {
             ImageView iv = (ImageView) findViewById(R.id.appIcon);
             iv.setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException e) {}
+
+
+        Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
+        reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
+        reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(reportApp);
     }
 
     public void stopRecording(View view) {
         Intent intent = new Intent(this, SubmitReportActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
+        finish();
     }
 
     public void submitBenchmark(View view) {

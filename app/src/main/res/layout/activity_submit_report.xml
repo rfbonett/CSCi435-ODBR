@@ -9,4 +9,67 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="csci435.csci435_odbr.SubmitReportActivity">
 
+    <ImageView
+        android:paddingLeft="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/appIcon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/appName"
+        android:layout_toEndOf="@+id/appIcon" />
+
+    <Button
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Submit Report"
+        android:id="@+id/submitReportButton"
+        android:onClick="submitReport"
+        android:layout_below="@+id/descriptionEditText"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/button_style_selector"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:ems="10"
+        android:id="@+id/reporterName"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/appName"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:ems="10"
+        android:id="@+id/reportTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/reporterName"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:maxLines="4"
+        android:minLines="4"
+        android:id="@+id/descriptionEditText"
+        android:layout_below="@+id/reportTitle"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
