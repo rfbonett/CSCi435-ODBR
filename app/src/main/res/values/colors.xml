@@ -14,6 +14,7 @@
     <color name="background_holo_dark" type="color">#ff000000</color>
     <color name="background_holo_light" type="color">#fff3f3f3</color>
     <color name="android_green" type="color">#A4C639</color>
+    <color name="lightGray" type="color">#D3D3D3</color>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>
@@ -30,5 +31,6 @@
         <item>@color/background_holo_dark</item>
         <item>@color/background_holo_light</item>
         <item>@color/android_green</item>
+        <item>@color/lightGray</item>
     </integer-array>
 </resources>

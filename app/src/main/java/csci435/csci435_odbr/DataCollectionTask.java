@@ -8,7 +8,8 @@ import android.os.AsyncTask;
 public class DataCollectionTask extends AsyncTask<String, Void, Void> {
 
     protected Void doInBackground(String... s) {
-        
+
+
         return null;
     }
 

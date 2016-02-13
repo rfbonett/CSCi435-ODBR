@@ -79,6 +79,7 @@ public class BugReport {
     }
 
     public JSONObject toJSON() {
+
         return new JSONObject();
     }
 
