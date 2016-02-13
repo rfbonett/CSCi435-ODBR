@@ -26,7 +26,7 @@
             android:name=".RecordActivity"
             android:label="@string/title_activity_end_record_state" />
         <activity
-            android:name=".SubmitReportActivity"
+            android:name=".ReviewActivity"
             android:label="@string/title_activity_submit_report" />
 
     </application>

@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="csci435.csci435_odbr.SubmitReportActivity">
+    tools:context=".ReviewActivity">
 
     <ImageView
         android:paddingLeft="8dp"
@@ -72,4 +72,5 @@
         android:id="@+id/descriptionEditText"
         android:layout_below="@+id/reportTitle"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

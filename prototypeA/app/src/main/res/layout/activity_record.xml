@@ -26,20 +26,25 @@
         android:id="@+id/appName"
         android:layout_toEndOf="@+id/appIcon" />
 
-    <Button
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:layout_marginTop="16dp"
-        android:text="Submit Benchmark"
-        android:id="@+id/submitBenchmarkButton"
-        android:onClick="submitBenchmark"
-        android:layout_below="@+id/descriptionEditText"
-        android:layout_centerHorizontal="true"
-        android:textColor="#000000"
-        android:textSize="30sp"
+    <EditText
+        android:id="@+id/nameEditText"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/button_style_selector"/>
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="Reporter Name"
+        android:layout_below="@+id/appIcon"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
+
+    <EditText
+        android:id="@+id/titleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="Report Title"
+        android:layout_below="@+id/nameEditText"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -50,23 +55,49 @@
         android:ems="10"
         android:maxLines="4"
         android:minLines="4"
-        android:id="@+id/descriptionEditText"
-        android:layout_below="@+id/appIcon"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/desiredOutcomeEditText"
+        android:layout_below="@+id/titleEditText"
+        android:hint="What Should Happen"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:maxLines="4"
+        android:minLines="4"
+        android:id="@+id/actualOutcomeEditText"
+        android:layout_below="@+id/desiredOutcomeEditText"
+        android:hint="What Does Happen"/>
 
     <Button
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Review Report"
+        android:id="@+id/reviewButton"
+        android:onClick="reviewReport"
+        android:layout_below="@+id/actualOutcomeEditText"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/button_style_selector"/>
 
+    <Button
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:layout_marginTop="16dp"
         android:id="@+id/stopRecordButton"
-        android:layout_below="@+id/submitBenchmarkButton"
+        android:layout_below="@+id/reviewButton"
         android:layout_centerHorizontal="true"
-        android:onClick="stopRecording"
-        android:text="Stop Recording"
+        android:onClick="submitReport"
+        android:text="Submit Report"
         android:textColor="#000000"
         android:textSize="30sp"
-
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/button_style_selector" />

@@ -15,7 +15,7 @@ public class RecordActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_end_record_state);
+        setContentView(R.layout.activity_record);
         TextView appName = (TextView) findViewById(R.id.appName);
         appName.setText("Bug Report for " + Globals.appName);
 
@@ -33,14 +33,25 @@ public class RecordActivity extends ActionBarActivity {
         startActivity(reportApp);
     }
 
-    public void stopRecording(View view) {
-        Intent intent = new Intent(this, SubmitReportActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    private void updateBugReport() {
+
+    }
+
+
+    public void reviewReport(View view) {
+        updateBugReport();
+        Intent intent = new Intent(this, ReviewActivity.class);
         startActivity(intent);
         finish();
     }
 
-    public void submitBenchmark(View view) {
 
+    public void submitReport(View view) {
+        updateBugReport();
+        BugReport.getInstance().toJSON();
+        Intent intent = new Intent(this, LaunchAppActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 }
