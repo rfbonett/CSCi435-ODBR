@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".RecordActivity">
+
+
+    <ImageView
+        android:paddingLeft="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/appIcon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/appName"
+        android:layout_toEndOf="@+id/appIcon" />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="Reporter Name"
+        android:layout_below="@+id/appIcon"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
+
+    <EditText
+        android:id="@+id/titleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="Report Title"
+        android:layout_below="@+id/nameEditText"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:maxLines="4"
+        android:minLines="4"
+        android:id="@+id/desiredOutcomeEditText"
+        android:layout_below="@+id/titleEditText"
+        android:hint="What Should Happen"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:maxLines="4"
+        android:minLines="4"
+        android:id="@+id/actualOutcomeEditText"
+        android:layout_below="@+id/desiredOutcomeEditText"
+        android:hint="What Does Happen"/>
+
+    <Button
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Review Report"
+        android:id="@+id/reviewButton"
+        android:onClick="reviewReport"
+        android:layout_below="@+id/actualOutcomeEditText"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/button_style_selector"/>
+
+    <Button
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="16dp"
+        android:id="@+id/stopRecordButton"
+        android:layout_below="@+id/reviewButton"
+        android:layout_centerHorizontal="true"
+        android:onClick="submitReport"
+        android:text="Submit Report"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/button_style_selector" />
+</RelativeLayout>
