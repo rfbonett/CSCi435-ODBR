@@ -10,10 +10,14 @@ Team Members:
 Richard Bonett | Daniel Park | Brendan Otten
 
 References:
+
 FUSION Bug Tracking System:
 Moran, K., Linares­Vásquez, M., Bernal­Cárdenas, C., and Poshyvanyk, D., "Auto­Completing Bug Reports for Android Applications", in Proceedings of 10th Joint Meeting of the European Software Engineering Conference and the 23rd ACM SIGSOFT Symposium on the Foundations of Software Engineering (E SEC/FSE’15) 
 
 FUSION website: www.fusion­android.com 
+
 Android: http://developer.android.com/tools/help/adb.html 
+
 RERAN: http://www.androidreran.com/ 
+
 Web­Technologies: http://www.json.org/ | https://en.wikipedia.org/wiki/Representational_state_transfer
