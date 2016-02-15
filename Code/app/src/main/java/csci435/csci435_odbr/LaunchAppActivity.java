@@ -25,6 +25,18 @@ import android.content.DialogInterface;
 import android.widget.RelativeLayout;
 import android.content.Intent;
 
+/**
+ * LaunchAppActivity displays a list of installed applications and a search bar.
+ *  --Installed applications are limited to those with a launch intent
+ * The user may select an app from the list or narrow the list using the search bar.
+ * Should the user select an app, a confirmation dialog will be displayed.
+ *  --Upon confirmation, hand-off to RecordActivity.
+ *
+ *  Collaborators:
+ *      --Globals: stores a handle to the application being reported
+ *      --RecordActivity: launched upon selection of an app to report
+ *      --CustomAdapter: Handles the display of installed applications in the list
+ */
 public class LaunchAppActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +64,7 @@ public class LaunchAppActivity extends Activity {
             }
         });
 
+        //Add the list of installed applications to the ListView
         ListView lv = (ListView) findViewById(R.id.installedAppsListView);
         CustomAdapter adapter = new CustomAdapter(this, installedApps);
         lv.setAdapter(adapter);
@@ -64,6 +77,9 @@ public class LaunchAppActivity extends Activity {
         });
     }
 
+    /**
+     * promptStart launches a dialog to confirm the selected application for the report
+     */
     private void promptStart(RelativeLayout data) {
         AlertDialog.Builder prompt = new AlertDialog.Builder(this);
         final String appName = ((TextView) data.findViewById(R.id.item_title)).getText().toString();
@@ -81,20 +97,29 @@ public class LaunchAppActivity extends Activity {
         prompt.show();
     }
 
+
+    /**
+     * startRecording sets the Global application handle and launches RecordActivity
+     * @param appName the name of the application
+     */
     private void startRecording(String appName) {
-        Globals.appName = appName;
+        //Find the applicationInfo object for the given application name
         PackageManager pm = getPackageManager();
         for (ApplicationInfo app : pm.getInstalledApplications(PackageManager.GET_META_DATA)) {
             if (app.loadLabel(pm).equals(appName)) {
-                Globals.packageName = app.packageName;
+                Globals.appName = appName;
             }
         }
+        //Launch RecordActivity
         Intent intent = new Intent(this, RecordActivity.class);
         startActivity(intent);
         finish();
     }
 }
 
+/**
+ * A CustomAdapter is an adapter for a ListView that displays an icon and name for each element
+ */
 class CustomAdapter extends ArrayAdapter<RowData> {
 
     private final Context context;
@@ -125,6 +150,9 @@ class CustomAdapter extends ArrayAdapter<RowData> {
 }
 
 
+/**
+ * RowData serves as a storage class for an application's icon and name
+ */
 class RowData{
     private Drawable icon;
     private String title;

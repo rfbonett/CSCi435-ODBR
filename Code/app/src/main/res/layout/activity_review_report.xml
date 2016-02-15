@@ -20,12 +20,13 @@
         android:id="@+id/appName"
         android:layout_toEndOf="@+id/appIcon" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/reviewItem"
+    <ImageView
+        android:id="@+id/screenshot"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appName"/>
 
-    </android.support.v4.view.ViewPager>
+
 
     <Button
         android:paddingLeft="24dp"

@@ -31,13 +31,6 @@
             android:name=".ReviewActivity"
             android:label="@string/title_activity_submit_report" />
 
-        <service android:name=".GetUserEvents">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data android:name="android.accessibilityservice" />
-        </service>
-
         <uses-permission android:name="android.permission.GET_TASKS"/>
     </application>
 

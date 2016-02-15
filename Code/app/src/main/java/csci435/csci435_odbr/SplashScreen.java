@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 
+/**
+ * The Splash Screen is simply something nice to look at while the app configures itself.
+ */
 public class SplashScreen extends ActionBarActivity {
 
     @Override

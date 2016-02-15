@@ -18,9 +18,6 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> {
 
     protected Void doInBackground(String... s) {
 
-
-        //BugReport.getInstance().addScreenshot(takeScreenshot());
-
         return null;
     }
 
