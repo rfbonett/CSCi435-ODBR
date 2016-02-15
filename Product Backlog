@@ -1,22 +1,14 @@
-Create Application States
-  —LaunchAppState
-    —Display list of applications installed on device
-    —Allow user to select an application -> launch the application
-  —EndRecordState
-    —Presents button to end the recording
-    —*Option to add a benchmark description
-    —*Ending the recording terminates the recorded app if running
-  —SubmitReportState
-    —Provides option to enter reporter name, report title and description
-    —Submit button sends the logged data to the server
+Generating a Report
+  As a user, I can view a list of installed applications on my device.
+  As a user, I can narrow the list of installed applications with a search bar.
+  As a user, I can select an application from the list to start a bug report.
+  As a user, I can input the appropriate steps to reproduce the bug.
+  As a user, I can pause and start recording at will.
+  As a user, I can add a title and description to my report.
+  As a user, I can submit my report.
   
-Program Data Collection Task
-  —Collects Data of the following types:
-    —User inputs (http://developer.android.com/reference/android/accessibilityservice/AccessibilityService.html)
-    —Sensor Data (http://developer.android.com/guide/topics/sensors/sensors_overview.html)
-  —Modules/Functions:
-    —TakeScreenshot() : saves a screenshot 
-    —
-
-Program Data Logging Task
-  —Parses the data into JSON to be sent to the server
+Reviewing a Report
+  As a user, I can review the steps I inputted for the report.
+  As a developer, I can review the steps the user inputted for the report.
+  As a developer, I can review detailed sensor traces from the report.
+  As a developer, I can replay the inputs the user did in their report on my own device/emulator.
