@@ -27,6 +27,8 @@ public class RecordActivity extends ActionBarActivity {
         } catch (PackageManager.NameNotFoundException e) {}
 
 
+        //launch data collection task
+
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
         reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
