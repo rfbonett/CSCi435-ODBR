@@ -24,6 +24,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.widget.RelativeLayout;
 import android.content.Intent;
+import android.widget.EditText;
+import android.text.TextWatcher;
+import android.text.Editable;
+import android.util.Log;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -66,13 +70,33 @@ public class LaunchAppActivity extends Activity {
 
         //Add the list of installed applications to the ListView
         ListView lv = (ListView) findViewById(R.id.installedAppsListView);
-        CustomAdapter adapter = new CustomAdapter(this, installedApps);
+        final CustomAdapter adapter = new CustomAdapter(this, installedApps);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 promptStart((RelativeLayout) view);
+            }
+        });
+
+        //Add search capabilities to search EditText
+        final EditText searchBar = (EditText) findViewById(R.id.searchBar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                String text = searchBar.getText().toString().toLowerCase();
+                adapter.filter(text);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
             }
         });
     }
@@ -108,6 +132,7 @@ public class LaunchAppActivity extends Activity {
         for (ApplicationInfo app : pm.getInstalledApplications(PackageManager.GET_META_DATA)) {
             if (app.loadLabel(pm).equals(appName)) {
                 Globals.appName = appName;
+                Globals.packageName = app.packageName;
             }
         }
         //Launch RecordActivity
@@ -124,6 +149,7 @@ class CustomAdapter extends ArrayAdapter<RowData> {
 
     private final Context context;
     private final ArrayList<RowData> elements;
+    private final ArrayList<RowData> visibleElements;
 
     public CustomAdapter(Context context, ArrayList<RowData> elements) {
 
@@ -131,22 +157,41 @@ class CustomAdapter extends ArrayAdapter<RowData> {
 
         this.context = context;
         this.elements = elements;
+        this.visibleElements = new ArrayList<RowData>(elements);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         LayoutInflater inflater = LayoutInflater.from(this.context);
         View rowView = inflater.inflate(R.layout.row_view, parent, false);
 
-        ImageView imgView = (ImageView) rowView.findViewById(R.id.item_icon);
-        TextView titleView = (TextView) rowView.findViewById(R.id.item_title);
+        if (visibleElements.size() > position) {
+            ImageView imgView = (ImageView) rowView.findViewById(R.id.item_icon);
+            TextView titleView = (TextView) rowView.findViewById(R.id.item_title);
 
-        imgView.setImageDrawable(elements.get(position).getIcon());
-        titleView.setText(elements.get(position).getTitle());
-
+            imgView.setImageDrawable(visibleElements.get(position).getIcon());
+            titleView.setText(visibleElements.get(position).getTitle());
+        }
         return rowView;
     }
+
+    /**
+     * Filters the list by an input prefix
+     */
+    public void filter(String s) {
+        Log.v("Value", s);
+        visibleElements.clear();
+        if (s.length() == 0) {
+            visibleElements.addAll(elements);
+        }
+        for (RowData r : elements) {
+            if (r.getTitle().toLowerCase().startsWith(s)) {
+                visibleElements.add(r);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 }
 
 
