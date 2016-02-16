@@ -2,6 +2,7 @@ package csci435.csci435_odbr;
 
 import java.io.OutputStream;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -37,8 +38,11 @@ public class ReviewActivity extends FragmentActivity {
     }
 
     public void submitReport(View view) {
-
-    finish();
+        BugReport.getInstance().toJSON();
+        Intent intent = new Intent(this, LaunchAppActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 
 }
