@@ -33,6 +33,7 @@ public class RecordActivity extends ActionBarActivity {
 
 
         //launch data collection task and floating window
+        startService(new Intent(RecordActivity.this, FloatingWindow.class));
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);

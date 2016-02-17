@@ -3,6 +3,8 @@
     package="csci435.csci435_odbr"
     >
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,6 +34,8 @@
             android:label="@string/title_activity_submit_report" />
 
         <uses-permission android:name="android.permission.GET_TASKS"/>
+
+        <service android:name="csci435.csci435_odbr.FloatingWindow"/>
     </application>
 
 </manifest>
