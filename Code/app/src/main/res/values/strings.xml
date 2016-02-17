@@ -4,4 +4,10 @@
     <string name="title_activity_end_record_state">EndRecordState</string>
     <string name="title_activity_splash_screen">CSCi435-ODBR</string>
     <string name="title_activity_submit_report">SubmitReportActivity</string>
+    <string name="reporterName">Reporter Name</string>
+    <string name="reportTitle">Report Title</string>
+    <string name="desiredBehavior">What Should Happen</string>
+    <string name="actualBehavior">What Does Happen</string>
+    <string name="reviewReport">Review Report</string>
+    <string name="submitReport">Submit Report</string>
 </resources>

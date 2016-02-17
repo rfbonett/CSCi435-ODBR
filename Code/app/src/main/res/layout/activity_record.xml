@@ -11,7 +11,8 @@
 
 
     <ImageView
-        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/appIcon"
@@ -31,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:hint="Reporter Name"
+        android:hint="@string/reporterName"
         android:layout_below="@+id/appIcon"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"/>
@@ -41,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:hint="Report Title"
+        android:hint="@string/reportTitle"
         android:layout_below="@+id/nameEditText"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"/>
@@ -57,7 +58,7 @@
         android:minLines="4"
         android:id="@+id/desiredOutcomeEditText"
         android:layout_below="@+id/titleEditText"
-        android:hint="What Should Happen"/>
+        android:hint="@string/desiredBehavior"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -70,13 +71,13 @@
         android:minLines="4"
         android:id="@+id/actualOutcomeEditText"
         android:layout_below="@+id/desiredOutcomeEditText"
-        android:hint="What Does Happen"/>
+        android:hint="@string/actualBehavior"/>
 
     <Button
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:layout_marginTop="16dp"
-        android:text="Review Report"
+        android:text="@string/reviewReport"
         android:id="@+id/reviewButton"
         android:onClick="reviewReport"
         android:layout_below="@+id/actualOutcomeEditText"
@@ -95,7 +96,7 @@
         android:layout_below="@+id/reviewButton"
         android:layout_centerHorizontal="true"
         android:onClick="submitReport"
-        android:text="Submit Report"
+        android:text="@string/submitReport"
         android:textColor="#000000"
         android:textSize="30sp"
         android:layout_width="match_parent"
