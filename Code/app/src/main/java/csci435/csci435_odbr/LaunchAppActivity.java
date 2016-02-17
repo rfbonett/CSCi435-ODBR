@@ -1,33 +1,32 @@
 package csci435.csci435_odbr;
 
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.ArrayAdapter;
-import android.content.pm.PackageManager;
-import android.content.pm.ApplicationInfo;
-import android.graphics.drawable.Drawable;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.app.AlertDialog;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.widget.RelativeLayout;
-import android.content.Intent;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.text.TextWatcher;
-import android.text.Editable;
-import android.util.Log;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -179,7 +178,6 @@ class CustomAdapter extends ArrayAdapter<RowData> {
      * Filters the list by an input prefix
      */
     public void filter(String s) {
-        Log.v("Value", s);
         visibleElements.clear();
         if (s.length() == 0) {
             visibleElements.addAll(elements);
