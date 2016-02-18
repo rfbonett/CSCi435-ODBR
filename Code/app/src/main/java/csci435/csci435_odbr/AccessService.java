@@ -13,9 +13,9 @@ public class AccessService extends AccessibilityService{
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        if(event.getPackageName() != Globals.packageName) {
+        if(event.getPackageName().equals(Globals.packageName)) {
             AccessibilityNodeInfo nodeInfo = event.getSource();
-            //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
             //Where do we store this data? It all seems pertinent, only keep data that is not part of our app so we ignore things
             //That have packageName == "csci435.csci435_odbr"
             event.getEventType();

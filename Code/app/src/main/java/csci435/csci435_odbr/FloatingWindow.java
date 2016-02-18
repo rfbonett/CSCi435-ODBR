@@ -78,7 +78,7 @@ public class FloatingWindow extends Service {
             public void onClick(View v) {
 
                 //Fuck handlers
-
+                startService(new Intent(getBaseContext(), AccessService.class));
                 //Toast.makeText(getBaseContext(), "Service Started", Toast.LENGTH_LONG).show();
                 //new DataCollectionTask().execute("");
 
