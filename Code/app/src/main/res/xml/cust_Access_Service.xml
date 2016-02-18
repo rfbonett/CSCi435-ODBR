@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service
+android:accessibilityEventTypes="typeAllMask"
+android:packageNames="csci435.csci435_odbr"
+android:accessibilityFeedbackType="feedbackSpoken"
+android:notificationTimeout="100"
+android:settingsActivity=".RecordActivity"
+android:canRetrieveWindowContent="true"
+xmlns:android="http://schemas.android.com/apk/res/android" />
