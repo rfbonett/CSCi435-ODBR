@@ -134,10 +134,17 @@ public class LaunchAppActivity extends Activity {
                 Globals.packageName = app.packageName;
             }
         }
+
+        startService(new Intent(getBaseContext(), AccessService.class));
+        startService(new Intent(this, FloatingWindow.class));
+
+        Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
+        reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
+        reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(reportApp);
+
         //Launch RecordActivity
-        Intent intent = new Intent(this, RecordActivity.class);
-        startActivity(intent);
-        finish();
+
     }
 }
 

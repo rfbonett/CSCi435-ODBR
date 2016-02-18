@@ -34,14 +34,10 @@ public class RecordActivity extends ActionBarActivity {
 
         //Both services have been started, now just need to make sure that the access service does what its
         //supposed to and records data in an accessible location
-        startService(new Intent(RecordActivity.this, FloatingWindow.class));
-        startService(new Intent(RecordActivity.this, AccessService.class));
+
 
         //Launch application to be reported
-        Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
-        reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
-        reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(reportApp);
+
     }
 
 

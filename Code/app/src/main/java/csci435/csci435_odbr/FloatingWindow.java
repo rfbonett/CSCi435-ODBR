@@ -78,7 +78,7 @@ public class FloatingWindow extends Service {
             public void onClick(View v) {
 
                 //Fuck handlers
-                startService(new Intent(getBaseContext(), AccessService.class));
+
                 //Toast.makeText(getBaseContext(), "Service Started", Toast.LENGTH_LONG).show();
                 //new DataCollectionTask().execute("");
 
@@ -91,6 +91,9 @@ public class FloatingWindow extends Service {
             @Override
             public void onClick(View v) {
                 wm.removeView(ll);
+
+                Intent intent = new Intent(getBaseContext(), RecordActivity.class);
+                startActivity(intent);
                 //Stop accessibility service
                 stopSelf();
             }
