@@ -47,7 +47,7 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> {
             Process su = Runtime.getRuntime().exec("su");
             DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
-            outputStream.writeBytes("screenrecord --time-limit 10 /sdcard/screen" + eventNum + ".png\n");
+            outputStream.writeBytes("screencap /sdcard/screen" + eventNum + ".png\n");
             outputStream.flush();
 
             outputStream.writeBytes("exit\n");
