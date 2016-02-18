@@ -93,8 +93,10 @@ public class FloatingWindow extends Service {
                 wm.removeView(ll);
 
                 Intent intent = new Intent(getBaseContext(), RecordActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                //Stop accessibility service
+                //Stop accessibility service too
+
                 stopSelf();
             }
         });
