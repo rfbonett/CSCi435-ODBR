@@ -24,6 +24,7 @@ public class FloatingWindow extends Service {
     private LinearLayout ll;
     private Button record;
     private Button stop;
+    public boolean toggle;
 
 
     @Override
@@ -70,14 +71,15 @@ public class FloatingWindow extends Service {
         ll.addView(stop);
         wm.addView(ll, parameters);
 
-
+        toggle = false;
 
 
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //Fuck handlers
+                toggle = !toggle;
+                
                 startService(new Intent(getBaseContext(), AccessService.class));
                 //Toast.makeText(getBaseContext(), "Service Started", Toast.LENGTH_LONG).show();
                 //new DataCollectionTask().execute("");

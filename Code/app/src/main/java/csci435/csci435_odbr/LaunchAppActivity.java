@@ -135,7 +135,7 @@ public class LaunchAppActivity extends Activity {
             }
         }
 
-
+        startService(new Intent(getBaseContext(), AccessService.class));
         startService(new Intent(this, FloatingWindow.class));
 
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
