@@ -73,3 +73,18 @@ Test functionality
   -Write white-box tests for tasks
     --ensure data collection is accurate
     --ensure BugReport class is functional
+
+User Stories
+  -Generating a Report
+    As a user, I can view a list of installed applications on my device. (Sprint1 : 3 hours)
+    As a user, I can narrow the list of installed applications with a search bar. (Sprint1 : 30 minutes)
+    As a user, I can select an application from the list to start a bug report. (Sprint1 : 30 minutes)
+    As a user, I can input the appropriate steps to reproduce the bug. (Sprint1 : 2 hours)
+    As a user, I can pause and start recording at will. (Sprint1 : 5 minutes)
+    As a user, I can add a title and description to my report. (Sprint1 : 1 hour)
+    As a user, I can submit my report. (Sprint1 : 30 minutes)
+  -Reviewing a Report
+    As a user, I can review the steps I inputted for the report. (Sprint1 : 30 minutes)
+    As a developer, I can review the steps the user inputted for the report. (Sprint1: 5 hours)
+    As a developer, I can review detailed sensor traces from the report. (Sprint1: 0 minutes)
+    As a developer, I can replay the inputs the user did in their report on my own device/emulator. (Sprint1: 0 minutes)
