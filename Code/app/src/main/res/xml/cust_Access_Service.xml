@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accessibility-service
-android:accessibilityEventTypes="typeAllMask"
+android:accessibilityEventTypes="typeViewClicked|typeViewLongClicked|typeViewTextChanged|
+typeTouchExplorationGestureStart|typeTouchExplorationGestureEnd"
 android:accessibilityFeedbackType="feedbackSpoken"
 android:notificationTimeout="100"
 android:settingsActivity=".RecordActivity"
