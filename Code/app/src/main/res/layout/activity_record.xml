@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recordLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".RecordActivity">
+    tools:context=".RecordActivity"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
 
 
     <ImageView
@@ -17,7 +21,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/appIcon"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,50 +32,57 @@
         android:layout_toEndOf="@+id/appIcon" />
 
     <EditText
-        android:id="@+id/nameEditText"
+        android:id="@+id/reporterNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:hint="@string/reporterName"
         android:layout_below="@+id/appIcon"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp"/>
+        android:paddingRight="24dp"
+        android:nextFocusForward="@+id/titleEditText"
+        android:singleLine="true"/>
 
     <EditText
-        android:id="@+id/titleEditText"
+        android:id="@+id/reportTitleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:hint="@string/reportTitle"
-        android:layout_below="@+id/nameEditText"
+        android:layout_below="@+id/reporterNameEditText"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp"/>
+        android:paddingRight="24dp"
+        android:nextFocusForward="@+id/desiredOutcomeEditText"
+        android:singleLine="true"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:inputType="textMultiLine"
         android:ems="10"
         android:maxLines="4"
         android:minLines="4"
+        android:scrollHorizontally="false"
         android:id="@+id/desiredOutcomeEditText"
-        android:layout_below="@+id/titleEditText"
-        android:hint="@string/desiredBehavior"/>
+        android:layout_below="@+id/reportTitleEditText"
+        android:hint="@string/desiredBehavior"
+        android:nextFocusForward="@+id/actualOutcomeEditText"
+        android:imeOptions="actionNext"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:inputType="textMultiLine"
         android:ems="10"
         android:maxLines="4"
         android:minLines="4"
+        android:scrollHorizontally="false"
         android:id="@+id/actualOutcomeEditText"
         android:layout_below="@+id/desiredOutcomeEditText"
-        android:hint="@string/actualBehavior"/>
+        android:hint="@string/actualBehavior"
+        android:imeOptions="actionDone"/>
 
     <Button
         android:paddingLeft="24dp"

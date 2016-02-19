@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="csci435.csci435_odbr"
     >
-
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -36,11 +36,10 @@
             android:name=".ReviewActivity"
             android:label="@string/title_activity_submit_report" />
 
-        <uses-permission android:name="android.permission.GET_TASKS"/>
+        <service android:name=".RecordFloatingWidget"></service>
 
-        <service android:name="csci435.csci435_odbr.FloatingWindow"/>
         <service android:name=".AccessService"
-            android:label="@string/accessibility_service_label"
+            android:label=""
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -49,5 +48,4 @@
         </service>
         <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     </application>
-
 </manifest>

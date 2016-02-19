@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
+import android.util.Log;
 
 /**
  * Created by Rich on 2/11/16.
@@ -22,6 +23,8 @@ public class BugReport {
     private String title;
     private String reporterName;
     private int events;
+    private String desiredOutcome;
+    private String actualOutcome;
 
     private static BugReport ourInstance = new BugReport();
 
@@ -63,6 +66,10 @@ public class BugReport {
         screenshots.put(events, s);
     }
 
+    public void addDesiredOutcome(String s) { desiredOutcome = s;}
+
+    public void addActualOutcome(String s) {actualOutcome = s;}
+
     public void addTitle(String s) {
         title = s;
     }
@@ -72,6 +79,10 @@ public class BugReport {
     }
 
     public JSONObject toJSON() {
+        Log.v("BugReport", "Reporter: " + reporterName);
+        Log.v("BugReport", "Title: " + title);
+        Log.v("BugReport", "What Should Happen: " + desiredOutcome);
+        Log.v("BugReport", "What Does Happen: " + actualOutcome);
 
         return new JSONObject();
     }

@@ -1,24 +1,39 @@
 package csci435.csci435_odbr;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
+import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.View;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
+import android.widget.EditText;
 
 
 /**
  * RecordActivity handles the visual recording and submitting the bug report
  */
 public class RecordActivity extends ActionBarActivity {
+    private EditText reporterName;
+    private EditText reportTitle;
+    private EditText desiredOutcome;
+    private EditText actualOutcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+        //Get handles to edit texts
+        reporterName = (EditText) findViewById(R.id.reporterNameEditText);
+        reportTitle = (EditText) findViewById(R.id.reportTitleEditText);
+        desiredOutcome = (EditText) findViewById(R.id.desiredOutcomeEditText);
+        actualOutcome = (EditText) findViewById(R.id.actualOutcomeEditText);
 
         //Set the image and title to the application icon and name
         TextView appName = (TextView) findViewById(R.id.appName);
@@ -31,13 +46,29 @@ public class RecordActivity extends ActionBarActivity {
             iv.setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException e) {}
 
-
-        //Both services have been started, now just need to make sure that the access service does what its
-        //supposed to and records data in an accessible location
-
-
-        //Launch application to be reported
-
+        //Set up return key to change focus for multiline edit texts
+        desiredOutcome.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    actualOutcome.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        actualOutcome.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(actualOutcome.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    findViewById(R.id.recordLayout).requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -49,7 +80,10 @@ public class RecordActivity extends ActionBarActivity {
      * --"What does happen"
      */
     private void updateBugReport() {
-
+        BugReport.getInstance().addReporter(reporterName.getText().toString());
+        BugReport.getInstance().addTitle(reportTitle.getText().toString());
+        BugReport.getInstance().addDesiredOutcome(desiredOutcome.getText().toString());
+        BugReport.getInstance().addActualOutcome(actualOutcome.getText().toString());
     }
 
 

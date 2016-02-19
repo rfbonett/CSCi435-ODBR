@@ -3,7 +3,6 @@ package csci435.csci435_odbr;
 import android.accessibilityservice.AccessibilityService;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 /**

@@ -10,5 +10,4 @@
     <string name="actualBehavior">What Does Happen</string>
     <string name="reviewReport">Review Report</string>
     <string name="submitReport">Submit Report</string>
-    <string name="accessibility_service_label">AccessService</string>
 </resources>

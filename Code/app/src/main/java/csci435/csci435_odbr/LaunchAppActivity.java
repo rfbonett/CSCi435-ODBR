@@ -27,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+import android.view.inputmethod.InputMethodManager;
+import android.view.KeyEvent;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -98,6 +101,22 @@ public class LaunchAppActivity extends Activity {
                                       int arg3) {
             }
         });
+
+        //Close the keyboard and remove focus from searchBar on return key
+        searchBar.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                adapter.filter(searchBar.getText().toString());
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                    imm.hideSoftInputFromWindow(searchBar.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    searchBar.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -135,16 +154,15 @@ public class LaunchAppActivity extends Activity {
             }
         }
 
-        startService(new Intent(getBaseContext(), AccessService.class));
-        startService(new Intent(this, FloatingWindow.class));
+        //launch data collection task and floating window
+        startService(new Intent(this, RecordFloatingWidget.class));
 
+        //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
         reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        reportApp.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(reportApp);
-
-        //Launch RecordActivity
-
     }
 }
 
