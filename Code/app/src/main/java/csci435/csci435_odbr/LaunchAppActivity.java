@@ -161,9 +161,6 @@ public class LaunchAppActivity extends Activity {
         Globals.recording = true;
         startService(new Intent(this, RecordFloatingWidget.class));
         startService(new Intent(this, AccessService.class));
-        DataCollectionTask d = new DataCollectionTask();
-        d.onPreExecute();
-        d.execute();
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);

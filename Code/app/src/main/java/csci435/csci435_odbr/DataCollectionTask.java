@@ -22,14 +22,6 @@ import android.hardware.Sensor;
 public class DataCollectionTask extends AsyncTask<String, Void, Void> implements SensorEventListener {
 
     @Override
-    protected void onPreExecute() {
-        for (Sensor s : Globals.sensors) {
-            Globals.sMgr.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
-        }
-    }
-
-
-    @Override
     protected Void doInBackground(String... params) {
         while (Globals.recording) {}
         return null;
@@ -44,10 +36,30 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
         return bitmap;
     }
 
+    /**
+     * Adds sensor data to the BugReport
+     * @param event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         BugReport.getInstance().addSensorData(event.sensor, event);
     }
+
+    /**
+     * If paused, resumes recording by registering listener for all sensors.
+     * If not paused, unregisters listener for all sensors.
+     */
+    public void togglePaused(boolean paused) {
+        if (paused) {
+            for (Sensor s : Globals.sensors) {
+                Globals.sMgr.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
+            }
+        }
+        else {
+            Globals.sMgr.unregisterListener(this);
+        }
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

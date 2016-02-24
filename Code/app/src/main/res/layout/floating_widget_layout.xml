@@ -19,7 +19,7 @@
         android:layout_height="72dp"
         android:background="@drawable/floating_button_selector"
         android:textOn=""
-        android:textOff="" />
+        android:textOff=""/>
 
     <Button
         android:id="@+id/submitButton"

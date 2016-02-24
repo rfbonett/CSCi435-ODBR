@@ -1,7 +1,5 @@
 package csci435.csci435_odbr;
 
-import java.util.Comparator;
-import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +8,6 @@ import org.json.JSONObject;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.view.accessibility.AccessibilityEvent;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
@@ -20,7 +17,8 @@ import android.util.Log;
  * Created by Rich on 2/11/16.
  */
 public class BugReport {
-    private HashMap<Sensor, HashMap<Long, float[]>> sensorData;
+    private int MAX_ITEMS_TO_PRINT = 10;
+    private HashMap<Sensor, SensorDataList> sensorData;
     private List<AccessibilityEvent> userEvents;
     private SparseArray<Bitmap> screenshots;
     private String title;
@@ -36,7 +34,7 @@ public class BugReport {
     }
 
     private BugReport() {
-        sensorData = new HashMap<Sensor, HashMap<Long, float[]>>();
+        sensorData = new HashMap<Sensor, SensorDataList>();
         userEvents = new ArrayList<AccessibilityEvent>();
         screenshots = new SparseArray<Bitmap>();
         title = "";
@@ -60,9 +58,9 @@ public class BugReport {
 
     public void addSensorData(Sensor s, SensorEvent e) {
         if (!sensorData.containsKey(s)) {
-            sensorData.put(s, new HashMap<Long, float[]>());
+            sensorData.put(s, new SensorDataList());
         }
-        sensorData.get(s).put(e.timestamp, e.values.clone());
+        sensorData.get(s).addData(e.timestamp, e.values.clone());
     }
 
     public void addScreenshot(Bitmap s) {
@@ -81,6 +79,10 @@ public class BugReport {
         reporterName = s;
     }
 
+    /**
+     * Returns its data as a formatted JSON file; currently outputs data to LogCat
+     * @return
+     */
     public JSONObject toJSON() {
         Log.v("BugReport", "Reporter: " + reporterName);
         Log.v("BugReport", "Title: " + title);
@@ -89,16 +91,13 @@ public class BugReport {
 
         for (Sensor s : sensorData.keySet()) {
             Log.v("BugReport", "Data for Sensor: " + s.getName());
-            HashMap<Long, float[]> data = sensorData.get(s);
-            ArrayList<Long> timestamps = new ArrayList<Long>(data.keySet());
-            Collections.sort(timestamps);
-
-            int i = 0;
-            long timeStart = timestamps.get(0);
-            for (long timestamp : timestamps) {
-                Log.v("BugReport", "Time: " + (timestamp - timeStart) + "| " + "Data: " + readable(data.get(timestamp)));
-                if (++i > 10) {break;}
+            SensorDataList data = sensorData.get(s);
+            long timeStart = data.getTime(0);
+            for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
+                Log.v("BugReport", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + readable(data.getValues(i)));
             }
+            int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
+            Log.v("BugReport", "And " + (printed > 0 ? printed : 0) + " more");
         }
         return new JSONObject();
     }
@@ -124,5 +123,32 @@ public class BugReport {
     }
     public String getTitle() {
         return title;
+    }
+}
+
+class SensorDataList {
+    private ArrayList<Long> timestamps;
+    private ArrayList<float[]> values;
+
+    public SensorDataList() {
+        timestamps = new ArrayList<Long>();
+        values = new ArrayList<float[]>();
+    }
+
+    public void addData(long timestamp, float[] value) {
+        timestamps.add(timestamp);
+        values.add(value);
+    }
+
+    public long getTime(int index) {
+        return timestamps.get(index);
+    }
+
+    public float[] getValues(int index) {
+        return values.get(index);
+    }
+
+    public int numItems() {
+        return timestamps.size();
     }
 }

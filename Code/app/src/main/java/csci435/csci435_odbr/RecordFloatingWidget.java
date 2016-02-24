@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 import android.animation.ObjectAnimator;
 import android.widget.Button;
+import android.widget.CompoundButton;
 
 /**
  * Created by Rich on 2/16/16.
@@ -38,6 +39,8 @@ public class RecordFloatingWidget extends Service {
             WindowManager.LayoutParams.TYPE_PHONE,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSPARENT);
+
+    private DataCollectionTask sensorDataTask;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -104,6 +107,15 @@ public class RecordFloatingWidget extends Service {
                 }
 
                 return false;
+            }
+        });
+
+        // Start Sensor Data Collection AsyncTask and set up pause/resume button
+        sensorDataTask = new DataCollectionTask();
+        sensorDataTask.execute();
+        pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sensorDataTask.togglePaused(isChecked);
             }
         });
     }
