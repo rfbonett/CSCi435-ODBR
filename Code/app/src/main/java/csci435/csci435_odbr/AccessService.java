@@ -4,15 +4,30 @@ import android.accessibilityservice.AccessibilityService;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
+import android.content.Intent;
 
 /**
  * Created by Brendan Otten on 2/17/2016.
  * resource: http://developer.android.com/guide/topics/ui/accessibility/services.html
  */
-public class AccessService extends AccessibilityService{
+public class AccessService extends AccessibilityService {
+
+    @Override
+    protected void onServiceConnected() {
+        Log.v("AccessService", "Connected");
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startid) {
+        Log.v("AccessService", "Starting");
+        Log.v("AccessService", "Test: " + Globals.appName);
+        return super.onStartCommand(intent, flags, startid);
+    }
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-
+        Log.v("AccessService", "PING");
         if(event.getPackageName().equals(Globals.packageName)) {
 
 
@@ -29,6 +44,12 @@ public class AccessService extends AccessibilityService{
 
     @Override
     public void onInterrupt() {
+        Log.v("AccessService", "RIP AccessService");
+    }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.v("AccessService", "RIP AccessService");
+        return super.onUnbind(intent);
     }
 }

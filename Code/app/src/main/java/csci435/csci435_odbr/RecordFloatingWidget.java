@@ -169,6 +169,7 @@ public class RecordFloatingWidget extends Service {
 
     public void stopRecording(View view) {
         //Launch RecordActivity
+        Globals.recording = false;
         Intent intent = new Intent(RecordFloatingWidget.this, RecordActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

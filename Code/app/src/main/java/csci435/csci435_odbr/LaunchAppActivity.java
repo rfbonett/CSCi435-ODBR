@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
+import android.hardware.Sensor;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -155,7 +157,13 @@ public class LaunchAppActivity extends Activity {
         }
 
         //launch data collection task and floating window
+        getSensors();
+        Globals.recording = true;
         startService(new Intent(this, RecordFloatingWidget.class));
+        startService(new Intent(this, AccessService.class));
+        DataCollectionTask d = new DataCollectionTask();
+        d.onPreExecute();
+        d.execute();
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
@@ -163,6 +171,12 @@ public class LaunchAppActivity extends Activity {
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(reportApp);
+    }
+
+    private void getSensors() {
+        SensorManager sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Globals.sensors = new ArrayList<Sensor>(sMgr.getSensorList(Sensor.TYPE_ALL));
+        Globals.sMgr = sMgr;
     }
 }
 
