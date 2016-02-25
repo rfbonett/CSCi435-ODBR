@@ -19,16 +19,24 @@ public class AccessService extends AccessibilityService {
 
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startid) {
+        Log.v("AccessService", "Starting");
+        Log.v("AccessService", "Test: " + Globals.appName);
+        return super.onStartCommand(intent, flags, startid);
+    }
+
+
+    @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
         if(event.getPackageName().equals(Globals.packageName)) {
 
             //toggle pause and play here.
             //if(RecordFloatingWidget.pause.isChecked()) {
-                //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
 
-                BugReport.getInstance().getUserEvents().add(new Events(event));
-                //take snapshot
+            BugReport.getInstance().getUserEvents().add(new Events(event));
+            //take snapshot
             //}
         }
     }
