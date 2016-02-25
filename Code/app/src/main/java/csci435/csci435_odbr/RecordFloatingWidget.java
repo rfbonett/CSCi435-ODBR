@@ -24,6 +24,7 @@ public class RecordFloatingWidget extends Service {
     WindowManager wm;
     LinearLayout ll;
     boolean visibility;
+    //boolean toggle;
 
     ToggleButton options;
     Button submit;

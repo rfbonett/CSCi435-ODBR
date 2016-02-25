@@ -6,20 +6,23 @@ import java.util.HashMap;
 
 import org.json.JSONObject;
 
+import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
 import android.util.Log;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * Created by Rich on 2/11/16.
  */
 public class BugReport {
     private int MAX_ITEMS_TO_PRINT = 10;
+    private List<Events> eventList;
     private HashMap<Sensor, SensorDataList> sensorData;
-    private List<AccessibilityEvent> userEvents;
+    //private List<AccessibilityEvent> userEvents;
     private SparseArray<Bitmap> screenshots;
     private String title;
     private String reporterName;
@@ -35,7 +38,7 @@ public class BugReport {
 
     private BugReport() {
         sensorData = new HashMap<Sensor, SensorDataList>();
-        userEvents = new ArrayList<AccessibilityEvent>();
+        eventList = new ArrayList<Events>();
         screenshots = new SparseArray<Bitmap>();
         title = "";
         reporterName = "";
@@ -44,15 +47,15 @@ public class BugReport {
 
     public void clearReport() {
         sensorData.clear();
-        userEvents.clear();
+        eventList.clear();
         screenshots.clear();
         title = "";
         reporterName = "";
         events = 0;
     }
 
-    public void addUserEvent(AccessibilityEvent e) {
-        userEvents.add(e);
+    public void addUserEvent(Events e) {
+        eventList.add(e);
         ++events;
     }
 
@@ -99,6 +102,12 @@ public class BugReport {
             int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
             Log.v("BugReport", "And " + (printed > 0 ? printed : 0) + " more");
         }
+
+        for(int i = 0; i < eventList.size(); i++){
+            Log.v("Event Number:", "" + i);
+            eventList.get(i).printData();
+        }
+
         return new JSONObject();
     }
 
@@ -112,8 +121,8 @@ public class BugReport {
 
 
     /* Getters */
-    public List<AccessibilityEvent> getUserEvents() {
-        return userEvents;
+    public List<Events> getUserEvents() {
+        return eventList;
     }
     public SparseArray<Bitmap> getScreenshots() {
         return screenshots;
@@ -124,6 +133,40 @@ public class BugReport {
     public String getTitle() {
         return title;
     }
+
+
+}
+
+class Events {
+    private Long timeStamp;
+    private int eventType;
+    private AccessibilityNodeInfo source;
+    private CharSequence packageName;
+    private Rect boundsInParent;
+    private Rect boundsInScreen;
+
+    public Events(AccessibilityEvent e){
+        packageName = e.getPackageName();
+        eventType = e.getEventType();
+        timeStamp = e.getEventTime();
+        source = e.getSource();
+        boundsInParent = new Rect();
+        boundsInScreen = new Rect();
+        source.getBoundsInParent(boundsInParent);
+        source.getBoundsInScreen(boundsInScreen);
+    }
+
+
+    public void printData(){
+
+        Log.v("Event: time", "" + timeStamp);
+        Log.v("Event: type", "" + eventType);
+        Log.v("Event: package name", "" + packageName);
+        //Log.v("Event: source", "" + source);
+        Log.v("Event: bounds in parent", "" + boundsInParent);
+        Log.v("Event: bounds in screen", "" + boundsInScreen);
+    }
+
 }
 
 class SensorDataList {
