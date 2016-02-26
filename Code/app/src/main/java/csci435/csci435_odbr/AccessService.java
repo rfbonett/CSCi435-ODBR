@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 import android.content.Intent;
+import android.provider.Settings;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,12 +15,6 @@ import java.io.IOException;
  * resource: http://developer.android.com/guide/topics/ui/accessibility/services.html
  */
 public class AccessService extends AccessibilityService {
-
-    @Override
-    protected void onServiceConnected() {
-        Log.v("AccessService", "Connected");
-    }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startid) {
@@ -32,21 +27,22 @@ public class AccessService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        if(event.getPackageName().equals(Globals.packageName)) {
+        Log.v("AccessService", "Event: " + event.getPackageName().equals(Globals.packageName));
+        if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
 
             //toggle pause and play here.
             //if(RecordFloatingWidget.pause.isChecked()) {
             //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
 
-            BugReport.getInstance().getUserEvents().add(new Events(event));
+            BugReport.getInstance().addUserEvent(event);
             //take snapshot
+            //}
 
             try {
                 takeScreenShot();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //}
         }
     }
 

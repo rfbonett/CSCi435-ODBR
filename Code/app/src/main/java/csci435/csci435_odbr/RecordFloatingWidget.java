@@ -24,7 +24,6 @@ public class RecordFloatingWidget extends Service {
     WindowManager wm;
     LinearLayout ll;
     boolean visibility;
-    //boolean toggle;
 
     ToggleButton options;
     Button submit;
@@ -117,6 +116,7 @@ public class RecordFloatingWidget extends Service {
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 sensorDataTask.togglePaused(isChecked);
+                Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });
     }

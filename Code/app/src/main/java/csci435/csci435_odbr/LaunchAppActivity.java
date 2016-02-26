@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,6 +22,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -32,6 +35,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.hardware.Sensor;
+import android.provider.Settings;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -51,6 +55,7 @@ public class LaunchAppActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_app);
 
+        BugReport.getInstance().clearReport();
         ArrayList<RowData> installedApps = new ArrayList<RowData>();
         PackageManager pm = getPackageManager();
 
@@ -119,6 +124,8 @@ public class LaunchAppActivity extends Activity {
                 return false;
             }
         });
+
+        //verifyAccessibilityServiceEnabled();
     }
 
     /**
@@ -159,8 +166,8 @@ public class LaunchAppActivity extends Activity {
         //launch data collection task and floating window
         getSensors();
         Globals.recording = true;
+        Globals.trackUserEvents = false;
         startService(new Intent(this, RecordFloatingWidget.class));
-        startService(new Intent(this, AccessService.class));
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
@@ -175,6 +182,29 @@ public class LaunchAppActivity extends Activity {
         Globals.sensors = new ArrayList<Sensor>(sMgr.getSensorList(Sensor.TYPE_ALL));
         Globals.sMgr = sMgr;
     }
+
+
+    /*
+    private void verifyAccessibilityServiceEnabled() {
+        AccessibilityManager am = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
+        for (AccessibilityServiceInfo service : am.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)) {
+            if (AccessService.id.equals(service.getId())) {
+                return;
+            }
+        }
+
+        AlertDialog.Builder prompt = new AlertDialog.Builder(this);
+        prompt.setTitle("Service Not Enabled");
+        prompt.setMessage("You must enable 'Access Service' to use this application");
+        prompt.setPositiveButton("Take Me There", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                intent.addFlags(intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            }});
+        prompt.show();
+
+    } */
 }
 
 /**

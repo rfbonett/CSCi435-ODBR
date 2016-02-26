@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.json.JSONObject;
 
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.view.accessibility.AccessibilityEvent;
@@ -18,6 +19,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.content.res.Configuration;
+import com.jjoe64.graphview.series.DataPoint;
+
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 /**
  * Created by Rich on 2/11/16.
@@ -62,8 +66,8 @@ public class BugReport {
         events = 0;
     }
 
-    public void addUserEvent(Events e) {
-        eventList.add(e);
+    public void addUserEvent(AccessibilityEvent e) {
+        eventList.add(new Events(e));
         ++events;
     }
 
@@ -144,22 +148,20 @@ public class BugReport {
         color.setStrokeWidth(5);
         c.drawARGB(255, 200, 200, 200);
         c.drawLine(0, 0, 0, Globals.height, color);
-        c.drawLine(0, Globals.height/2, Globals.width, Globals.height/2, color);
+        c.drawLine(0, Globals.height / 2, Globals.width, Globals.height / 2, color);
         color.setStrokeWidth(3);
 
         long timeMod = data.getElapsedTime(data.numItems() - 1) / Globals.width;
         timeMod = timeMod > 0 ? timeMod : 1;
         for (int k = 0; k < data.sizeOfValueArray() && k < colors.length; k++) {
-            float valueMean = data.meanValue(k);
-            float valueStDev = data.stDev(k);
-            float rangeY = valueStDev * 6;
-            valueMean = valueMean > 0 ? valueMean : 1;
+            float valueMod = data.meanValue(k) / (Globals.height / 2);
+            valueMod = valueMod > 0 ? valueMod : 1;
             color.setColor(colors[k]);
             float startX = data.getElapsedTime(0) / timeMod;
-            float startY = Globals.height - ((Globals.height/2) * (data.getValues(0)[k] / valueMean));
+            float startY = data.getValues(0)[k] / valueMod;
             for (int i = 1; i < data.numItems(); i++) {
                 float endX = data.getElapsedTime(i) / timeMod;
-                float endY = Globals.height - ((Globals.height/2) * (data.getValues(i)[k] / valueMean));
+                float endY = data.getValues(i)[k] / valueMod;
                 c.drawLine(startX, startY, endX, endY, color);
                 startX = endX;
                 startY = endY;
@@ -168,6 +170,20 @@ public class BugReport {
         sensorGraphs.put(s, b);
         return b;
     }
+
+    /*
+    public ArrayList<LineGraphSeries<DataPoint>> getValuesAsPoints(Sensor s) {
+        ArrayList<LineGraphSeries<DataPoint>> series = new ArrayList<LineGraphSeries<DataPoint>>();
+        SensorDataList data = sensorData.get(s);
+        for (int k = 0; k < data.sizeOfValueArray(); k++) {
+            LineGraphSeries<DataPoint> line = new LineGraphSeries<DataPoint>();
+            for (int i = 0; i < data.numItems(); i++) {
+                line.appendData(new DataPoint(data.getTime(i), data.getValues(i)[k]), true, data.numItems());
+            }
+            series.add(line);
+        }
+        return series;
+    } */
 
 
     /* Getters */
@@ -213,7 +229,7 @@ class Events {
         Log.v("Event: time", "" + timeStamp);
         Log.v("Event: type", "" + eventType);
         Log.v("Event: package name", "" + packageName);
-        //Log.v("Event: source", "" + source);
+        Log.v("Event: source", "" + source);
         Log.v("Event: bounds in parent", "" + boundsInParent);
         Log.v("Event: bounds in screen", "" + boundsInScreen);
     }

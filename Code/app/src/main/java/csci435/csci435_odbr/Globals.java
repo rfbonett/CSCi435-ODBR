@@ -14,6 +14,7 @@ public class Globals {
     public static ArrayList<Sensor> sensors;
     public static SensorManager sMgr;
     public static boolean recording;
+    public static boolean trackUserEvents;
     public static int width;
     public static int height;
 }
