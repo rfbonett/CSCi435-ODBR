@@ -200,6 +200,7 @@ public class BugReport {
         return title;
     }
     public int numSensors() {return sensorData.keySet().size();}
+    public int numEvents() {return events;}
     public Sensor getSensor(int ndx) {return sensors.get(ndx);}
 }
 
@@ -221,6 +222,11 @@ class Events {
         boundsInScreen = new Rect();
         source.getBoundsInParent(boundsInParent);
         source.getBoundsInScreen(boundsInScreen);
+    }
+
+
+    public String getViewDesc() {
+        return (String) source.getClassName() + source.getContentDescription();
     }
 
 

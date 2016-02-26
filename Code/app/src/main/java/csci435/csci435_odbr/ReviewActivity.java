@@ -10,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -48,7 +50,21 @@ public class ReviewActivity extends FragmentActivity {
         Globals.width = (getResources().getConfiguration().screenWidthDp * 2) - 24;
         Globals.height = getResources().getConfiguration().screenHeightDp;
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPager.setAdapter(new CustomPageAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new SensorDataPageAdapter(getSupportFragmentManager()));
+
+        Switch pageSwitch = (Switch) findViewById(R.id.pageSwitch);
+        pageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    viewPager.setAdapter(new UserEventPageAdapter(getSupportFragmentManager()));
+                }
+                else {
+                    viewPager.setAdapter(new SensorDataPageAdapter(getSupportFragmentManager()));
+                }
+
+            }
+        });
 
         //Sets the initial review screenshot
         /*
@@ -72,11 +88,51 @@ public class ReviewActivity extends FragmentActivity {
     }
 
 
-    class CustomPageAdapter extends FragmentStatePagerAdapter {
+    class UserEventPageAdapter extends FragmentStatePagerAdapter {
 
         private int count;
 
-        public CustomPageAdapter(FragmentManager manager) {
+        public UserEventPageAdapter(FragmentManager manager) {
+            super(manager);
+            count = BugReport.getInstance().numEvents();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment page = new UserEventFragment();
+            Bundle args = new Bundle();
+            args.putInt(UserEventFragment.ARG_OBJECT, position);
+            page.setArguments(args);
+            return page;
+        }
+
+        @Override
+        public int getCount() {
+            return count;
+        }
+    }
+
+    public static class UserEventFragment extends Fragment {
+        public static final String ARG_OBJECT = "object";
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            int pos = getArguments().getInt(ARG_OBJECT);
+            int max = BugReport.getInstance().numEvents();
+            String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
+            View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
+            TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
+            return rootView;
+        }
+    }
+
+
+    class SensorDataPageAdapter extends FragmentStatePagerAdapter {
+
+        private int count;
+
+        public SensorDataPageAdapter(FragmentManager manager) {
             super(manager);
             count = BugReport.getInstance().numSensors();
         }
@@ -97,17 +153,17 @@ public class ReviewActivity extends FragmentActivity {
     }
 
 
-    // Instances of this class are fragments representing a single
-    // object in our collection.
     public static class SensorDataFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            Sensor s = BugReport.getInstance().getSensor(getArguments().getInt(ARG_OBJECT));
+            int pos = getArguments().getInt(ARG_OBJECT);
+            int max = BugReport.getInstance().numSensors();
+            Sensor s = BugReport.getInstance().getSensor(pos);
             View rootView = inflater.inflate(R.layout.sensor_data_fragment_layout, container, false);
             TextView sensorTitle = (TextView) rootView.findViewById(R.id.sensorTitle);
-            sensorTitle.setText(s.getName());
+            sensorTitle.setText("(" + (pos + 1) + "/" + max + ")  " + s.getName());
 
             ImageView sensorGraph = (ImageView) rootView.findViewById(R.id.sensorGraph);
             sensorGraph.setImageBitmap(BugReport.getInstance().drawSensorData(s));
