@@ -139,6 +139,7 @@ public class BugReport {
             return sensorGraphs.get(s);
         }
 
+        Globals.height = Globals.height / 2;
         Bitmap b = Bitmap.createBitmap(Globals.width, Globals.height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
@@ -168,6 +169,7 @@ public class BugReport {
             }
         }
         sensorGraphs.put(s, b);
+        Globals.height = Globals.height * 2;
         return b;
     }
 
@@ -231,6 +233,17 @@ class Events {
         source.getBoundsInScreen(boundsInScreen);
     }
 
+    public Rect getScreenRect() {
+        return boundsInScreen;
+    }
+
+
+    public int[] getTransformedBoundsInScreen(int width, int height) {
+        int[] location = new int[2];
+        location[0] = boundsInScreen.centerX() * width / Globals.width;
+        location[1] = boundsInScreen.centerY() * height / Globals.height;
+        return location;
+    }
 
     public String getViewDesc() {
         CharSequence className = source.getClassName();

@@ -3,22 +3,25 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
+    <LinearLayout
+        android:id="@+id/titleLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/appIcon"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:orientation="horizontal">
+        <ImageView
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/appIcon"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/appName"
-        android:layout_toEndOf="@+id/appIcon" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/appName"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/pageToggle"
@@ -26,7 +29,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2"
-        android:layout_below="@+id/appIcon">
+        android:layout_below="@+id/titleLayout">
         <ToggleButton
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,7 +38,9 @@
             android:textOn="Sensor Data"
             android:textOff="Sensor Data"
             android:onClick="displaySensorData"
-            android:background="@drawable/toggle_button_sensor_selector"/>
+            android:background="@drawable/toggle_button_sensor_selector"
+            android:textColor="@drawable/toggle_button_color_selector"
+            android:textSize="20sp"/>
 
         <ToggleButton
             android:layout_width="0dp"
@@ -45,7 +50,9 @@
             android:textOn="User Events"
             android:textOff="User Events"
             android:onClick="displayUserEvents"
-            android:background="@drawable/toggle_button_userevents_selector"/>
+            android:background="@drawable/toggle_button_userevents_selector"
+            android:textColor="@drawable/toggle_button_color_selector"
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

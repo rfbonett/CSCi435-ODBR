@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
@@ -53,8 +57,10 @@ public class ReviewActivity extends FragmentActivity {
             iv.setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException e) {}
 
-        Globals.width = (getResources().getConfiguration().screenWidthDp * 2) - 24;
-        Globals.height = getResources().getConfiguration().screenHeightDp;
+        Point displaySize = new Point();
+        getWindowManager().getDefaultDisplay().getRealSize(displaySize);
+        Globals.width = displaySize.x;
+        Globals.height = displaySize.y;
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         sensorDataButton = (ToggleButton) findViewById(R.id.sensorDataButton);
@@ -144,8 +150,18 @@ public class ReviewActivity extends FragmentActivity {
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
-            //ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
+
+            ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             //screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
+            Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);;
+            Canvas c = new Canvas(b);
+            Paint color = new Paint();
+            color.setColor(Color.YELLOW);
+            color.setStyle(Paint.Style.STROKE);
+            color.setStrokeWidth(5);
+            int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(b.getWidth(), b.getHeight());
+            c.drawCircle(bounds[0], bounds[1], 60, color);
+            screenshot.setImageBitmap(b);
             return rootView;
         }
     }
