@@ -1,8 +1,12 @@
 package csci435.csci435_odbr;
 
 import android.accessibilityservice.AccessibilityService;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import android.content.Intent;
 import android.provider.Settings;
@@ -27,9 +31,8 @@ public class AccessService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        Log.v("AccessService", "Event: " + event.getPackageName().equals(Globals.packageName));
+        Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
-
             //toggle pause and play here.
             //if(RecordFloatingWidget.pause.isChecked()) {
             //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
@@ -57,22 +60,27 @@ public class AccessService extends AccessibilityService {
         return super.onUnbind(intent);
     }
 
+
     public void takeScreenShot() throws Exception {
         try{
-            Log.v("AccessibilityScreenshot", "Success");
             Process su = Runtime.getRuntime().exec("su");
             DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
-            outputStream.writeBytes("screencap -p " + "/storage/sdcard/events.png");
+            outputStream.writeBytes("screencap -p " + Environment.getExternalStorageDirectory() + "/events.png");
             outputStream.flush();
 
             outputStream.writeBytes("exit\n");
             outputStream.flush();
             su.waitFor();
-        }catch(IOException e){
-            throw new Exception(e);
-        }catch(InterruptedException e){
-            throw new Exception(e);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap b = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/events.png", options);
+            BugReport.getInstance().addScreenshot(b);
+            Log.v("AccessibilityScreenshot", "Success");
+        }catch(Exception e) {
+            Log.v("BugReport", "Screenshot threw exception");
+            throw e;
         }
     }
 }

@@ -5,11 +5,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
+import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -34,6 +36,7 @@ public class ReviewActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_review_report);
 
         //Sets the title and image
@@ -123,6 +126,8 @@ public class ReviewActivity extends FragmentActivity {
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
+            //ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
+            //screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
             return rootView;
         }
     }

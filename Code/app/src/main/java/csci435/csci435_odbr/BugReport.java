@@ -193,6 +193,13 @@ public class BugReport {
     public SparseArray<Bitmap> getScreenshots() {
         return screenshots;
     }
+    public Events getEventAtIndex(int ndx) {
+        return eventList.get(ndx);
+    }
+    public Bitmap getScreenshotAtIndex(int ndx) {
+        return screenshots.get(ndx);
+    }
+
     public String getReporterName() {
         return reporterName;
     }
@@ -226,7 +233,18 @@ class Events {
 
 
     public String getViewDesc() {
-        return (String) source.getClassName() + source.getContentDescription();
+        CharSequence className = source.getClassName();
+        char stopChar = '.';
+        int start = className.length() - 1;
+        while (start > 0 && !(stopChar == className.charAt(start))) {
+            start--;
+        }
+
+        CharSequence desc = source.getContentDescription();
+        if (desc == null) {
+            desc = source.getText();
+        }
+        return (String) className.subSequence(start + 1, className.length()) + " " + desc;
     }
 
 

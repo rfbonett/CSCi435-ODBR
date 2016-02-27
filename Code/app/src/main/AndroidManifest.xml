@@ -36,8 +36,6 @@
             android:name=".ReviewActivity"
             android:label="@string/title_activity_submit_report" />
 
-        <uses-permission android:name="android.permission.GET_TASKS"/>
-
         <service android:name="csci435.csci435_odbr.RecordFloatingWidget"/>
         <service android:name=".AccessService"
             android:label="@string/access_service_label"
@@ -47,7 +45,6 @@
             </intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/cust_access_service" />
         </service>
-        <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     </application>
 
 </manifest>
