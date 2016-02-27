@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ToggleButton
+        android:id="@+id/optionsButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@color/gray"
+        android:text="hide buttons"/>
+
+    <ToggleButton
+        android:id="@+id/pauseButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@color/gray"
+        android:text="pause/resume"/>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@color/gray"
+        android:text="stop recording"
+        android:onClick="stopRecording"/>
+
+</LinearLayout>
