@@ -20,16 +20,33 @@
         android:id="@+id/appName"
         android:layout_toEndOf="@+id/appIcon" />
 
-    <Switch
-        android:id="@+id/pageSwitch"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/pageToggle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/appIcon"
-        android:textOn="User Events"
-        android:textOff="Sensor Data" />
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_below="@+id/appIcon">
+        <ToggleButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sensorDataButton"
+            android:layout_weight="1"
+            android:textOn="Sensor Data"
+            android:textOff="Sensor Data"
+            android:onClick="displaySensorData"
+            android:background="@drawable/toggle_button_sensor_selector"/>
 
-
+        <ToggleButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/userEventsButton"
+            android:layout_weight="1"
+            android:textOn="User Events"
+            android:textOff="User Events"
+            android:onClick="displayUserEvents"
+            android:background="@drawable/toggle_button_userevents_selector"/>
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
@@ -38,7 +55,7 @@
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="24dp"
-        android:layout_below="@+id/pageSwitch"
+        android:layout_below="@+id/pageToggle"
         android:layout_centerHorizontal="true">
 
     </android.support.v4.view.ViewPager>

@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.hardware.Sensor;
 import android.graphics.Canvas;
+import android.widget.ToggleButton;
 
 /**
  * Review Activity provides the user with a summary of their input events
@@ -32,6 +33,8 @@ import android.graphics.Canvas;
 public class ReviewActivity extends FragmentActivity {
 
     private ViewPager viewPager;
+    private ToggleButton sensorDataButton;
+    private ToggleButton userEventsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,11 @@ public class ReviewActivity extends FragmentActivity {
         Globals.width = (getResources().getConfiguration().screenWidthDp * 2) - 24;
         Globals.height = getResources().getConfiguration().screenHeightDp;
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPager.setAdapter(new SensorDataPageAdapter(getSupportFragmentManager()));
 
+        sensorDataButton = (ToggleButton) findViewById(R.id.sensorDataButton);
+        userEventsButton = (ToggleButton) findViewById(R.id.userEventsButton);
+        displaySensorData(sensorDataButton);
+        /*
         Switch pageSwitch = (Switch) findViewById(R.id.pageSwitch);
         pageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -67,7 +73,7 @@ public class ReviewActivity extends FragmentActivity {
                 }
 
             }
-        });
+        }); */
 
         //Sets the initial review screenshot
         /*
@@ -76,6 +82,18 @@ public class ReviewActivity extends FragmentActivity {
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/img.png", options);
         image.setImageBitmap(bitmap); */
+    }
+
+    public void displaySensorData(View v) {
+        viewPager.setAdapter(new SensorDataPageAdapter(getSupportFragmentManager()));
+        userEventsButton.setChecked(false);
+        sensorDataButton.setChecked(true);
+    }
+
+    public void displayUserEvents(View v) {
+        viewPager.setAdapter(new UserEventPageAdapter(getSupportFragmentManager()));
+        sensorDataButton.setChecked(false);
+        userEventsButton.setChecked(true);
     }
 
     /**

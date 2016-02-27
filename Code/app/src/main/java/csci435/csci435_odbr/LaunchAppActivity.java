@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -24,8 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -37,7 +33,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.hardware.Sensor;
-import android.provider.Settings;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.

@@ -15,6 +15,7 @@
     <color name="background_holo_light" type="color">#fff3f3f3</color>
     <color name="android_green" type="color">#A4C639</color>
     <color name="lightGray" type="color">#D3D3D3</color>
+    <color name="lightblue" type="color">#FF99E8F6</color>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>
