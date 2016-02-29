@@ -31,21 +31,11 @@ public class AccessService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
+        //Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
-            //toggle pause and play here.
-            //if(RecordFloatingWidget.pause.isChecked()) {
+            Globals.screenshot = 1;
             //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
-
             BugReport.getInstance().addUserEvent(event);
-            //take snapshot
-            //}
-
-            try {
-                takeScreenShot();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -60,27 +50,11 @@ public class AccessService extends AccessibilityService {
         return super.onUnbind(intent);
     }
 
-
-    public void takeScreenShot() throws Exception {
-        try{
-            Process su = Runtime.getRuntime().exec("su");
-            DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
-
-            outputStream.writeBytes("screencap -p " + Environment.getExternalStorageDirectory() + "/events.png");
-            outputStream.flush();
-
-            outputStream.writeBytes("exit\n");
-            outputStream.flush();
-            su.waitFor();
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap b = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/events.png", options);
-            BugReport.getInstance().addScreenshot(b);
-            Log.v("AccessibilityScreenshot", "Success");
-        }catch(Exception e) {
-            Log.v("BugReport", "Screenshot threw exception");
-            throw e;
-        }
+    @Override
+    public void onServiceConnected(){
+        Log.v("AccessService", "Connected");
+        Toast.makeText(getBaseContext(), "Service started", Toast.LENGTH_SHORT).show();
     }
+
+
 }

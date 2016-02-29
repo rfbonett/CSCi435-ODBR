@@ -152,8 +152,9 @@ public class ReviewActivity extends FragmentActivity {
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
-            //screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
+            screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
             Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);;
+            //Bitmap b = BugReport.getInstance().getScreenshotAtIndex(pos);
             Canvas c = new Canvas(b);
             Paint color = new Paint();
             color.setColor(Color.YELLOW);

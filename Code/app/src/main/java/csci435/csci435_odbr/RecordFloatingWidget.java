@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -113,6 +114,9 @@ public class RecordFloatingWidget extends Service {
         // Start Sensor Data Collection AsyncTask and set up pause/resume button
         sensorDataTask = new DataCollectionTask();
         sensorDataTask.execute();
+        Log.v("Screenshot", Globals.recording + "");
+
+
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 sensorDataTask.togglePaused(isChecked);
