@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
@@ -46,6 +47,7 @@ public class ReviewActivity extends FragmentActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_review_report);
 
+        BugReport.getInstance().printScreenshots();
         //Sets the title and image
         TextView appName = (TextView) findViewById(R.id.appName);
         appName.setText("Bug Report for " + Globals.appName);
@@ -150,11 +152,11 @@ public class ReviewActivity extends FragmentActivity {
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
-
+            Log.v("ReviewActivity", pos + "");
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
-            Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);;
-            //Bitmap b = BugReport.getInstance().getScreenshotAtIndex(pos);
+            Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
+
             Canvas c = new Canvas(b);
             Paint color = new Paint();
             color.setColor(Color.YELLOW);
@@ -162,6 +164,7 @@ public class ReviewActivity extends FragmentActivity {
             color.setStrokeWidth(5);
             int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(b.getWidth(), b.getHeight());
             c.drawCircle(bounds[0], bounds[1], 60, color);
+            //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
             screenshot.setImageBitmap(b);
             return rootView;
         }

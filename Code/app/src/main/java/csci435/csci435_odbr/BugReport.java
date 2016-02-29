@@ -80,7 +80,13 @@ public class BugReport {
     }
 
     public void addScreenshot(Bitmap s) {
-        screenshots.put(events, s);
+        screenshots.put(events - 1, s);
+    }
+
+    public void printScreenshots(){
+        for(int i = 0; i < screenshots.size(); i++){
+            Log.v("Screenshots", "" + getScreenshotAtIndex(i));
+        }
     }
 
     public void addDesiredOutcome(String s) { desiredOutcome = s;}
@@ -232,6 +238,7 @@ class Events {
         source.getBoundsInParent(boundsInParent);
         source.getBoundsInScreen(boundsInScreen);
     }
+
 
     public Rect getScreenRect() {
         return boundsInScreen;
