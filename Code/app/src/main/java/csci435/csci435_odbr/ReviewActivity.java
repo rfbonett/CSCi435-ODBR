@@ -17,8 +17,10 @@ import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.support.v4.view.ViewPager;
@@ -40,6 +42,7 @@ public class ReviewActivity extends FragmentActivity {
     private ViewPager viewPager;
     private ToggleButton sensorDataButton;
     private ToggleButton userEventsButton;
+    private int verticalSpacer = 360;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,40 +66,22 @@ public class ReviewActivity extends FragmentActivity {
         getWindowManager().getDefaultDisplay().getRealSize(displaySize);
         Globals.width = displaySize.x;
         Globals.height = displaySize.y;
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         sensorDataButton = (ToggleButton) findViewById(R.id.sensorDataButton);
         userEventsButton = (ToggleButton) findViewById(R.id.userEventsButton);
         displaySensorData(sensorDataButton);
-        /*
-        Switch pageSwitch = (Switch) findViewById(R.id.pageSwitch);
-        pageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    viewPager.setAdapter(new UserEventPageAdapter(getSupportFragmentManager()));
-                }
-                else {
-                    viewPager.setAdapter(new SensorDataPageAdapter(getSupportFragmentManager()));
-                }
 
-            }
-        }); */
-
-        //Sets the initial review screenshot
-        /*
-        ImageView image = (ImageView) findViewById(R.id.screenshot);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/img.png", options);
-        image.setImageBitmap(bitmap); */
+        Globals.availableHeightForImage = Globals.height - verticalSpacer;
     }
+
 
     public void displaySensorData(View v) {
         viewPager.setAdapter(new SensorDataPageAdapter(getSupportFragmentManager()));
         userEventsButton.setChecked(false);
         sensorDataButton.setChecked(true);
     }
+
 
     public void displayUserEvents(View v) {
         viewPager.setAdapter(new UserEventPageAdapter(getSupportFragmentManager()));
@@ -148,24 +133,26 @@ public class ReviewActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             int pos = getArguments().getInt(ARG_OBJECT);
             int max = BugReport.getInstance().numEvents();
+
             String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
-            Log.v("ReviewActivity", pos + "");
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
-            Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
 
-            Canvas c = new Canvas(b);
+            Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
+            int scaledWidth = (int) (b.getWidth() * ((float) Globals.availableHeightForImage / (float) b.getHeight()));
+            Bitmap bScaled = Bitmap.createScaledBitmap(b, scaledWidth, Globals.availableHeightForImage, true);
+            Canvas c = new Canvas(bScaled);
             Paint color = new Paint();
             color.setColor(Color.YELLOW);
             color.setStyle(Paint.Style.STROKE);
             color.setStrokeWidth(5);
-            int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(b.getWidth(), b.getHeight());
+            int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight());
             c.drawCircle(bounds[0], bounds[1], 60, color);
             //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
-            screenshot.setImageBitmap(b);
+            screenshot.setImageBitmap(bScaled);
             return rootView;
         }
     }

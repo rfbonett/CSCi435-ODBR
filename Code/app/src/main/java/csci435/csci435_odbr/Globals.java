@@ -18,4 +18,5 @@ public class Globals {
     public static int width;
     public static int height;
     public static int screenshot;
+    public static int availableHeightForImage;
 }
