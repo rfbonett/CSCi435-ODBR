@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -215,19 +215,31 @@ public class LaunchAppActivity extends Activity {
 /**
  * A CustomAdapter is an adapter for a ListView that displays an icon and name for each element
  */
-class CustomAdapter extends ArrayAdapter<RowData> {
+class CustomAdapter extends BaseAdapter {
 
     private final Context context;
     private final ArrayList<RowData> elements;
     private final ArrayList<RowData> visibleElements;
 
     public CustomAdapter(Context context, ArrayList<RowData> elements) {
-
-        super(context, R.layout.row_view, elements);
-
         this.context = context;
         this.elements = elements;
         this.visibleElements = new ArrayList<RowData>(elements);
+    }
+
+    @Override
+    public int getCount() {
+        return visibleElements.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
     }
 
     @Override
