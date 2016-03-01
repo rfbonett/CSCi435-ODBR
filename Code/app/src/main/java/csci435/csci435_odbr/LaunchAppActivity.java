@@ -155,7 +155,7 @@ public class LaunchAppActivity extends Activity {
      * @param appName the name of the application
      */
     private void startRecording(String appName) {
-        if ("".equals(Globals.appName)) {
+        if ("".equals(appName)) {
             return;
         }
         //Find the applicationInfo object for the given application name
