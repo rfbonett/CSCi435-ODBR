@@ -130,6 +130,9 @@ public class LaunchAppActivity extends Activity {
      * promptStart launches a dialog to confirm the selected application for the report
      */
     private void promptStart(RelativeLayout data) {
+        if ("".equals(((TextView) data.findViewById(R.id.item_title)).getText())) {
+            return;
+        }
         AlertDialog.Builder prompt = new AlertDialog.Builder(this);
         final String appName = ((TextView) data.findViewById(R.id.item_title)).getText().toString();
         Drawable icon = ((ImageView) data.findViewById(R.id.item_icon)).getDrawable();
@@ -152,6 +155,9 @@ public class LaunchAppActivity extends Activity {
      * @param appName the name of the application
      */
     private void startRecording(String appName) {
+        if ("".equals(Globals.appName)) {
+            return;
+        }
         //Find the applicationInfo object for the given application name
         PackageManager pm = getPackageManager();
         for (ApplicationInfo app : pm.getInstalledApplications(PackageManager.GET_META_DATA)) {

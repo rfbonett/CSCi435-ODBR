@@ -150,7 +150,7 @@ public class ReviewActivity extends FragmentActivity {
             color.setStyle(Paint.Style.STROKE);
             color.setStrokeWidth(5);
             int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight());
-            c.drawCircle(bounds[0], bounds[1], 60, color);
+            c.drawCircle(bounds[0], bounds[1], 50, color);
             //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
             screenshot.setImageBitmap(bScaled);
             return rootView;
