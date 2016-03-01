@@ -138,8 +138,12 @@ public class ReviewActivity extends FragmentActivity {
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
+
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
-            screenshot.setImageBitmap(BugReport.getInstance().getScreenshotAtIndex(pos));
+            Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);
+            if (screenBitmap != null) {
+                screenshot.setImageBitmap(screenBitmap);
+            }
 
             Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
             int scaledWidth = (int) (b.getWidth() * ((float) Globals.availableHeightForImage / (float) b.getHeight()));
