@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
@@ -123,6 +124,21 @@ public class RecordFloatingWidget extends Service {
                 Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });
+    }
+
+
+    public void hideForScreenshot() {
+        options.setVisibility(View.INVISIBLE);
+        pause.setVisibility(View.INVISIBLE);
+        submit.setVisibility(View.INVISIBLE);
+
+        ViewGroup.LayoutParams params = ll.getLayoutParams();
+        ViewGroup.LayoutParams hideParams = params;
+        hideParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
+        hideParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        ll.setLayoutParams(hideParams);
+        while (Globals.screenshot == 1) {}
+        ll.setLayoutParams(params);
     }
 
 
