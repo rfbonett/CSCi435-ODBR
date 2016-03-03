@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.View;
 import android.content.pm.PackageManager;
@@ -82,10 +81,10 @@ public class RecordActivity extends ActionBarActivity {
      * --"What does happen"
      */
     private void updateBugReport() {
-        BugReport.getInstance().addReporter(reporterName.getText().toString());
-        BugReport.getInstance().addTitle(reportTitle.getText().toString());
-        BugReport.getInstance().addDesiredOutcome(desiredOutcome.getText().toString());
-        BugReport.getInstance().addActualOutcome(actualOutcome.getText().toString());
+        BugReport.getInstance().setReporterName(reporterName.getText().toString());
+        BugReport.getInstance().setTitle(reportTitle.getText().toString());
+        BugReport.getInstance().setDesiredOutcome(desiredOutcome.getText().toString());
+        BugReport.getInstance().setActualOutcome(actualOutcome.getText().toString());
     }
 
 

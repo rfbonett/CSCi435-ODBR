@@ -1,5 +1,6 @@
 package csci435.csci435_odbr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,6 +16,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -204,6 +207,7 @@ public class ReviewActivity extends FragmentActivity {
             return rootView;
         }
     }
+
 }
 
 
