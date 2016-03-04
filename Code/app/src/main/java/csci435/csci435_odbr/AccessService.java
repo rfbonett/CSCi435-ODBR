@@ -34,6 +34,8 @@ public class AccessService extends AccessibilityService {
         //Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
             Globals.screenshot = 1;
+            Log.v("AccessService", "" + (getRootInActiveWindow() == null ? "null" : getRootInActiveWindow()));
+            Log.v("AccessService", "" + event.getSource());
             //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
             BugReport.getInstance().addUserEvent(event);
         }

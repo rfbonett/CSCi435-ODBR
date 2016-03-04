@@ -128,17 +128,26 @@ public class RecordFloatingWidget extends Service {
 
 
     public void hideForScreenshot() {
+        //Hides Buttons
         options.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
         submit.setVisibility(View.INVISIBLE);
 
+        //Fills Screen
         ViewGroup.LayoutParams params = ll.getLayoutParams();
         ViewGroup.LayoutParams hideParams = params;
         hideParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
         hideParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
         ll.setLayoutParams(hideParams);
+
+        //Wait for screenshot to return to adb
         while (Globals.screenshot == 1) {}
+
+        //Returns to normal size and shows buttons
         ll.setLayoutParams(params);
+        options.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.VISIBLE);
+        submit.setVisibility(View.VISIBLE);
     }
 
 
