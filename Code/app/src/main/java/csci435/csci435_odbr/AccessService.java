@@ -38,6 +38,19 @@ public class AccessService extends AccessibilityService {
             Log.v("AccessService", "" + event.getSource());
             //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
             BugReport.getInstance().addUserEvent(event);
+
+            //hide for screenshot
+            RecordFloatingWidget.hideForScreenshot();
+            //background thread is started so we can prompt the hideforscreenshot now, that will hide, and then change wait
+            Intent intent = new Intent(this, SnapshotIntentService.class);
+            int index = BugReport.getInstance().numEvents();
+            intent.putExtra("index", index);
+            startService(intent);
+
+            //RecordFloatingWidget.restoreAfterScreenshot();
+
+            //take the screenshot by firing off a new intent
+
         }
     }
 

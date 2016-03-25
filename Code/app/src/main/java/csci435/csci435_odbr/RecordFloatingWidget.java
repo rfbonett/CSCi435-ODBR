@@ -3,8 +3,10 @@ package csci435.csci435_odbr;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,12 +26,12 @@ import android.widget.CompoundButton;
 public class RecordFloatingWidget extends Service {
 
     WindowManager wm;
-    LinearLayout ll;
+    static LinearLayout ll;
     boolean visibility;
 
-    ToggleButton options;
-    Button submit;
-    ToggleButton pause;
+    static ToggleButton options;
+    static Button submit;
+    static ToggleButton pause;
 
     final int animationTime = 250;
     float animationDist;
@@ -124,10 +126,17 @@ public class RecordFloatingWidget extends Service {
                 Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });
+
+        IntentFilter statusIntentFilter = new IntentFilter("csci435.csci435_odbr.SnapshotIntentService.send");
+
+        SnapshotReciever snapshotReciever = new SnapshotReciever();
+        LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
+
+
     }
 
 
-    public void hideForScreenshot() {
+    public static void hideForScreenshot() {
         //Hides Buttons
         options.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
@@ -140,10 +149,10 @@ public class RecordFloatingWidget extends Service {
         hideParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
         ll.setLayoutParams(hideParams);
 
-        //Wait for screenshot to return to adb
-        while (Globals.screenshot == 1) {}
+    }
 
-        //Returns to normal size and shows buttons
+    public static void restoreAfterScreenshot() {
+        ViewGroup.LayoutParams params = ll.getLayoutParams();
         ll.setLayoutParams(params);
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);

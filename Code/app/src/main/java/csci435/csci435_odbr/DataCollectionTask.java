@@ -29,46 +29,6 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
     protected Void doInBackground(String... params) {
         int i = 0;
         while (Globals.recording) {
-            if(Globals.screenshot == 1){
-                //Log.v("Screenshot", "Screenshot async occuring");
-                if (Environment.MEDIA_MOUNTED.equals(Environment
-                        .getExternalStorageState())) {
-
-                    // we check if external storage is\ available, otherwise
-                    // display an error message to the user using Toast Message
-                    File sdCard = Environment.getExternalStorageDirectory();
-                    File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
-                    directory.mkdirs();
-
-                    String filename = "screenshot" + i + ".png";
-                    File yourFile = new File(directory, filename);
-
-
-                    try {
-                        Process sh = Runtime.getRuntime().exec("su", null, null);
-                        OutputStream os = sh.getOutputStream();
-                        os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename).getBytes("ASCII"));
-
-
-                        os.flush();
-                        os.close();
-                        sh.waitFor();
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                        Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
-                        BugReport.getInstance().addScreenshot(b);
-
-                        i++;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    Log.v("Screenshot", "ERROR");
-
-                }
-                Globals.screenshot = 0;
-            }
         }
         return null;
     }
