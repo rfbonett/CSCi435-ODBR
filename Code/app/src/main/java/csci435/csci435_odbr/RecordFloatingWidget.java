@@ -148,7 +148,7 @@ public class RecordFloatingWidget extends Service {
                 sensorDataTask.togglePaused(isChecked);
                 Globals.trackUserEvents = !Globals.trackUserEvents;
 
-                if (raw[0] == 0){
+                if (raw[0] == 0) {
                     fireScreenshot();
                     raw[0] = 1;
                 }
@@ -156,15 +156,18 @@ public class RecordFloatingWidget extends Service {
             }
         });
 
+        //Broadcast Receiver for the Snapshot su process
         IntentFilter statusIntentFilter = new IntentFilter("csci435.csci435_odbr.SnapshotIntentService.send");
 
         SnapshotReciever snapshotReciever = new SnapshotReciever();
         LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
 
-        //Globals.screenshot = 0;
+        //Broadcast reciever for the getEvents
+        IntentFilter getEventFilter = new IntentFilter("csci435.csci435_odbr.GetEventIntentService.send");
 
-
+        GetEventReciever getEventReciever = new GetEventReciever();
+        LocalBroadcastManager.getInstance(this).registerReceiver(getEventReciever, getEventFilter);
 
     }
 
@@ -174,37 +177,21 @@ public class RecordFloatingWidget extends Service {
         int index = BugReport.getInstance().numEvents();
         intent.putExtra("index", index);
         startService(intent);
-
     }
 
 
     public static void hideForScreenshot() {
-        //Hides Buttons
         options.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
         submit.setVisibility(View.INVISIBLE);
-
-        //Fills Screen
-        //ViewGroup.LayoutParams params = ll.getLayoutParams();
-        //ViewGroup.LayoutParams hideParams = params;
-        //hideParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
-        //hideParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
-
         wm.updateViewLayout(ll, fill_params);
-
-
     }
 
     public static void restoreAfterScreenshot() {
-        //ViewGroup.LayoutParams params = ll.getLayoutParams();
-        //Log.v("Restore", BugReport.getInstance().numEvents() + "");
-
         wm.updateViewLayout(ll, parameters);
-
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
-
     }
 
 

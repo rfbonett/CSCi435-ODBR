@@ -33,24 +33,21 @@ public class AccessService extends AccessibilityService {
 
         //Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents && Globals.screenshot == 0) {
-            Globals.screenshot = 1;
-            Log.v("AccessService", "" + (getRootInActiveWindow() == null ? "null" : getRootInActiveWindow()));
-            Log.v("AccessService", "" + event.getSource());
-            //Toast.makeText(getBaseContext(), "Service: " + event.getPackageName(), Toast.LENGTH_SHORT).show();
-            BugReport.getInstance().addUserEvent(event);
 
-            //hide for screenshot
-            RecordFloatingWidget.hideForScreenshot();
-            //background thread is started so we can prompt the hideforscreenshot now, that will hide, and then change wait
-            Intent intent = new Intent(this, SnapshotIntentService.class);
-            int index = BugReport.getInstance().numEvents();
-            intent.putExtra("index", index);
-            startService(intent);
+            Log.v("Event type", event.getEventType() + "");
 
-            //RecordFloatingWidget.restoreAfterScreenshot();
+            if(event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+                Globals.screenshot = 1;
+                BugReport.getInstance().addUserEvent(event);
 
-            //take the screenshot by firing off a new intent
-
+                //hide for screenshot
+                RecordFloatingWidget.hideForScreenshot();
+                //background thread is started so we can prompt the hideforscreenshot now, that will hide, and then change wait
+                Intent intent = new Intent(this, SnapshotIntentService.class);
+                int index = BugReport.getInstance().numEvents();
+                intent.putExtra("index", index);
+                startService(intent);
+            }
         }
     }
 

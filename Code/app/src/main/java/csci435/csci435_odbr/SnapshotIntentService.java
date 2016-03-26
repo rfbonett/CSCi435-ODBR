@@ -25,6 +25,8 @@ public class SnapshotIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         //Take screenshot, allows us to define other scenarios just incase we need to here
+
+        //implemented for getEvent
         Bundle extras = intent.getExtras();
         int index = extras.getInt("index");
         takeScreenShot(index);

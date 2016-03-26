@@ -107,6 +107,7 @@ public class RecordActivity extends ActionBarActivity {
     public void submitReport(View view) {
         updateBugReport();
         BugReport.getInstance().toJSON();
+        BugReport.getInstance().clearReport();
         Intent intent = new Intent(this, LaunchAppActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
