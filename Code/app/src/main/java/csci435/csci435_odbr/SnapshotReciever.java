@@ -15,5 +15,6 @@ public class SnapshotReciever extends BroadcastReceiver {
         //restores the screenshot's params
         RecordFloatingWidget.restoreAfterScreenshot();
 
+        Globals.screenshot = 0;
     }
 }

@@ -64,7 +64,7 @@ public class SnapshotIntentService extends IntentService {
                     Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
                     BugReport.getInstance().addScreenshot(b); //screenshot is added here so shouldn't be a problem
 
-                    i++;
+                    //i++;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -81,6 +81,6 @@ public class SnapshotIntentService extends IntentService {
         Intent localIntent = new Intent("csci435.csci435_odbr.SnapshotIntentService.send").putExtra("csci435.csci435_odbr.SnapshotIntentService.status", 1);
         // Broadcasts the Intent to receivers in this app.
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-        Globals.screenshot = 0;
+        //Globals.screenshot = 0;
     }
 }

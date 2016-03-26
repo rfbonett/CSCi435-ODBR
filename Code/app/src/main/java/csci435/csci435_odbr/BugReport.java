@@ -61,7 +61,11 @@ public class BugReport {
 
     public void addUserEvent(AccessibilityEvent e) {
         eventList.add(new Events(e));
-        ++eventCount;
+        addCount();
+    }
+
+    public void addCount(){
+        eventCount++;
     }
 
     public void addSensorData(Sensor s, SensorEvent e) {
@@ -73,7 +77,7 @@ public class BugReport {
     }
 
     public void addScreenshot(Bitmap s) {
-        screenshots.put(eventCount - 1, s);
+        screenshots.put(eventCount, s);
     }
 
     public void printScreenshots(){

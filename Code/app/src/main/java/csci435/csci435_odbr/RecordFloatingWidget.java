@@ -66,7 +66,7 @@ public class RecordFloatingWidget extends Service {
     public void onCreate() {
         super.onCreate();
 
-
+        final int[] raw = {0};
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         ll = new LinearLayout(this);
 
@@ -81,12 +81,22 @@ public class RecordFloatingWidget extends Service {
         parameters.y = 0;
         parameters.gravity = Gravity.CENTER;
         //ll.setBackgroundColor(0x88ff0000);
-        wm.addView(ll, parameters);
+
 
         visibility = true;
         options = (ToggleButton) ll.findViewById(R.id.optionsButton);
         submit = (Button) ll.findViewById(R.id.submitButton);
         pause = (ToggleButton) ll.findViewById(R.id.pauseButton);
+
+        //options.setVisibility(View.INVISIBLE);
+        //submit.setVisibility(View.INVISIBLE);
+        //pause.setVisibility(View.INVISIBLE);
+
+        wm.addView(ll, parameters);
+
+
+        //hideForScreenshot();
+
         animationDist = options.getY() - pause.getY();
         animationDistLong = options.getY() - submit.getY();
         moveDown(submit, animationDistLong);
@@ -137,6 +147,12 @@ public class RecordFloatingWidget extends Service {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 sensorDataTask.togglePaused(isChecked);
                 Globals.trackUserEvents = !Globals.trackUserEvents;
+
+                if (raw[0] == 0){
+                    fireScreenshot();
+                    raw[0] = 1;
+                }
+
             }
         });
 
@@ -145,26 +161,19 @@ public class RecordFloatingWidget extends Service {
         SnapshotReciever snapshotReciever = new SnapshotReciever();
         LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
-        /*
-        oView = new LinearLayout(this);
-        oView.setBackgroundColor(0x88ff0000); // The translucent red color
 
-        WindowManager wm_fill = (WindowManager) getSystemService(WINDOW_SERVICE);
+        //Globals.screenshot = 0;
 
-        Button fill_button = new Button(this);
-        fill_button.setLayoutParams(params);
-        fill_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //literally do nothing
-                Log.v("Button", "Pressed");
-            }
-        });
-        fill_button.setFocusable(false);
-        oView.setFocusable(false);
-        oView.addView(fill_button);
 
-        wm_fill.addView(oView, params);
-        */
+
+    }
+
+    private void fireScreenshot() {
+        hideForScreenshot();
+        Intent intent = new Intent(this, SnapshotIntentService.class);
+        int index = BugReport.getInstance().numEvents();
+        intent.putExtra("index", index);
+        startService(intent);
 
     }
 
@@ -188,10 +197,14 @@ public class RecordFloatingWidget extends Service {
 
     public static void restoreAfterScreenshot() {
         //ViewGroup.LayoutParams params = ll.getLayoutParams();
+        //Log.v("Restore", BugReport.getInstance().numEvents() + "");
+
         wm.updateViewLayout(ll, parameters);
+
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
+
     }
 
 
