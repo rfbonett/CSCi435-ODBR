@@ -24,8 +24,8 @@ import android.widget.CompoundButton;
  * Created by Rich on 2/16/16.
  */
 public class RecordFloatingWidget extends Service {
-
-    WindowManager wm;
+    LinearLayout oView;
+    static WindowManager wm;
     static LinearLayout ll;
     boolean visibility;
 
@@ -33,16 +33,27 @@ public class RecordFloatingWidget extends Service {
     static Button submit;
     static ToggleButton pause;
 
+    static Button fill;
+
+
     final int animationTime = 250;
     float animationDist;
     float animationDistLong;
 
-    final WindowManager.LayoutParams parameters = new WindowManager.LayoutParams(
+    final static WindowManager.LayoutParams parameters = new WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_PHONE,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSPARENT);
+
+    final static WindowManager.LayoutParams fill_params = new WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.TYPE_PHONE,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT);
+
 
     private DataCollectionTask sensorDataTask;
 
@@ -55,18 +66,21 @@ public class RecordFloatingWidget extends Service {
     public void onCreate() {
         super.onCreate();
 
+
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         ll = new LinearLayout(this);
+
 
         //Inflate the linear layout containing the buttons
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.floating_widget_layout, ll);
 
+
         //Initialize Window Manager
         parameters.x = 0;
         parameters.y = 0;
         parameters.gravity = Gravity.CENTER;
-
+        //ll.setBackgroundColor(0x88ff0000);
         wm.addView(ll, parameters);
 
         visibility = true;
@@ -77,7 +91,6 @@ public class RecordFloatingWidget extends Service {
         animationDistLong = options.getY() - submit.getY();
         moveDown(submit, animationDistLong);
         moveDown(pause, animationDist);
-
         //Allow the button to be moved around the screen
         options.setOnTouchListener(new View.OnTouchListener() {
             WindowManager.LayoutParams updatedParameters = parameters;
@@ -132,6 +145,26 @@ public class RecordFloatingWidget extends Service {
         SnapshotReciever snapshotReciever = new SnapshotReciever();
         LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
+        /*
+        oView = new LinearLayout(this);
+        oView.setBackgroundColor(0x88ff0000); // The translucent red color
+
+        WindowManager wm_fill = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        Button fill_button = new Button(this);
+        fill_button.setLayoutParams(params);
+        fill_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //literally do nothing
+                Log.v("Button", "Pressed");
+            }
+        });
+        fill_button.setFocusable(false);
+        oView.setFocusable(false);
+        oView.addView(fill_button);
+
+        wm_fill.addView(oView, params);
+        */
 
     }
 
@@ -143,17 +176,19 @@ public class RecordFloatingWidget extends Service {
         submit.setVisibility(View.INVISIBLE);
 
         //Fills Screen
-        ViewGroup.LayoutParams params = ll.getLayoutParams();
-        ViewGroup.LayoutParams hideParams = params;
-        hideParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
-        hideParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
-        ll.setLayoutParams(hideParams);
+        //ViewGroup.LayoutParams params = ll.getLayoutParams();
+        //ViewGroup.LayoutParams hideParams = params;
+        //hideParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
+        //hideParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+
+        wm.updateViewLayout(ll, fill_params);
+
 
     }
 
     public static void restoreAfterScreenshot() {
-        ViewGroup.LayoutParams params = ll.getLayoutParams();
-        ll.setLayoutParams(params);
+        //ViewGroup.LayoutParams params = ll.getLayoutParams();
+        wm.updateViewLayout(ll, parameters);
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);

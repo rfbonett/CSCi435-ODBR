@@ -28,4 +28,6 @@
         android:background="@mipmap/ic_submit"
         android:onClick="stopRecording"/>
 
+
 </LinearLayout>
+
