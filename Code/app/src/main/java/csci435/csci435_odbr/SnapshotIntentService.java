@@ -17,6 +17,8 @@ import java.io.OutputStream;
  */
 public class SnapshotIntentService extends IntentService {
 
+    String filename;
+
 
     public SnapshotIntentService() {
         super("SnapshotIntentService");
@@ -37,50 +39,50 @@ public class SnapshotIntentService extends IntentService {
         Log.v("Snapshot", "Started");
 
         //Run SU process here, we are in background thread.
-            //Log.v("Screenshot", "Screenshot async occuring");
-            if (Environment.MEDIA_MOUNTED.equals(Environment
-                    .getExternalStorageState())) {
+        //Log.v("Screenshot", "Screenshot async occuring");
+        long timestamp = 0;
+        if (Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())) {
 
-                // we check if external storage is\ available, otherwise
-                // display an error message to the user using Toast Message
-                File sdCard = Environment.getExternalStorageDirectory();
-                File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
-                directory.mkdirs();
+            // we check if external storage is\ available, otherwise
+            // display an error message to the user using Toast Message
+            File sdCard = Environment.getExternalStorageDirectory();
+            File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
+            directory.mkdirs();
 
-                String filename = "screenshot" + i + ".png";
-                File yourFile = new File(directory, filename);
+            filename = "screenshot" + i + ".png";
+            File yourFile = new File(directory, filename);
 
 
-                try {
-                    Process sh = Runtime.getRuntime().exec("su", null, null);
-                    OutputStream os = sh.getOutputStream();
-                    os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename).getBytes("ASCII"));
+            try {
+                Process sh = Runtime.getRuntime().exec("su", null, null);
+                OutputStream os = sh.getOutputStream();
+                os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename).getBytes("ASCII"));
+                timestamp = System.currentTimeMillis();
+                //fire off the recordfloatingwidget.hideforscreenshot
 
-                    //fire off the recordfloatingwidget.hideforscreenshot
-
-                    os.flush();
-                    os.close();
-                    sh.waitFor();
+                os.flush();
+                os.close();
+                sh.waitFor();
+                    /*
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                     Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
                     BugReport.getInstance().addScreenshot(b); //screenshot is added here so shouldn't be a problem
-
-                    //i++;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-
-
+                    */
+                //i++;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else {
-                Log.v("Screenshot", "ERROR");
 
-            }
+
+        } else {
+            Log.v("Screenshot", "ERROR");
+
+        }
         //Tell program to restore the widget
-        Intent localIntent = new Intent("csci435.csci435_odbr.SnapshotIntentService.send").putExtra("csci435.csci435_odbr.SnapshotIntentService.status", 1);
+        Intent localIntent = new Intent("csci435.csci435_odbr.SnapshotIntentService.send").putExtra("timestamp", timestamp);
+        localIntent.putExtra("filename", filename);
         // Broadcasts the Intent to receivers in this app.
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
         //Globals.screenshot = 0;

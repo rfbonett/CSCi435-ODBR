@@ -20,6 +20,8 @@ import android.animation.ObjectAnimator;
 import android.widget.Button;
 import android.widget.CompoundButton;
 
+import java.io.File;
+
 /**
  * Created by Rich on 2/16/16.
  */
@@ -36,7 +38,7 @@ public class RecordFloatingWidget extends Service {
     static Button fill;
 
 
-    final int animationTime = 250;
+    final int animationTime = 100;
     float animationDist;
     float animationDistLong;
 
@@ -142,15 +144,49 @@ public class RecordFloatingWidget extends Service {
         sensorDataTask.execute();
         Log.v("Screenshot", Globals.recording + "");
 
-
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sensorDataTask.togglePaused(isChecked);
-                Globals.trackUserEvents = !Globals.trackUserEvents;
 
                 if (raw[0] == 0) {
                     fireScreenshot();
                     raw[0] = 1;
+                }
+
+                sensorDataTask.togglePaused(isChecked);
+                Globals.trackUserEvents = !Globals.trackUserEvents;
+
+                //get the size of the "buffer" here
+
+                File file = new File("sdcard/events.txt");
+                double buffer = file.length();
+
+                while(Globals.recording){
+
+                    //Get data for total thread count
+                    if(Globals.total_screenshots < 4) {
+                        fireScreenshot();
+                        Globals.total_screenshots++;
+                    }
+
+                    //if buffer size changes, redeclare the file sdcard/events.txt
+
+                    if(buffer != file.length() && BugReport.getInstance().getQueueSize() > 0){
+                        //file size has changed, event has occured, we want to record the screenshot
+                        //change the buffer size first
+
+                        buffer = file.length();
+
+                        //send string
+                        long timestamp = System.currentTimeMillis();
+                        Screenshots screenshot = BugReport.getInstance().getPotentialScreenshot();
+                        BugReport.getInstance().addScreenshot(screenshot);
+                    }
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }

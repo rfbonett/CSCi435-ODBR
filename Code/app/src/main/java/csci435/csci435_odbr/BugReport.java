@@ -1,9 +1,13 @@
 package csci435.csci435_odbr;
 
 import java.lang.reflect.Array;
+import java.util.AbstractQueue;
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 import org.json.JSONObject;
@@ -29,8 +33,10 @@ public class BugReport {
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
+    private Queue<Screenshots> screenshotsQueue = new PriorityQueue<Screenshots>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
     private List<Events> eventList = new ArrayList<Events>();
+    private List<Screenshots> screenshotsList = new ArrayList<Screenshots>();
     private SparseArray<Bitmap> screenshots = new SparseArray<Bitmap>();
     private String title = "";
     private String reporterName = "";
@@ -62,6 +68,25 @@ public class BugReport {
     public void addUserEvent(AccessibilityEvent e) {
         eventList.add(new Events(e));
         addCount();
+    }
+
+    public void addScreenshot(Screenshots screenshot){
+        //add user screenshot to some data structure, can literally be just an array
+
+        screenshotsList.add(screenshot);
+
+    }
+
+    public void addPotentialScreenshot(Screenshots screenshot){
+        screenshotsQueue.add(screenshot);
+    }
+
+    public Screenshots getPotentialScreenshot(){
+        return screenshotsQueue.remove();
+    }
+
+    public int getQueueSize(){
+        return screenshotsQueue.size();
     }
 
     public void addCount(){

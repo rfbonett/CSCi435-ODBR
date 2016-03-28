@@ -48,6 +48,15 @@ public class AccessService extends AccessibilityService {
                 intent.putExtra("index", index);
                 startService(intent);
             }
+            /*
+            <service android:name=".AccessService"
+            android:label="@string/access_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+            <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/cust_access_service" />
+            </service>*/
         }
     }
 

@@ -20,4 +20,5 @@ public class Globals {
     public static int screenshot;
     public static int availableHeightForImage;
     public static int wait;
+    public static int total_screenshots;
 }
