@@ -27,9 +27,13 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
 
     @Override
     protected Void doInBackground(String... params) {
-        int i = 0;
-        while (Globals.recording) {
-        }
+        try {
+            File eventsFile = new File("sdcard/events.txt");;
+            eventsFile.createNewFile();
+            Process sh = Runtime.getRuntime().exec("su", null, null);
+            OutputStream os = sh.getOutputStream();
+            os.write(("/system/bin/getevent -t > sdcard/events.txt").getBytes("ASCII"));
+        } catch (Exception e) {}
         return null;
     }
 

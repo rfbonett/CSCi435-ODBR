@@ -30,24 +30,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="18" selection-start-line="50" selection-start-column="18" selection-end-line="50" selection-end-column="18" />
-              <folding>
-                <element signature="e#939#977#0" expanded="true" />
-                <element signature="e#1340#1358#0" expanded="true" />
-                <element signature="e#1868#1898#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RecordFloatingWidget.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="RecordFloatingWidget.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3809524">
+            <state vertical-scroll-proportion="0.0">
               <caret line="73" column="46" selection-start-line="73" selection-start-column="46" selection-end-line="73" selection-end-column="46" />
               <folding>
                 <element signature="e#4733#6509#0" expanded="true" />
@@ -93,6 +79,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DataCollectionTask.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.48879552">
+              <caret line="35" column="32" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -1725,7 +1721,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/fill_screen_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/floating_widget_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/LaunchAppActivity.java" />
@@ -1742,6 +1737,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotIntentService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java" />
       </list>
     </option>
   </component>
@@ -2107,7 +2103,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="1" width="1918" height="1018" extended-state="1" />
+    <frame x="1" y="1" width="1918" height="1018" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2166,14 +2162,6 @@
             <element signature="e#1293#1313#0" expanded="false" />
             <element signature="e#1340#1358#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2331,7 +2319,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3809524">
+        <state vertical-scroll-proportion="0.0">
           <caret line="73" column="46" selection-start-line="73" selection-start-column="46" selection-end-line="73" selection-end-column="46" />
           <folding>
             <element signature="e#4733#6509#0" expanded="true" />
@@ -2339,6 +2327,14 @@
             <element signature="e#8252#8393#0" expanded="true" />
             <element signature="e#8392#8393#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48879552">
+          <caret line="35" column="32" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
