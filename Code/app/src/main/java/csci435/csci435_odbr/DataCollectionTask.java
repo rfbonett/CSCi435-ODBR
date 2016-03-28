@@ -27,20 +27,18 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
 
     @Override
     protected Void doInBackground(String... params) {
-        int i = 0;
-        while (Globals.recording) {
-        }
+
+        try {
+            File eventsFile = new File("sdcard/events.txt");;
+            eventsFile.createNewFile();
+            Process sh = Runtime.getRuntime().exec("su", null, null);
+            OutputStream os = sh.getOutputStream();
+            os.write(("/system/bin/getevent -t > sdcard/events.txt").getBytes("ASCII"));
+
+        } catch (Exception e) {}
         return null;
     }
 
-
-    private Bitmap takeScreenshot(View view) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
-                view.getHeight(), Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-        return bitmap;
-    }
 
     /**
      * Adds sensor data to the BugReport
@@ -50,6 +48,7 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
     public void onSensorChanged(SensorEvent event) {
         BugReport.getInstance().addSensorData(event.sensor, event);
     }
+
 
     /**
      * If paused, resumes recording by registering listener for all sensors.

@@ -160,7 +160,9 @@ public class RecordFloatingWidget extends Service {
                 File file = new File("sdcard/events.txt");
                 double buffer = file.length();
 
-                while(Globals.recording){
+
+                //while(Globals.recording){
+                    Log.v("RecordFloatingWidget", "" + buffer);
 
                     //Get data for total thread count
                     if(Globals.total_screenshots < 4) {
@@ -181,13 +183,13 @@ public class RecordFloatingWidget extends Service {
                         Screenshots screenshot = BugReport.getInstance().getPotentialScreenshot();
                         BugReport.getInstance().addScreenshot(screenshot);
                     }
-
+                    /*
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
-                }
+                    } */
+                //}
 
             }
         });
