@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -18,6 +19,8 @@ import java.io.OutputStream;
 public class SnapshotIntentService extends IntentService {
 
     String filename;
+    static OutputStream os;
+    Process sh;
 
 
     public SnapshotIntentService() {
@@ -35,6 +38,7 @@ public class SnapshotIntentService extends IntentService {
 
     }
 
+
     private void takeScreenShot(int i) {
         Log.v("Snapshot", "Started");
 
@@ -50,20 +54,32 @@ public class SnapshotIntentService extends IntentService {
             File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
             directory.mkdirs();
 
-            filename = "screenshot" + i + ".png";
-            File yourFile = new File(directory, filename);
+            //filename = "screenshotlol" + i + ".png";
+            //File yourFile = new File(directory, filename);
 
-
+            filename = "screenshotnew" + Globals.screenshot_index + ".png";
             try {
-                Process sh = Runtime.getRuntime().exec("su", null, null);
-                OutputStream os = sh.getOutputStream();
-                os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename).getBytes("ASCII"));
-                timestamp = System.currentTimeMillis();
-                //fire off the recordfloatingwidget.hideforscreenshot
-
+                sh = Runtime.getRuntime().exec("su", null, null);
+                os = sh.getOutputStream();
+                os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename +"\n").getBytes("ASCII"));
                 os.flush();
-                os.close();
-                sh.waitFor();
+
+                timestamp = System.currentTimeMillis();
+                Screenshots screenshots = new Screenshots(filename, timestamp);
+                BugReport.getInstance().addPotentialScreenshot(screenshots);
+                //int j = 0;
+                //while(Globals.recording){
+                    //Process sh = Runtime.getRuntime().exec("su", null, null);
+                    //filename = "screenshotlol" + Globals.screenshot_index + ".png";
+
+                    //os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename +"\n").getBytes("ASCII"));
+                    //os.flush();
+                    //Log.v("Screenshot", "Screenshot fired at: " + System.currentTimeMillis());
+                    //os.close();
+
+                    //add to stack here, possibly implement a wait function.
+                //}
+                //os.close();
                     /*
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -86,5 +102,30 @@ public class SnapshotIntentService extends IntentService {
         // Broadcasts the Intent to receivers in this app.
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
         //Globals.screenshot = 0;
+    }
+
+    public static void writeBytes(){
+        try {
+            String filename = "screenshot" + Globals.screenshot_index + ".png";
+            os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename + "\n").getBytes("ASCII"));
+            os.flush();
+            long timestamp = System.currentTimeMillis();
+            Screenshots screenshots = new Screenshots(filename, timestamp);
+            BugReport.getInstance().addPotentialScreenshot(screenshots);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public static void finishWriting() {
+        try {
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

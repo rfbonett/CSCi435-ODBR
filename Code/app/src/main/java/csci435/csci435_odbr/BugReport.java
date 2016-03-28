@@ -3,12 +3,14 @@ package csci435.csci435_odbr;
 import java.lang.reflect.Array;
 import java.util.AbstractQueue;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 import org.json.JSONObject;
 
@@ -33,7 +35,7 @@ public class BugReport {
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
-    private Queue<Screenshots> screenshotsQueue = new PriorityQueue<Screenshots>();
+    //private Queue<Screenshots> screenshotsQueue = new LinkedList<Screenshots>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
     private List<Events> eventList = new ArrayList<Events>();
     private List<Screenshots> screenshotsList = new ArrayList<Screenshots>();
@@ -63,30 +65,33 @@ public class BugReport {
         desiredOutcome = "";
         actualOutcome = "";
         eventCount = 0;
-    }
+        screenshotsList.clear();
 
+    }
+    /*
     public void addUserEvent(AccessibilityEvent e) {
         eventList.add(new Events(e));
         addCount();
     }
+    */
 
     public void addScreenshot(Screenshots screenshot){
         //add user screenshot to some data structure, can literally be just an array
 
         screenshotsList.add(screenshot);
-
+        //addCount();
     }
 
     public void addPotentialScreenshot(Screenshots screenshot){
-        screenshotsQueue.add(screenshot);
+        screenshotsList.add(screenshot);
     }
 
-    public Screenshots getPotentialScreenshot(){
-        return screenshotsQueue.remove();
+    public Screenshots getPotentialScreenshot(int index){
+        return screenshotsList.get(index);
     }
 
-    public int getQueueSize(){
-        return screenshotsQueue.size();
+    public int getListSize(){
+        return screenshotsList.size();
     }
 
     public void addCount(){
@@ -102,7 +107,9 @@ public class BugReport {
     }
 
     public void addScreenshot(Bitmap s) {
+        //addCount();
         screenshots.put(eventCount, s);
+        addCount();
     }
 
     public void printScreenshots(){

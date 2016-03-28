@@ -10,6 +10,11 @@ public class Screenshots {
     String filename;
     long timestamp;
 
+    public Screenshots(String file, long time){
+        filename = file;
+        timestamp = time;
+    }
+
     public void add_timestamp(long time){
         timestamp = time;
     }

@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
@@ -35,6 +36,8 @@ import android.hardware.Sensor;
 import android.graphics.Canvas;
 import android.widget.ToggleButton;
 
+import java.io.File;
+
 /**
  * Review Activity provides the user with a summary of their input events
  * --The summary is provided as a list of screenshots and brief summaries
@@ -49,6 +52,7 @@ public class ReviewActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_review_report);
@@ -76,6 +80,10 @@ public class ReviewActivity extends FragmentActivity {
         displaySensorData(sensorDataButton);
 
         Globals.availableHeightForImage = Globals.height - verticalSpacer;
+
+
+
+
     }
 
 
@@ -137,10 +145,10 @@ public class ReviewActivity extends FragmentActivity {
             int pos = getArguments().getInt(ARG_OBJECT);
             int max = BugReport.getInstance().numEvents();
 
-            String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
+            //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
-            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + viewDesc);
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with ");
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);
@@ -156,8 +164,11 @@ public class ReviewActivity extends FragmentActivity {
             color.setColor(Color.YELLOW);
             color.setStyle(Paint.Style.STROKE);
             color.setStrokeWidth(5);
-            int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight());
-            c.drawCircle(bounds[0], bounds[1], 50, color);
+
+            //HERE WE NEED GET_EVENT DATA
+
+            //int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight());
+            //c.drawCircle(bounds[0], bounds[1], 50, color);
             //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
             screenshot.setImageBitmap(bScaled);
             return rootView;

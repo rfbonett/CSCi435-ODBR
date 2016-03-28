@@ -32,31 +32,21 @@ public class AccessService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
         //Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
-        if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents && Globals.screenshot == 0) {
+        if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
 
             Log.v("Event type", event.getEventType() + "");
 
             if(event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
-                Globals.screenshot = 1;
-                BugReport.getInstance().addUserEvent(event);
+                Globals.screenshot_index++;
+                //BugReport.getInstance().addCount();
+                Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
+                SnapshotIntentService.writeBytes();
 
-                //hide for screenshot
-                RecordFloatingWidget.hideForScreenshot();
-                //background thread is started so we can prompt the hideforscreenshot now, that will hide, and then change wait
-                Intent intent = new Intent(this, SnapshotIntentService.class);
-                int index = BugReport.getInstance().numEvents();
-                intent.putExtra("index", index);
-                startService(intent);
+
+
             }
-            /*
-            <service android:name=".AccessService"
-            android:label="@string/access_service_label"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-            <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data android:name="android.accessibilityservice" android:resource="@xml/cust_access_service" />
-            </service>*/
+
+
         }
     }
 

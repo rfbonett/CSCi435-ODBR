@@ -16,18 +16,18 @@ public class SnapshotReciever extends BroadcastReceiver {
         //restores the screenshot's params
 
         //RecordFloatingWidget.restoreAfterScreenshot();
-        Bundle bundle = intent.getExtras();
-        long timestamp = bundle.getLong("timestamp");
-        String filename = bundle.getString("filename");
+        //Bundle bundle = intent.getExtras();
+        //long timestamp = bundle.getLong("timestamp");
+        //String filename = bundle.getString("filename");
 
-        Screenshots screenshot = new Screenshots();
-        screenshot.add_filename(filename);
-        screenshot.add_timestamp(timestamp);
+        //Screenshots screenshot = new Screenshots();
+        //screenshot.add_filename(filename);
+        //screenshot.add_timestamp(timestamp);
 
-        //add it to the queue
-        BugReport.getInstance().addPotentialScreenshot(screenshot);
+        //add it to the stack
+        //BugReport.getInstance().addPotentialScreenshot(screenshot);
 
-        Globals.total_screenshots--;
+        //Globals.total_screenshots--;
 
         //Globals.screenshot = 0;
     }

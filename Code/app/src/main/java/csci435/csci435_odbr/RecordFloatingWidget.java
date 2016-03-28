@@ -4,7 +4,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -67,6 +70,8 @@ public class RecordFloatingWidget extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        BugReport.getInstance().clearReport();
 
         final int[] raw = {0};
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -159,7 +164,7 @@ public class RecordFloatingWidget extends Service {
 
                 File file = new File("sdcard/events.txt");
                 double buffer = file.length();
-
+                /*
                 while(Globals.recording){
 
                     //Get data for total thread count
@@ -188,7 +193,7 @@ public class RecordFloatingWidget extends Service {
                         e.printStackTrace();
                     }
                 }
-
+                */
             }
         });
 
@@ -199,16 +204,11 @@ public class RecordFloatingWidget extends Service {
         LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
 
-        //Broadcast reciever for the getEvents
-        IntentFilter getEventFilter = new IntentFilter("csci435.csci435_odbr.GetEventIntentService.send");
-
-        GetEventReciever getEventReciever = new GetEventReciever();
-        LocalBroadcastManager.getInstance(this).registerReceiver(getEventReciever, getEventFilter);
 
     }
 
     private void fireScreenshot() {
-        hideForScreenshot();
+        //hideForScreenshot();
         Intent intent = new Intent(this, SnapshotIntentService.class);
         int index = BugReport.getInstance().numEvents();
         intent.putExtra("index", index);
@@ -291,7 +291,24 @@ public class RecordFloatingWidget extends Service {
 
     public void stopRecording(View view) {
         //Launch RecordActivity
+        Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
         Globals.recording = false;
+        Globals.screenshot_index = 0;
+        SnapshotIntentService.finishWriting();
+        //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM
+        int size = BugReport.getInstance().getListSize();
+        Log.v("Screenshot", "size: "+ size);
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
+        for(int i = 0; i < size-1; i++){
+            Screenshots screenshot = BugReport.getInstance().getPotentialScreenshot(i);
+            Log.v("Screenshot", "filename: " + screenshot.get_filename());
+            File yourFile = new File(directory, screenshot.get_filename());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
+            BugReport.getInstance().addScreenshot(b); //screenshot is added here so shouldn't be a problem
+        }
         Intent intent = new Intent(RecordFloatingWidget.this, RecordActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
