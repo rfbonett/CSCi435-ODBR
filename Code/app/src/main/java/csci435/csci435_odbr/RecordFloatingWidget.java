@@ -164,36 +164,6 @@ public class RecordFloatingWidget extends Service {
 
                 File file = new File("sdcard/events.txt");
                 double buffer = file.length();
-                /*
-                while(Globals.recording){
-
-                    //Get data for total thread count
-                    if(Globals.total_screenshots < 4) {
-                        fireScreenshot();
-                        Globals.total_screenshots++;
-                    }
-
-                    //if buffer size changes, redeclare the file sdcard/events.txt
-
-                    if(buffer != file.length() && BugReport.getInstance().getQueueSize() > 0){
-                        //file size has changed, event has occured, we want to record the screenshot
-                        //change the buffer size first
-
-                        buffer = file.length();
-
-                        //send string
-                        long timestamp = System.currentTimeMillis();
-                        Screenshots screenshot = BugReport.getInstance().getPotentialScreenshot();
-                        BugReport.getInstance().addScreenshot(screenshot);
-                    }
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                */
             }
         });
 
