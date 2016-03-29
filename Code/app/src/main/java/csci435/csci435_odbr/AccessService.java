@@ -31,7 +31,7 @@ public class AccessService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        //Log.v("AccessService", "Event: " + event.getWindowId());//event.getPackageName().equals(Globals.packageName));
+        //Log.v("AccessService", "Event: " + event.getWindowId());
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
 
             Log.v("Event type", event.getEventType() + "");
@@ -41,12 +41,7 @@ public class AccessService extends AccessibilityService {
                 //BugReport.getInstance().addCount();
                 Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
                 SnapshotIntentService.writeBytes();
-
-
-
             }
-
-
         }
     }
 

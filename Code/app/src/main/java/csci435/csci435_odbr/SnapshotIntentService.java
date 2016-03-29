@@ -57,7 +57,7 @@ public class SnapshotIntentService extends IntentService {
             //filename = "screenshotlol" + i + ".png";
             //File yourFile = new File(directory, filename);
 
-            filename = "screenshotnew" + Globals.screenshot_index + ".png";
+            filename = "screenshot" + Globals.screenshot_index + ".png";
             try {
                 sh = Runtime.getRuntime().exec("su", null, null);
                 os = sh.getOutputStream();

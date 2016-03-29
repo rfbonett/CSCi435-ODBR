@@ -68,12 +68,12 @@ public class BugReport {
         screenshotsList.clear();
 
     }
-    /*
+
     public void addUserEvent(AccessibilityEvent e) {
         eventList.add(new Events(e));
         addCount();
     }
-    */
+
 
     public void addScreenshot(Screenshots screenshot){
         //add user screenshot to some data structure, can literally be just an array
@@ -252,61 +252,41 @@ public class BugReport {
 class Events {
     private Long timeStamp;
     private int eventType;
-    private AccessibilityNodeInfo source;
     private CharSequence packageName;
-    private Rect boundsInParent;
-    private Rect boundsInScreen;
+    private CharSequence className;
+    private CharSequence contentDescription;
+    private CharSequence text;
+    private int screenshotIndex;
 
     public Events(AccessibilityEvent e){
         packageName = e.getPackageName();
         eventType = e.getEventType();
         timeStamp = e.getEventTime();
-        source = e.getSource();
-        boundsInParent = new Rect();
-        boundsInScreen = new Rect();
-        source.getBoundsInParent(boundsInParent);
-        source.getBoundsInScreen(boundsInScreen);
+        className = e.getSource().getClassName();
+        contentDescription = e.getSource().getContentDescription();
+        text = e.getSource().getText();
+        screenshotIndex = Globals.screenshot_index;
     }
+    
 
-
-    public Rect getScreenRect() {
-        return boundsInScreen;
-    }
-
-
-    public int[] getTransformedBoundsInScreen(int width, int height) {
-        int[] location = new int[2];
-        location[0] = boundsInScreen.centerX() * width / Globals.width;
-        location[1] = boundsInScreen.centerY() * height / Globals.height;
-        return location;
-    }
-
-    public String getViewDesc() {
-        CharSequence className = source.getClassName();
+    public String getViewDescription() {
         char stopChar = '.';
         int start = className.length() - 1;
         while (start > 0 && !(stopChar == className.charAt(start))) {
             start--;
         }
-
-        CharSequence desc = source.getContentDescription();
-        if (desc == null) {
-            desc = source.getText();
-        }
-        return (String) className.subSequence(start + 1, className.length()) + " " + desc;
+        return (String) className.subSequence(start + 1, className.length()) + " " + contentDescription;
     }
 
 
     public void printData(){
-
         Log.v("Event: time", "" + timeStamp);
         Log.v("Event: type", "" + eventType);
         Log.v("Event: package name", "" + packageName);
-        Log.v("Event: source", "" + source);
-        Log.v("Event: bounds in parent", "" + boundsInParent);
-        Log.v("Event: bounds in screen", "" + boundsInScreen);
+        Log.v("Event: class name", "" + className);
+        Log.v("Event: description", "" + contentDescription);
+        Log.v("Event: text", "" + text);
     }
-
 }
 
 
