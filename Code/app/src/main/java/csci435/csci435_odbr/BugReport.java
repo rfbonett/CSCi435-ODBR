@@ -66,7 +66,6 @@ public class BugReport {
         actualOutcome = "";
         eventCount = 0;
         screenshotsList.clear();
-
     }
 
     public void addUserEvent(AccessibilityEvent e) {

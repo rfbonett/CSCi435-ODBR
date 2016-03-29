@@ -37,10 +37,12 @@ public class AccessService extends AccessibilityService {
             Log.v("Event type", event.getEventType() + "");
 
             if(event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
-                Globals.screenshot_index++;
-                //BugReport.getInstance().addCount();
-                Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
-                SnapshotIntentService.writeBytes();
+                if(Globals.time_last_event - System.currentTimeMillis() > 500) {
+                    Globals.time_last_event = System.currentTimeMillis();
+                    SnapshotIntentService.writeBytes();
+                    Globals.screenshot_index++;
+                }
+                BugReport.getInstance().addUserEvent(event);
             }
         }
     }

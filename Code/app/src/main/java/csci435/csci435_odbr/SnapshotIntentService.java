@@ -33,8 +33,28 @@ public class SnapshotIntentService extends IntentService {
 
         //implemented for getEvent
         Bundle extras = intent.getExtras();
-        int index = extras.getInt("index");
-        takeScreenShot(index);
+        long timestamp = 0;
+        if (Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())) {
+            File sdCard = Environment.getExternalStorageDirectory();
+            File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
+            directory.mkdirs();
+
+            filename = "screenshot" + Globals.screenshot_index + ".png";
+            try {
+                sh = Runtime.getRuntime().exec("su", null, null);
+                os = sh.getOutputStream();
+                Globals.time_last_event = System.currentTimeMillis();
+                writeBytes();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } else {
+            Log.v("Screenshot", "ERROR");
+
+        }
 
     }
 
@@ -47,15 +67,9 @@ public class SnapshotIntentService extends IntentService {
         long timestamp = 0;
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
-
-            // we check if external storage is\ available, otherwise
-            // display an error message to the user using Toast Message
             File sdCard = Environment.getExternalStorageDirectory();
             File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
             directory.mkdirs();
-
-            //filename = "screenshotlol" + i + ".png";
-            //File yourFile = new File(directory, filename);
 
             filename = "screenshot" + Globals.screenshot_index + ".png";
             try {
@@ -67,26 +81,6 @@ public class SnapshotIntentService extends IntentService {
                 timestamp = System.currentTimeMillis();
                 Screenshots screenshots = new Screenshots(filename, timestamp);
                 BugReport.getInstance().addPotentialScreenshot(screenshots);
-                //int j = 0;
-                //while(Globals.recording){
-                    //Process sh = Runtime.getRuntime().exec("su", null, null);
-                    //filename = "screenshotlol" + Globals.screenshot_index + ".png";
-
-                    //os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename +"\n").getBytes("ASCII"));
-                    //os.flush();
-                    //Log.v("Screenshot", "Screenshot fired at: " + System.currentTimeMillis());
-                    //os.close();
-
-                    //add to stack here, possibly implement a wait function.
-                //}
-                //os.close();
-                    /*
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                    Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
-                    BugReport.getInstance().addScreenshot(b); //screenshot is added here so shouldn't be a problem
-                    */
-                //i++;
             } catch (Exception e) {
                 e.printStackTrace();
             }

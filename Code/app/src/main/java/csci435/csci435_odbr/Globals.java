@@ -22,4 +22,5 @@ public class Globals {
     public static int wait;
     public static int total_screenshots;
     public static int screenshot_index;
+    public static long time_last_event;
 }
