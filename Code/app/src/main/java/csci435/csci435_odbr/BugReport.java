@@ -36,6 +36,7 @@ public class BugReport {
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
+    private List<int[]> getEventList = new ArrayList<int[]>();
     private List<Events> eventList = new ArrayList<Events>();
     private SparseArray<Bitmap> screenshots = new SparseArray<Bitmap>();
     private String title = "";
@@ -63,6 +64,22 @@ public class BugReport {
         desiredOutcome = "";
         actualOutcome = "";
         eventCount = 0;
+    }
+
+    public void addGetEvent(int x, int y){
+        int [] coords = new int [2];
+        coords[0] = x;
+        coords[1] = y;
+        getEventList.add(coords);
+    }
+
+    public int [] getGetEvent(int index){
+        if(index > getEventList.size() - 1){
+            return getEventList.get(getEventList.size() - 1);
+        }
+        else {
+            return getEventList.get(index);
+        }
     }
 
     public void addUserEvent(AccessibilityEvent e) {

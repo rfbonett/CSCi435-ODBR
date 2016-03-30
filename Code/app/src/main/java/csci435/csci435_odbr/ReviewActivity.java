@@ -148,7 +148,7 @@ public class ReviewActivity extends FragmentActivity {
             //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
-            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with ");
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + BugReport.getInstance().getEventAtIndex(pos).getViewDescription());
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);
@@ -167,11 +167,19 @@ public class ReviewActivity extends FragmentActivity {
 
             //HERE WE NEED GET_EVENT DATA
 
-            //int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight());
-            //c.drawCircle(bounds[0], bounds[1], 50, color);
+            int[] bounds = BugReport.getInstance().getGetEvent(pos);
+            int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), bounds[0], bounds[1]);
+            c.drawCircle(point[0],point[1], 50, color);
             //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
             screenshot.setImageBitmap(bScaled);
             return rootView;
+        }
+
+        public int[] getTransformedBoundsInScreen(int bwidth, int bheight, int width, int height) {
+            int[] center = new int[2];
+            center[0] = width * bwidth / Globals.width;
+            center[1] = height * bheight / Globals.height;
+            return center;
         }
     }
 

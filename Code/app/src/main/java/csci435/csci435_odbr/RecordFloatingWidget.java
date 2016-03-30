@@ -173,6 +173,9 @@ public class RecordFloatingWidget extends Service {
         int index = BugReport.getInstance().numEvents();
         intent.putExtra("index", index);
         startService(intent);
+
+        Intent intent2 = new Intent(this, getEventIntentService.class);
+        startService(intent2);
     }
 
 
