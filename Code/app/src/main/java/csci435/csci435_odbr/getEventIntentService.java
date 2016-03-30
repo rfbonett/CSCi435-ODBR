@@ -35,7 +35,7 @@ public class getEventIntentService extends IntentService {
             OutputStream os = new FileOutputStream(eventsFile);
             String s;
             BufferedReader br = new BufferedReader(new FileReader(eventsFile));
-            int numEvents = -1;
+            int numEvents = 0;
 
             while(Globals.recording){
 
@@ -44,10 +44,7 @@ public class getEventIntentService extends IntentService {
             while(br.ready()){
                 s = br.readLine();
                 if(s.contains("DOWN")){
-                    if(numEvents == -1){
-                        numEvents++;
-                    }
-                    else {
+
                         numEvents++;
 
                         s = br.readLine();
@@ -72,8 +69,6 @@ public class getEventIntentService extends IntentService {
                             }
                         }
 
-
-                    }
                 }
 
                 //Log.v("getEvent", s);
