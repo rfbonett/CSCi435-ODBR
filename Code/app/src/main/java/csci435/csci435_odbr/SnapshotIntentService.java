@@ -36,7 +36,7 @@ public class SnapshotIntentService extends IntentService {
             File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
             directory.mkdirs();
 
-            filename = "screenshot" + Globals.screenshot_index + ".png";
+            //filename = "screenshot" + Globals.screenshot_index + ".png";
             try {
                 sh = Runtime.getRuntime().exec("su", null, null);
                 os = sh.getOutputStream();
@@ -60,7 +60,7 @@ public class SnapshotIntentService extends IntentService {
             String filename = "screenshot" + Globals.screenshot_index + ".png";
             os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename + "\n").getBytes("ASCII"));
             os.flush();
-
+            Log.v("Screenshot", filename);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -35,16 +35,13 @@ public class AccessService extends AccessibilityService {
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
 
             Log.v("Event type", event.getEventType() + "");
-
+            Log.v("Screenshot", "AccessService fired");
             if(event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
                 BugReport.getInstance().addUserEvent(event);
-
-                if(Globals.time_last_event - System.currentTimeMillis() > 500) {
-                    Globals.time_last_event = System.currentTimeMillis();
-                    SnapshotIntentService.writeBytes();
-                    Globals.screenshot_index++;
-                }
-
+                Globals.time_last_event = System.currentTimeMillis();
+                Log.v("Screenshot", "screenshot fired");
+                SnapshotIntentService.writeBytes();
+                Globals.screenshot_index++;
             }
         }
     }

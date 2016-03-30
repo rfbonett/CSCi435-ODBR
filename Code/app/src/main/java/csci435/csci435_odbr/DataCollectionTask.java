@@ -1,6 +1,9 @@
 package csci435.csci435_odbr;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +27,29 @@ import android.hardware.Sensor;
  * Created by Rich on 2/11/16.
  */
 public class DataCollectionTask extends AsyncTask<String, Void, Void> implements SensorEventListener {
+    Process sh;
+    OutputStream os;
 
     @Override
     protected Void doInBackground(String... params) {
 
         try {
-            File eventsFile = new File("sdcard/events.txt");;
-            eventsFile.createNewFile();
-            Process sh = Runtime.getRuntime().exec("su", null, null);
-            OutputStream os = sh.getOutputStream();
-            os.write(("/system/bin/getevent -t > sdcard/events.txt").getBytes("ASCII"));
-
-        } catch (Exception e) {}
+            sh = Runtime.getRuntime().exec(new String[]{"su","-c","getevent -lt"});
+            InputStreamReader is = new InputStreamReader(sh.getInputStream());
+            String s;
+            BufferedReader br = new BufferedReader(is);
+            while(Globals.recording){
+                s = br.readLine();
+                if(s != null){
+                    Log.v("getEvent", s);
+                }
+            }
+            is.close();
+            sh.destroy();
+            Log.v("DataCollection", "Process Killed");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

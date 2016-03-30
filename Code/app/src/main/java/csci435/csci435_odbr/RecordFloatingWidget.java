@@ -173,8 +173,6 @@ public class RecordFloatingWidget extends Service {
         SnapshotReciever snapshotReciever = new SnapshotReciever();
         LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
-
-
     }
 
     private void fireScreenshot() {
@@ -261,19 +259,20 @@ public class RecordFloatingWidget extends Service {
 
     public void stopRecording(View view) {
         //Launch RecordActivity
-        Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
+        //Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
         Globals.recording = false;
-        Globals.screenshot_index = 0;
+        //Globals.screenshot_index = 0;
         SnapshotIntentService.finishWriting();
+
         //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM
         int size = BugReport.getInstance().getListSize();
         Log.v("Screenshot", "size: "+ size);
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
         for(int i = 0; i < size-1; i++){
-            Screenshots screenshot = BugReport.getInstance().getPotentialScreenshot(i);
-            Log.v("Screenshot", "filename: " + screenshot.get_filename());
-            File yourFile = new File(directory, screenshot.get_filename());
+            Events event = BugReport.getInstance().getEventAtIndex(i);
+            Log.v("Screenshot", "filename: " + event.getFilename());
+            File yourFile = new File(directory, event.getFilename());
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);

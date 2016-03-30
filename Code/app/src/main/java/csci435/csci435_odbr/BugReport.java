@@ -35,10 +35,8 @@ public class BugReport {
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
-    //private Queue<Screenshots> screenshotsQueue = new LinkedList<Screenshots>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
     private List<Events> eventList = new ArrayList<Events>();
-    private List<Screenshots> screenshotsList = new ArrayList<Screenshots>();
     private SparseArray<Bitmap> screenshots = new SparseArray<Bitmap>();
     private String title = "";
     private String reporterName = "";
@@ -65,32 +63,14 @@ public class BugReport {
         desiredOutcome = "";
         actualOutcome = "";
         eventCount = 0;
-        screenshotsList.clear();
     }
 
     public void addUserEvent(AccessibilityEvent e) {
         eventList.add(new Events(e));
-        addCount();
-    }
-
-
-    public void addScreenshot(Screenshots screenshot){
-        //add user screenshot to some data structure, can literally be just an array
-
-        screenshotsList.add(screenshot);
-        //addCount();
-    }
-
-    public void addPotentialScreenshot(Screenshots screenshot){
-        screenshotsList.add(screenshot);
-    }
-
-    public Screenshots getPotentialScreenshot(int index){
-        return screenshotsList.get(index);
     }
 
     public int getListSize(){
-        return screenshotsList.size();
+        return eventList.size();
     }
 
     public void addCount(){
@@ -207,21 +187,6 @@ public class BugReport {
     }
 
 
-    /*
-    public ArrayList<LineGraphSeries<DataPoint>> getValuesAsPoints(Sensor s) {
-        ArrayList<LineGraphSeries<DataPoint>> series = new ArrayList<LineGraphSeries<DataPoint>>();
-        SensorDataList data = sensorData.get(s);
-        for (int k = 0; k < data.sizeOfValueArray(); k++) {
-            LineGraphSeries<DataPoint> line = new LineGraphSeries<DataPoint>();
-            for (int i = 0; i < data.numItems(); i++) {
-                line.appendData(new DataPoint(data.getTime(i), data.getValues(i)[k]), true, data.numItems());
-            }
-            series.add(line);
-        }
-        return series;
-    } */
-
-
     /* Getters */
     public List<Events> getUserEvents() {
         return eventList;
@@ -266,8 +231,10 @@ class Events {
         text = e.getSource().getText();
         screenshotIndex = Globals.screenshot_index;
     }
-    
 
+    public String getFilename(){
+        return "screenshot" + screenshotIndex + ".png";
+    }
     public String getViewDescription() {
         char stopChar = '.';
         int start = className.length() - 1;
