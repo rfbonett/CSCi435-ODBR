@@ -53,7 +53,6 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
         return null;
     }
 
-
     /**
      * Adds sensor data to the BugReport
      * @param event

@@ -13,22 +13,14 @@ public class SnapshotReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //restores the screenshot's params
+        Bundle extras = intent.getExtras();
+        Boolean visibility = extras.getBoolean("visibility");
+        if(!visibility){
+            RecordFloatingWidget.hideForScreenshot();
+        }
+        else{
+            RecordFloatingWidget.restoreAfterScreenshot();
+        }
 
-        //RecordFloatingWidget.restoreAfterScreenshot();
-        //Bundle bundle = intent.getExtras();
-        //long timestamp = bundle.getLong("timestamp");
-        //String filename = bundle.getString("filename");
-
-        //Screenshots screenshot = new Screenshots();
-        //screenshot.add_filename(filename);
-        //screenshot.add_timestamp(timestamp);
-
-        //add it to the stack
-        //BugReport.getInstance().addPotentialScreenshot(screenshot);
-
-        //Globals.total_screenshots--;
-
-        //Globals.screenshot = 0;
     }
 }

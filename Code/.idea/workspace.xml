@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="Screenshot" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="Timer" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
@@ -33,18 +33,45 @@
       <file leaf-file-name="RecordFloatingWidget.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="73" column="32" selection-start-line="73" selection-start-column="32" selection-end-line="73" selection-end-column="32" />
+            <state vertical-scroll-proportion="-9.090909">
+              <caret line="153" column="64" selection-start-line="153" selection-start-column="64" selection-end-line="153" selection-end-column="64" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SnapshotReciever.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotReciever.java">
+      <file leaf-file-name="TimerIntentService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/TimerIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="10" selection-start-line="27" selection-start-column="10" selection-end-line="27" selection-end-column="10" />
+              <caret line="24" column="61" selection-start-line="24" selection-start-column="61" selection-end-line="24" selection-end-column="61" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#342#343#0" expanded="true" />
+                <element signature="e#385#386#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="69" selection-start-line="41" selection-start-column="69" selection-end-line="41" selection-end-column="69" />
+              <folding>
+                <element signature="e#939#977#0" expanded="true" />
+                <element signature="e#1340#1358#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SnapshotReciever.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotReciever.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.5094614">
+              <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -64,7 +91,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="48" column="54" selection-start-line="48" selection-start-column="54" selection-end-line="48" selection-end-column="54" />
+              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -74,8 +101,11 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/AccessService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="36" column="27" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
-              <folding />
+              <caret line="41" column="41" selection-start-line="41" selection-start-column="41" selection-end-line="41" selection-end-column="41" />
+              <folding>
+                <element signature="e#1862#1863#0" expanded="true" />
+                <element signature="e#1921#1922#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -103,29 +133,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BugReport.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.053973">
-              <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
-              <folding>
-                <element signature="e#1279#1287#0" expanded="true" />
-                <element signature="e#2073#2074#0" expanded="true" />
-                <element signature="e#2117#2118#0" expanded="true" />
-                <element signature="e#2148#2149#0" expanded="true" />
-                <element signature="e#2187#2188#0" expanded="true" />
-                <element signature="e#7671#7672#0" expanded="true" />
-                <element signature="e#7733#7734#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SnapshotIntentService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="44" column="29" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
+              <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -1694,16 +1706,17 @@
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/GetEventReciever.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/GetEventIntentService.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/xml/cust_access_service.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotReciever.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/ReviewActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/Globals.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotIntentService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/AccessService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/Screenshots.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/TimerIntentService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/AccessService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotReciever.java" />
       </list>
     </option>
   </component>
@@ -1807,16 +1820,8 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="csci435_odbr" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BugReport.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidManifestsGroupNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -2020,7 +2025,7 @@
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31985295" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.083333336" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1127451" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -2098,7 +2103,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="40" column="18" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
-          <folding />
+          <folding>
+            <element signature="e#1862#1863#0" expanded="true" />
+            <element signature="e#1921#1922#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2150,27 +2158,9 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#939#977#0" expanded="true" />
-            <element signature="e#1340#1358#0" expanded="true" />
-            <element signature="e#1868#1898#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/LaunchAppActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="177" column="92" selection-start-line="177" selection-start-column="81" selection-end-line="177" selection-end-column="92" />
-          <folding>
-            <element signature="e#2075#2084#0" expanded="true" />
-            <element signature="e#2840#3019#0" expanded="true" />
-            <element signature="e#3018#3019#0" expanded="true" />
-            <element signature="e#3308#3540#0" expanded="true" />
-            <element signature="e#3539#3540#0" expanded="true" />
-            <element signature="e#4410#5087#0" expanded="true" />
-            <element signature="e#5086#5087#0" expanded="true" />
-            <element signature="e#5857#6036#0" expanded="true" />
-            <element signature="e#6035#6036#0" expanded="true" />
+            <element signature="e#1293#1313#0" expanded="true" />
+            <element signature="e#1467#1508#0" expanded="true" />
+            <element signature="e#1942#1972#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2201,22 +2191,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="18" selection-start-line="50" selection-start-column="18" selection-end-line="50" selection-end-column="18" />
+        <state vertical-scroll-proportion="-5.6136365">
+          <caret line="108" column="46" selection-start-line="108" selection-start-column="46" selection-end-line="108" selection-end-column="46" />
           <folding>
-            <element signature="e#939#977#0" expanded="true" />
-            <element signature="e#1340#1358#0" expanded="true" />
-            <element signature="e#1868#1898#0" expanded="true" />
+            <element signature="e#1279#1287#0" expanded="true" />
+            <element signature="e#2073#2074#0" expanded="true" />
+            <element signature="e#2117#2118#0" expanded="true" />
+            <element signature="e#2148#2149#0" expanded="true" />
+            <element signature="e#2187#2188#0" expanded="true" />
+            <element signature="e#7671#7672#0" expanded="true" />
+            <element signature="e#7733#7734#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotReciever.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/LaunchAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="10" selection-start-line="27" selection-start-column="10" selection-end-line="27" selection-end-column="10" />
+          <caret line="181" column="33" selection-start-line="181" selection-start-column="33" selection-end-line="181" selection-end-column="33" />
+          <folding>
+            <element signature="e#2075#2084#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotIntentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/Globals.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
           <folding />
         </state>
       </provider>
@@ -2232,26 +2244,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/Globals.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/DataCollectionTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="48" column="54" selection-start-line="48" selection-start-column="54" selection-end-line="48" selection-end-column="54" />
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotIntentService.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="29" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
+          <caret line="41" column="69" selection-start-line="41" selection-start-column="69" selection-end-line="41" selection-end-column="69" />
+          <folding>
+            <element signature="e#939#977#0" expanded="true" />
+            <element signature="e#1340#1358#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.090909">
+          <caret line="153" column="64" selection-start-line="153" selection-start-column="64" selection-end-line="153" selection-end-column="64" />
           <folding />
         </state>
       </provider>
@@ -2264,35 +2279,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="73" column="32" selection-start-line="73" selection-start-column="32" selection-end-line="73" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/AccessService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="27" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
-          <folding />
+          <caret line="41" column="41" selection-start-line="41" selection-start-column="41" selection-end-line="41" selection-end-column="41" />
+          <folding>
+            <element signature="e#1862#1863#0" expanded="true" />
+            <element signature="e#1921#1922#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/TimerIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.053973">
-          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="61" selection-start-line="24" selection-start-column="61" selection-end-line="24" selection-end-column="61" />
           <folding>
-            <element signature="e#1279#1287#0" expanded="true" />
-            <element signature="e#2073#2074#0" expanded="true" />
-            <element signature="e#2117#2118#0" expanded="true" />
-            <element signature="e#2148#2149#0" expanded="true" />
-            <element signature="e#2187#2188#0" expanded="true" />
-            <element signature="e#7671#7672#0" expanded="true" />
-            <element signature="e#7733#7734#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#342#343#0" expanded="true" />
+            <element signature="e#385#386#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/SnapshotReciever.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5094614">
+          <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -34,9 +34,14 @@ public class AccessService extends AccessibilityService {
         //Log.v("AccessService", "Event: " + event.getWindowId());
         if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
 
-            Log.v("Event type", event.getEventType() + "");
-            Log.v("Screenshot", "AccessService fired");
             if(event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+
+                //hide for screenshots intent
+                if(!(RecordFloatingWidget.widget_hidden)){
+                    Intent intent = new Intent(this, TimerIntentService.class);
+                    startService(intent);
+                }
+
                 BugReport.getInstance().addUserEvent(event);
                 Globals.time_last_event = System.currentTimeMillis();
                 Log.v("Screenshot", "screenshot fired");

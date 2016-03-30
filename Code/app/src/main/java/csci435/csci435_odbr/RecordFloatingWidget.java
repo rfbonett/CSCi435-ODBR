@@ -29,6 +29,7 @@ import java.io.File;
  * Created by Rich on 2/16/16.
  */
 public class RecordFloatingWidget extends Service {
+    public static boolean widget_hidden = false;
     LinearLayout oView;
     static WindowManager wm;
     static LinearLayout ll;
@@ -95,14 +96,9 @@ public class RecordFloatingWidget extends Service {
         submit = (Button) ll.findViewById(R.id.submitButton);
         pause = (ToggleButton) ll.findViewById(R.id.pauseButton);
 
-        //options.setVisibility(View.INVISIBLE);
-        //submit.setVisibility(View.INVISIBLE);
-        //pause.setVisibility(View.INVISIBLE);
 
         wm.addView(ll, parameters);
 
-
-        //hideForScreenshot();
 
         animationDist = options.getY() - pause.getY();
         animationDistLong = options.getY() - submit.getY();
@@ -151,25 +147,21 @@ public class RecordFloatingWidget extends Service {
 
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (raw[0] == 0) {
                     fireScreenshot();
                     raw[0] = 1;
-                }
 
+                    //fires the first time the button is clicked
+                    Intent intent = new Intent(getBaseContext(), TimerIntentService.class);
+                    startService(intent);
+                }
                 sensorDataTask.togglePaused(isChecked);
                 Globals.trackUserEvents = !Globals.trackUserEvents;
-
-                //get the size of the "buffer" here
-
-                File file = new File("sdcard/events.txt");
-                double buffer = file.length();
             }
         });
 
         //Broadcast Receiver for the Snapshot su process
-        IntentFilter statusIntentFilter = new IntentFilter("csci435.csci435_odbr.SnapshotIntentService.send");
-
+        IntentFilter statusIntentFilter = new IntentFilter("csci435.csci435_odbr.TimerIntentService.send");
         SnapshotReciever snapshotReciever = new SnapshotReciever();
         LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
@@ -188,11 +180,13 @@ public class RecordFloatingWidget extends Service {
         options.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
         submit.setVisibility(View.INVISIBLE);
-        wm.updateViewLayout(ll, fill_params);
+        widget_hidden = true;
+        //wm.updateViewLayout(ll, fill_params);
     }
 
     public static void restoreAfterScreenshot() {
-        wm.updateViewLayout(ll, parameters);
+        //wm.updateViewLayout(ll, parameters);
+        widget_hidden = false;
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
