@@ -262,19 +262,7 @@ public class RecordFloatingWidget extends Service {
         SnapshotIntentService.finishWriting();
 
         //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM
-        int size = BugReport.getInstance().getListSize();
-        Log.v("Screenshot", "size: "+ size);
-        File sdCard = Environment.getExternalStorageDirectory();
-        File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
-        for(int i = 0; i < size-1; i++){
-            Events event = BugReport.getInstance().getEventAtIndex(i);
-            Log.v("Screenshot", "filename: " + event.getFilename());
-            File yourFile = new File(directory, event.getFilename());
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap b = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
-            BugReport.getInstance().addScreenshot(b); //screenshot is added here so shouldn't be a problem
-        }
+
         Intent intent = new Intent(RecordFloatingWidget.this, RecordActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

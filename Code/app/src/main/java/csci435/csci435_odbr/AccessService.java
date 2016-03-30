@@ -45,8 +45,9 @@ public class AccessService extends AccessibilityService {
                 BugReport.getInstance().addUserEvent(event);
                 Globals.time_last_event = System.currentTimeMillis();
                 Log.v("Screenshot", "screenshot fired");
-                SnapshotIntentService.writeBytes();
                 Globals.screenshot_index++;
+                SnapshotIntentService.writeBytes();
+
             }
         }
     }

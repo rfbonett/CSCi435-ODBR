@@ -38,7 +38,6 @@ public class BugReport {
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
     private List<int[]> getEventList = new ArrayList<int[]>();
     private List<Events> eventList = new ArrayList<Events>();
-    private SparseArray<Bitmap> screenshots = new SparseArray<Bitmap>();
     private String title = "";
     private String reporterName = "";
     private String desiredOutcome = "";
@@ -58,7 +57,6 @@ public class BugReport {
         sensorGraphs.clear();
         sensorList.clear();
         eventList.clear();
-        screenshots.clear();
         title = "";
         reporterName = "";
         desiredOutcome = "";
@@ -100,18 +98,6 @@ public class BugReport {
             sensorData.put(s, new SensorDataList());
         }
         sensorData.get(s).addData(e.timestamp, e.values.clone());
-    }
-
-    public void addScreenshot(Bitmap s) {
-        //addCount();
-        screenshots.put(eventCount, s);
-        addCount();
-    }
-
-    public void printScreenshots(){
-        for(int i = 0; i < screenshots.size(); i++){
-            Log.v("Screenshots", "" + getScreenshotAtIndex(i));
-        }
     }
 
     public void setDesiredOutcome(String s) { desiredOutcome = s;}
@@ -208,14 +194,8 @@ public class BugReport {
     public List<Events> getUserEvents() {
         return eventList;
     }
-    public SparseArray<Bitmap> getScreenshots() {
-        return screenshots;
-    }
     public Events getEventAtIndex(int ndx) {
         return eventList.get(ndx);
-    }
-    public Bitmap getScreenshotAtIndex(int ndx) {
-        return screenshots.get(ndx);
     }
 
     public String getReporterName() {

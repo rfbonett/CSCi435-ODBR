@@ -119,7 +119,7 @@ public class ReviewActivity extends FragmentActivity {
 
         public UserEventPageAdapter(FragmentManager manager) {
             super(manager);
-            count = BugReport.getInstance().numEvents();
+            count = Globals.screenshot_index;
         }
 
         @Override
@@ -143,7 +143,7 @@ public class ReviewActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             int pos = getArguments().getInt(ARG_OBJECT);
-            int max = BugReport.getInstance().numEvents();
+            int max = Globals.screenshot_index;
 
             //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
@@ -151,7 +151,22 @@ public class ReviewActivity extends FragmentActivity {
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + BugReport.getInstance().getEventAtIndex(pos).getViewDescription());
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
-            Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);
+            //Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);
+            //different way to get this bitmap
+            //int size = BugReport.getInstance().getListSize();
+            //Log.v("Screenshot", "size: "+ size);
+            File sdCard = Environment.getExternalStorageDirectory();
+            File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
+            Events event = BugReport.getInstance().getEventAtIndex(pos);
+            Log.v("Screenshot", "filename: " + event.getFilename());
+            File yourFile = new File(directory, event.getFilename());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap screenBitmap = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
+            //BugReport.getInstance().addScreenshot(screen); //screenshot is added here so shouldn't be a problem
+
+
+
             if (screenBitmap != null) {
                 screenshot.setImageBitmap(screenBitmap);
             }
