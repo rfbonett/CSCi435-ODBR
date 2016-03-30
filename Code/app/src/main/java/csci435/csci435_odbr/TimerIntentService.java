@@ -8,6 +8,7 @@ import android.util.Log;
 /**
  * Created by Brendan Otten on 3/29/2016.
  */
+//Background process that checks every 5 seocnds if the user is still actively using the application
 public class TimerIntentService extends IntentService {
 
     Intent localIntent;
@@ -23,7 +24,7 @@ public class TimerIntentService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
 
         Globals.time_last_event = System.currentTimeMillis();
-
+        //while the user does something else in less than 5 seconds, keep the pause button invisible
         while(System.currentTimeMillis() - Globals.time_last_event < 5000){
 
         }

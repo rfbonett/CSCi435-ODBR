@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/../../CSCi435-ODBR/gen" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/../../CSCi435-ODBR/gen" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/../../CSCi435-ODBR/AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/../../CSCi435-ODBR/res" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/../../CSCi435-ODBR/assets" />
+        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/../../CSCi435-ODBR/libs" />
+        <option name="PROGUARD_LOGS_FOLDER_RELATIVE_PATH" value="/../../CSCi435-ODBR/proguard_logs" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/Code/prototypeA/app/src/androidTest/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Code/app/src/test/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Code/prototypeA/app/src/test/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Artifacts/WireFrame2/app/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Artifacts/WireFrame2/app/src/test/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Code/app/src/androidTest/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Artifacts/WireFrame2/app/src/androidTest/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Code/app/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Code/prototypeA/app/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+    </content>
+    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
