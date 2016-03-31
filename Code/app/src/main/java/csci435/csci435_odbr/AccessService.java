@@ -46,7 +46,9 @@ public class AccessService extends AccessibilityService {
                 Globals.time_last_event = System.currentTimeMillis();
                 Log.v("Screenshot", "screenshot fired");
                 Globals.screenshot_index++;
-                SnapshotIntentService.writeBytes();
+
+                SnapshotIntentService.writeCheck();
+                SnapshotIntentService.writeScreenshot();
 
             }
         }

@@ -9,8 +9,11 @@ import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 /**
@@ -21,6 +24,8 @@ public class SnapshotIntentService extends IntentService {
     String filename;
     static OutputStream os;
     Process sh;
+    static InputStream is;
+    static BufferedReader br;
 
 
     public SnapshotIntentService() {
@@ -40,9 +45,12 @@ public class SnapshotIntentService extends IntentService {
             try {
                 sh = Runtime.getRuntime().exec("su", null, null);
                 os = sh.getOutputStream();
+                is = sh.getInputStream();
+                br = new BufferedReader(new InputStreamReader(is));
                 Globals.time_last_event = System.currentTimeMillis();
                 Globals.screenshot_index = 0;
-                writeBytes();
+                writeCheck();
+                writeScreenshot();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -55,12 +63,32 @@ public class SnapshotIntentService extends IntentService {
 
     }
 
-    public static void writeBytes(){
+    public static void writeScreenshot(){
+
         try {
             String filename = "screenshot" + Globals.screenshot_index + ".png";
             os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename + "\n").getBytes("ASCII"));
             os.flush();
             Log.v("Screenshot", filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void writeCheck(){
+
+        try {
+            String s = "";
+            //Log.v("Screenshot", "hanging in check");
+            while(!s.contains("APP_STATE_IDLE")) {
+                os.write(("dumpsys window -a | grep 'mAppTransitionState'\n").getBytes("ASCII"));
+                os.flush();
+                s = br.readLine();
+                Log.v("Screenshot", s);
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -84,9 +84,10 @@ public class BugReport {
         eventList.add(new Events(e));
     }
 
-    public int getListSize(){
+    public int getNumEvents(){
         return eventList.size();
     }
+
 
     public void addCount(){
         eventCount++;

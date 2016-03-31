@@ -258,7 +258,7 @@ public class RecordFloatingWidget extends Service {
         //Launch RecordActivity
         //Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
         Globals.recording = false;
-        //Globals.screenshot_index = 0;
+        Globals.trackUserEvents = false;
         SnapshotIntentService.finishWriting();
 
         //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM

@@ -56,8 +56,6 @@ public class ReviewActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_review_report);
-
-        BugReport.getInstance().printScreenshots();
         //Sets the title and image
         TextView appName = (TextView) findViewById(R.id.appName);
         appName.setText("Bug Report for " + Globals.appName);
@@ -119,7 +117,7 @@ public class ReviewActivity extends FragmentActivity {
 
         public UserEventPageAdapter(FragmentManager manager) {
             super(manager);
-            count = Globals.screenshot_index;
+            count = BugReport.getInstance().getNumEvents();
         }
 
         @Override

@@ -31,7 +31,7 @@ public class getEventIntentService extends IntentService {
                 eventsFile.delete();
             }
             eventsFile.createNewFile();
-            sh = Runtime.getRuntime().exec(new String[]{"su","-c","getevent -lt > sdcard/events.txt"});
+            sh = Runtime.getRuntime().exec(new String[]{"su","-c","getevent -lt > sdcard/events.txt\n"});
             OutputStream os = new FileOutputStream(eventsFile);
             String s;
             BufferedReader br = new BufferedReader(new FileReader(eventsFile));
