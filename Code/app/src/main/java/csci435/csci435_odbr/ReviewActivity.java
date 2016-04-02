@@ -240,46 +240,6 @@ public class ReviewActivity extends FragmentActivity {
         }
     }
 
-    public static void getGUIEventFromRawEvent(String rawEvent) {
-
-        String[] data = rawEvent.split("#");
-        int eventTypeId = Integer.parseInt(data[0]);
-        String eventLabel = data[1];
-        double duration = Double.parseDouble(data[3]);
-        String[] initPosition = data[4].replace("(", "").replace(")", "").split(",");
-        String[] finalPosition = data[5].replace("(", "").replace(")", "").split(",");
-
-        String direction = getSwipeText(eventTypeId, Integer.parseInt(initPosition[0].trim()),
-                Integer.parseInt(initPosition[1].trim()), Integer.parseInt(finalPosition[0].trim()),
-                Integer.parseInt(finalPosition[1].trim()));
-    }
-
-    private static String getSwipeText(int eventTypeId, int initPositionX, int initPositionY, int finalPositionX,
-                                       int finalPositionY) {
-        String direction = "";
-        if (eventTypeId == 2) {
-            int diffX = initPositionX - finalPositionX;
-            int diffY = initPositionY - finalPositionY;
-
-            String vertical = "UP";
-            String horizontal = "LEFT";
-
-            if (diffX > 0) {
-                vertical = "DOWN";
-            }
-            if (diffY < 0) {
-                horizontal = "RIGHT";
-            }
-
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                direction = horizontal + "-" + vertical;
-            } else {
-                direction = vertical + "-" + horizontal;
-            }
-        }
-        return direction;
-    }
-
 }
 
 
