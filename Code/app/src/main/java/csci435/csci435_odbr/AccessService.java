@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -20,6 +21,24 @@ import java.io.IOException;
  * resource: http://developer.android.com/guide/topics/ui/accessibility/services.html
  */
 public class AccessService extends AccessibilityService {
+    Handler handler = new Handler();
+
+    public Runnable widget_timer = new Runnable() {
+        @Override
+        public void run() {
+
+            //check to see if we have reached the condition.
+            if(System.currentTimeMillis() - Globals.time_last_event > 8000){
+                //we dont want to loop anymore
+                RecordFloatingWidget.restoreAfterScreenshot();
+            }
+            else{
+                //check again 1 second later
+                handler.postDelayed(widget_timer, 1000);
+            }
+
+        }
+    };
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startid) {
@@ -35,32 +54,40 @@ public class AccessService extends AccessibilityService {
         //Log.v("AccessService", "Event: " + event.getWindowId());
         if(Globals.recording) {
 
+            BugReport.getInstance().addUserEvent(event);
+
             if(event.getPackageName().equals(Globals.packageName)){
 
                 //We want to add events in an unbiased manner, but we only want to increment the screenshots
                 //and fire them if they are fired on the app we are recording.
-                BugReport.getInstance().addUserEvent(event);
 
-                if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+                Globals.time_last_event = System.currentTimeMillis();
 
-                    //hide for screenshots intent
-                    if (!(RecordFloatingWidget.widget_hidden)) {
-                        Intent intent = new Intent(this, TimerIntentService.class);
-                        startService(intent);
+                //hides until we want to reveal again
+                if(!(RecordFloatingWidget.widget_hidden)){
+                    RecordFloatingWidget.hideForScreenshot();
+                    handler.post(widget_timer);
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
-                    Globals.time_last_event = System.currentTimeMillis();
-                    Log.v("Screenshot", "screenshot fired");
-                    Globals.screenshot_index++;
-
-                    Context context = getApplicationContext();
-                    SnapshotIntentService.writeCheck();
-                    SnapshotIntentService.writeScreenshot(context);
-
                 }
+
+
+
+                Log.v("Screenshot", "screenshot fired");
+                Globals.screenshot_index++;
+
+                Context context = getApplicationContext();
+                SnapshotIntentService.writeCheck();
+                SnapshotIntentService.writeScreenshot(context);
             }
         }
     }
+
 
     @Override
     public void onInterrupt() {

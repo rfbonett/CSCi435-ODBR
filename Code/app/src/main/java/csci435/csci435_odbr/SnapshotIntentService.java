@@ -68,6 +68,7 @@ public class SnapshotIntentService extends IntentService {
         try {
             OutputStream os = su_screenshots.getOutputStream();
             String filename = "screenshot" + Globals.screenshot_index + ".png";
+
             os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename + "\n").getBytes("ASCII"));
             os.flush();
 
@@ -83,7 +84,6 @@ public class SnapshotIntentService extends IntentService {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             Log.v("Screenshot", filename);
-
             su_screenshots = Runtime.getRuntime().exec("su", null, null);
 
         } catch (Exception e) {

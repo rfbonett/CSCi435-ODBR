@@ -41,7 +41,6 @@
 
         <service android:name="csci435.csci435_odbr.RecordFloatingWidget"/>
         <service android:name="csci435.csci435_odbr.SnapshotIntentService"/>
-        <service android:name="csci435.csci435_odbr.TimerIntentService"/>
         <service android:name=".AccessService"
             android:label="@string/access_service_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
