@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
+        <uses-library android:name="android.test.runner"/>
         <activity
             android:name=".SplashScreen"
             android:label="@string/title_activity_splash_screen"
@@ -40,7 +41,6 @@
             android:label="@string/title_activity_submit_report" />
 
         <service android:name="csci435.csci435_odbr.RecordFloatingWidget"/>
-        <service android:name="csci435.csci435_odbr.getEventIntentService"/>
         <service android:name="csci435.csci435_odbr.SnapshotIntentService"/>
         <service android:name="csci435.csci435_odbr.TimerIntentService"/>
         <service android:name=".AccessService"

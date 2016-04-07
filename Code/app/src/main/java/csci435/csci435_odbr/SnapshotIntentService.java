@@ -1,6 +1,7 @@
 package csci435.csci435_odbr;
 
 import android.app.IntentService;
+import android.app.UiAutomation;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -173,4 +174,5 @@ public class SnapshotIntentService extends IntentService {
 
 
     }
+
 }

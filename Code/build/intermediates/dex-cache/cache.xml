@@ -1,3 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="/Users/Rich/Library/Application Support/android_development/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/Rich/GitHub/CSCi435-ODBR/CSCi435-ODBR/Code/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0_708cda479ece42a929696f77cf83425ce12a67a9.jar" />
+    </item>
+    <item
+        jar="/Users/Rich/GitHub/CSCi435-ODBR/CSCi435-ODBR/Code/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28">
+        <dex dex="/Users/Rich/GitHub/CSCi435-ODBR/CSCi435-ODBR/Code/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-19.1.0_f2bf7e44dad0bd8689203bafd17c4f6fc6d6221d.jar" />
+    </item>
+
+</items>

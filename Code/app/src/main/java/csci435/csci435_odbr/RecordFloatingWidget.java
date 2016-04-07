@@ -24,7 +24,6 @@ import android.widget.CompoundButton;
  */
 public class RecordFloatingWidget extends Service {
     public static boolean widget_hidden = false;
-    LinearLayout oView;
     static WindowManager wm;
     static LinearLayout ll;
     boolean visibility;
@@ -32,9 +31,6 @@ public class RecordFloatingWidget extends Service {
     static ToggleButton options;
     static Button submit;
     static ToggleButton pause;
-
-    static Button fill;
-
 
     final int animationTime = 100;
     float animationDist;
@@ -47,15 +43,8 @@ public class RecordFloatingWidget extends Service {
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSPARENT);
 
-    final static WindowManager.LayoutParams fill_params = new WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT);
 
-
-    private DataCollectionTask sensorDataTask;
+    private SensorDataLogger sensorDataLogger;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -135,8 +124,7 @@ public class RecordFloatingWidget extends Service {
         });
 
         // Start Sensor Data Collection AsyncTask and set up pause/resume button
-        sensorDataTask = new DataCollectionTask();
-        sensorDataTask.execute();
+        sensorDataLogger = new SensorDataLogger();
         Log.v("Screenshot", Globals.recording + "");
 
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -150,7 +138,7 @@ public class RecordFloatingWidget extends Service {
                     startScreenshots();
                     Globals.recording = true;
                 }
-                sensorDataTask.togglePaused(isChecked);
+                sensorDataLogger.togglePaused(isChecked);
                 Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });

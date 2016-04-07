@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import android.graphics.BitmapFactory;
@@ -26,25 +28,20 @@ import android.hardware.Sensor;
 /**
  * Created by Rich on 2/11/16.
  */
-public class DataCollectionTask extends AsyncTask<String, Void, Void> implements SensorEventListener {
-    Process sh;
-    OutputStream os;
+public class SensorDataLogger implements SensorEventListener {
 
-    @Override
-    protected Void doInBackground(String... params) {
-
-        return null;
-    }
-
+    HashMap<Sensor, float[]> lastLoggedData = new HashMap<Sensor, float[]>();
     /**
      * Adds sensor data to the BugReport
      * @param event
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        BugReport.getInstance().addSensorData(event.sensor, event);
+        if (!Arrays.equals(lastLoggedData.get(event.sensor), event.values)) {
+            BugReport.getInstance().addSensorData(event.sensor, event);
+            lastLoggedData.put(event.sensor, event.values);
+        }
     }
-
 
     /**
      * If paused, resumes recording by registering listener for all sensors.
@@ -63,7 +60,5 @@ public class DataCollectionTask extends AsyncTask<String, Void, Void> implements
 
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {/* Nothing to do */}
 }

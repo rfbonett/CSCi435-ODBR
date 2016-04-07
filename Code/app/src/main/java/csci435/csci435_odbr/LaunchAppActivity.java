@@ -48,32 +48,17 @@ import android.hardware.Sensor;
  */
 public class LaunchAppActivity extends Activity {
 
+    private ArrayList<RowData> installedApps;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_launch_app);
 
         BugReport.getInstance().clearReport();
-        ArrayList<RowData> installedApps = new ArrayList<RowData>();
-        PackageManager pm = getPackageManager();
 
         //Create a List of all installed applications
-        List<ApplicationInfo> allApps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-        for (ApplicationInfo app : allApps) {
-            try {
-                if (pm.getLaunchIntentForPackage(app.packageName) != null) {
-                    String appName = (String) app.loadLabel(pm);
-                    Drawable icon = pm.getApplicationIcon(app.packageName);
-                    installedApps.add(new RowData(icon, appName));
-                }
-            } catch (PackageManager.NameNotFoundException e) {}
-        }
-        //Sort the list of installed applications before displaying
-        Collections.sort(installedApps, new Comparator<RowData>() {
-            public int compare(RowData app1, RowData app2) {
-                return app1.getTitle().compareTo(app2.getTitle());
-            }
-        });
+        getInstalledApplications();
 
         //Add the list of installed applications to the ListView
         ListView lv = (ListView) findViewById(R.id.installedAppsListView);
@@ -123,7 +108,29 @@ public class LaunchAppActivity extends Activity {
             }
         });
 
-        //verifyAccessibilityServiceEnabled();
+    }
+
+    private void getInstalledApplications() {
+        installedApps = new ArrayList<RowData>();
+        PackageManager pm = getPackageManager();
+        for (ApplicationInfo app : pm.getInstalledApplications(PackageManager.GET_META_DATA)) {
+            try {
+                if (pm.getLaunchIntentForPackage(app.packageName) != null) {
+                    String appName = (String) app.loadLabel(pm);
+                    Drawable icon = pm.getApplicationIcon(app.packageName);
+                    if (!(this.getPackageName().equals(app.packageName))) {
+                        installedApps.add(new RowData(icon, appName));
+                    }
+                }
+            } catch (PackageManager.NameNotFoundException e) {}
+        }
+
+        //Sort the list of installed applications before displaying
+        Collections.sort(installedApps, new Comparator<RowData>() {
+            public int compare(RowData app1, RowData app2) {
+                return app1.getTitle().compareTo(app2.getTitle());
+            }
+        });
     }
 
     /**
@@ -187,29 +194,6 @@ public class LaunchAppActivity extends Activity {
         Globals.sensors = new ArrayList<Sensor>(sMgr.getSensorList(Sensor.TYPE_ALL));
         Globals.sMgr = sMgr;
     }
-
-
-    /*
-    private void verifyAccessibilityServiceEnabled() {
-        AccessibilityManager am = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
-        for (AccessibilityServiceInfo service : am.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)) {
-            if (AccessService.id.equals(service.getId())) {
-                return;
-            }
-        }
-
-        AlertDialog.Builder prompt = new AlertDialog.Builder(this);
-        prompt.setTitle("Service Not Enabled");
-        prompt.setMessage("You must enable 'Access Service' to use this application");
-        prompt.setPositiveButton("Take Me There", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                intent.addFlags(intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
-            }});
-        prompt.show();
-
-    } */
 }
 
 /**
