@@ -49,6 +49,7 @@ public class SnapshotIntentService extends IntentService {
                 br = new BufferedReader(new InputStreamReader(is));
                 Globals.time_last_event = System.currentTimeMillis();
                 Globals.screenshot_index = 0;
+                startGetEvent();
                 writeCheck();
                 writeScreenshot();
             } catch (Exception e) {
@@ -95,9 +96,29 @@ public class SnapshotIntentService extends IntentService {
 
     }
 
+    public static void startGetEvent(){
+        try {
+            //Start getevent in background, note the ampersand
+            Log.v("Screenshot", "tried to start");
+            os.write(("/system/bin/getevent -t > sdcard/events.txt & \n").getBytes("ASCII"));
+
+        } catch (Exception e) {}
+
+    }
+
+    public static void stopGetEvent(){
+
+        //Kill the getevent process
+        try {
+            Log.v("Screenshot", "tried to kill");
+            os.write(("kill $(pidof getevent)\n").getBytes("ASCII"));
+        } catch (Exception e) {}
+    }
+
 
     public static void finishWriting() {
         try {
+            stopGetEvent();
             os.close();
         } catch (IOException e) {
             e.printStackTrace();

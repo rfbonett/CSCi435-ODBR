@@ -37,10 +37,12 @@ public class getEventIntentService extends IntentService {
             BufferedReader br = new BufferedReader(new FileReader(eventsFile));
             int numEvents = 0;
 
+            /*
             while(Globals.recording){
 
             }
 
+            /*
             while(br.ready()){
                 s = br.readLine();
                 if(s.contains("DOWN")){
@@ -77,6 +79,7 @@ public class getEventIntentService extends IntentService {
             br.close();
             sh.destroy();
             Log.v("DataCollection", "Process Killed");
+            */
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -174,8 +174,8 @@ public class RecordFloatingWidget extends Service {
         intent.putExtra("index", index);
         startService(intent);
 
-        Intent intent2 = new Intent(this, getEventIntentService.class);
-        startService(intent2);
+        //Intent intent2 = new Intent(this, getEventIntentService.class);
+        //startService(intent2);
     }
 
 
