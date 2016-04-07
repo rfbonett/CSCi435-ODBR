@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -27,6 +28,8 @@ public class RecordFloatingWidget extends Service {
     static WindowManager wm;
     static LinearLayout ll;
     boolean visibility;
+
+    Handler handler = new Handler();
 
     static ToggleButton options;
     static Button submit;
@@ -133,8 +136,11 @@ public class RecordFloatingWidget extends Service {
                     raw[0] = 1;
                     //fires the first time the button is clicked
 
-                    Intent intent = new Intent(getBaseContext(), TimerIntentService.class);
-                    startService(intent);
+                    RecordFloatingWidget.hideForScreenshot();
+                    Globals.time_last_event = System.currentTimeMillis();
+                    handler.post(widget_timer);
+
+
                     startScreenshots();
                     Globals.recording = true;
                 }
@@ -142,13 +148,6 @@ public class RecordFloatingWidget extends Service {
                 Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });
-
-
-
-        //Broadcast Receiver for the Snapshot su process
-        IntentFilter statusIntentFilter = new IntentFilter("csci435.csci435_odbr.TimerIntentService.send");
-        SnapshotReciever snapshotReciever = new SnapshotReciever();
-        LocalBroadcastManager.getInstance(this).registerReceiver(snapshotReciever, statusIntentFilter);
 
     }
 
@@ -170,10 +169,10 @@ public class RecordFloatingWidget extends Service {
 
     public static void restoreAfterScreenshot() {
         //wm.updateViewLayout(ll, parameters);
-        widget_hidden = false;
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
+        widget_hidden = false;
     }
 
 
@@ -251,4 +250,21 @@ public class RecordFloatingWidget extends Service {
         ll.setVisibility(View.GONE);
         onDestroy();
     }
+
+    public Runnable widget_timer = new Runnable() {
+        @Override
+        public void run() {
+
+            //check to see if we have reached the condition.
+            if(System.currentTimeMillis() - Globals.time_last_event > 8000){
+                //we dont want to loop anymore
+                RecordFloatingWidget.restoreAfterScreenshot();
+            }
+            else{
+                //check again 1 second later
+                handler.postDelayed(widget_timer, 1000);
+            }
+
+        }
+    };
 }
