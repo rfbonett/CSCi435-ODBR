@@ -1,6 +1,7 @@
 package csci435.csci435_odbr;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,7 +53,7 @@ public class SnapshotIntentService extends IntentService {
                 Globals.screenshot_index = 0;
                 startGetEvent();
                 writeCheck();
-                writeScreenshot();
+                writeScreenshot(getApplicationContext());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -64,12 +66,22 @@ public class SnapshotIntentService extends IntentService {
 
     }
 
-    public static void writeScreenshot(){
+    public static void writeScreenshot(Context context){
 
         try {
             String filename = "screenshot" + Globals.screenshot_index + ".png";
             os.write(("/system/bin/screencap -p " + "/sdcard/ScreenShots/" + filename + "\n").getBytes("ASCII"));
             os.flush();
+
+
+            //need something that will wait until the screenshot has finished
+
+            //make toast?
+            CharSequence text = "Hello toast!";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
             Log.v("Screenshot", filename);
         } catch (IOException e) {
             e.printStackTrace();

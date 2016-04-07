@@ -4,10 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -15,15 +12,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 import android.animation.ObjectAnimator;
 import android.widget.Button;
 import android.widget.CompoundButton;
-
-import java.io.File;
 
 /**
  * Created by Rich on 2/16/16.
@@ -148,17 +142,20 @@ public class RecordFloatingWidget extends Service {
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (raw[0] == 0) {
-                    fireScreenshot();
                     raw[0] = 1;
-
                     //fires the first time the button is clicked
+
                     Intent intent = new Intent(getBaseContext(), TimerIntentService.class);
                     startService(intent);
+                    startScreenshots();
+                    Globals.recording = true;
                 }
                 sensorDataTask.togglePaused(isChecked);
                 Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });
+
+
 
         //Broadcast Receiver for the Snapshot su process
         IntentFilter statusIntentFilter = new IntentFilter("csci435.csci435_odbr.TimerIntentService.send");
@@ -167,15 +164,11 @@ public class RecordFloatingWidget extends Service {
 
     }
 
-    private void fireScreenshot() {
-        //hideForScreenshot();
+    private void startScreenshots() {
         Intent intent = new Intent(this, SnapshotIntentService.class);
         int index = BugReport.getInstance().numEvents();
         intent.putExtra("index", index);
         startService(intent);
-
-        //Intent intent2 = new Intent(this, getEventIntentService.class);
-        //startService(intent2);
     }
 
 

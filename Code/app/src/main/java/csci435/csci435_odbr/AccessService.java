@@ -1,6 +1,7 @@
 package csci435.csci435_odbr;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -32,24 +33,31 @@ public class AccessService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
         //Log.v("AccessService", "Event: " + event.getWindowId());
-        if(event.getPackageName().equals(Globals.packageName) && Globals.trackUserEvents) {
+        if(Globals.recording) {
 
-            if(event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            if(event.getPackageName().equals(Globals.packageName)){
 
-                //hide for screenshots intent
-                if(!(RecordFloatingWidget.widget_hidden)){
-                    Intent intent = new Intent(this, TimerIntentService.class);
-                    startService(intent);
-                }
-
+                //We want to add events in an unbiased manner, but we only want to increment the screenshots
+                //and fire them if they are fired on the app we are recording.
                 BugReport.getInstance().addUserEvent(event);
-                Globals.time_last_event = System.currentTimeMillis();
-                Log.v("Screenshot", "screenshot fired");
-                Globals.screenshot_index++;
 
-                SnapshotIntentService.writeCheck();
-                SnapshotIntentService.writeScreenshot();
+                if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
 
+                    //hide for screenshots intent
+                    if (!(RecordFloatingWidget.widget_hidden)) {
+                        Intent intent = new Intent(this, TimerIntentService.class);
+                        startService(intent);
+                    }
+
+                    Globals.time_last_event = System.currentTimeMillis();
+                    Log.v("Screenshot", "screenshot fired");
+                    Globals.screenshot_index++;
+
+                    Context context = getApplicationContext();
+                    SnapshotIntentService.writeCheck();
+                    SnapshotIntentService.writeScreenshot(context);
+
+                }
             }
         }
     }

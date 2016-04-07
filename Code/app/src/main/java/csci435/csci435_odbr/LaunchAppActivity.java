@@ -169,7 +169,7 @@ public class LaunchAppActivity extends Activity {
 
         //launch data collection task and floating window
         getSensors();
-        Globals.recording = true;
+        Globals.recording = false;
         Globals.screenshot = 1;
         Globals.trackUserEvents = false;
         startService(new Intent(this, RecordFloatingWidget.class));
