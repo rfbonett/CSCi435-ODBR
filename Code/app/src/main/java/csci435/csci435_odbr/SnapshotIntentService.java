@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -81,9 +82,19 @@ public class SnapshotIntentService extends IntentService {
             CharSequence text = "Data Recorded!";
             int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(context, text, duration);
+            final Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             Log.v("Screenshot", filename);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 500);
+
+
             su_screenshots = Runtime.getRuntime().exec("su", null, null);
 
         } catch (Exception e) {
