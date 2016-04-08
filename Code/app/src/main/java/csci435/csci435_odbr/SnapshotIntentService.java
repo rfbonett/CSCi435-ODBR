@@ -48,6 +48,12 @@ public class SnapshotIntentService extends IntentService {
             try {
                 su_getEvent = Runtime.getRuntime().exec("su", null, null);
                 su_screenshots = Runtime.getRuntime().exec("su", null, null);
+
+                File fp = new File(sdCard+"/events.txt");
+                if(fp.exists()){
+                    fp.delete();
+                }
+
                 Globals.time_last_event = System.currentTimeMillis();
                 Globals.screenshot_index = 0;
                 startGetEvent();
@@ -135,7 +141,7 @@ public class SnapshotIntentService extends IntentService {
 
             //Start getevent in background, note the ampersand
             Log.v("Screenshot", "tried to start");
-            os.write(("/system/bin/getevent -t > sdcard/events.txt & \n").getBytes("ASCII"));
+            os.write(("/system/bin/getevent -lt > sdcard/events.txt & \n").getBytes("ASCII"));
             os.flush();
         } catch (Exception e) {}
 

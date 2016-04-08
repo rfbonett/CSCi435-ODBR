@@ -54,6 +54,11 @@ public class ReviewActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        partition_events pe = new partition_events();
+        pe.parse();
+
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_review_report);
         //Sets the title and image
@@ -80,6 +85,7 @@ public class ReviewActivity extends FragmentActivity {
         Globals.availableHeightForImage = Globals.height - verticalSpacer;
 
 
+        //partitionevents?
 
 
     }
@@ -180,9 +186,9 @@ public class ReviewActivity extends FragmentActivity {
 
             //HERE WE NEED GET_EVENT DATA
 
-            //int[] bounds = BugReport.getInstance().getGetEvent(pos);
-            //int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), bounds[0], bounds[1]);
-            //c.drawCircle(point[0],point[1], 50, color);
+            int[] bounds = BugReport.getInstance().getGetEvent(pos);
+            int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), bounds[0], bounds[1]);
+            c.drawCircle(point[0],point[1], 50, color);
             //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
             screenshot.setImageBitmap(bScaled);
             return rootView;
