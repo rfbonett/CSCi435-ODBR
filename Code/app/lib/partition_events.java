@@ -148,25 +148,3 @@ public class partition_events {
     }
   }
 } 
-/*pattern = re.compile(
-        r'\[\s*(\d*\.\d*)\] /dev/input/event(\d): ' \
-        r'([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})')
-
-for line in input_file:
-    if line[0] != '[':
-        continue
-    time, device, type, code, value = re.match(pattern, line).groups()
-    time = float(time)
-    device = int(device)
-    type = int(type, 16)
-    code = int(code, 16)
-    value = int(value, 16)
-    event = device, type, code, value
-    events.append(event)
-    
-    # Button down.
-    if type == EV_KEY:
-
-        # If the touch screen has been toggled, let sync events
-        # handle the logic.
-        */
