@@ -20,8 +20,9 @@ public class partition_events {
     int CLICK_RING = 20;
     int x = 0;
     int y = 0;
-    boolean was_finger_down = false;
-    boolean finger_down = false;
+    //the "finger_down" variables are booleans, using ints 0 for false and 1 for true
+    int was_finger_down = 0;
+    int finger_down = 0;
     ArrayList<String> events = new ArrayList<String>();
     ArrayList<String> coords = new ArrayList<String>();
     File input_file = new File(args[1]);
@@ -38,14 +39,23 @@ public class partition_events {
         //insert regex stuff here
         Matcher matcher = Pattern.compile(regex_pattern).matcher(line);  
         float time = Float.parseFloat(matcher.group(0));
-        int device_base10 = Integer.parseInt(matcher.group(1));
-        String device = Integer.toString(device_base10, 16);
-        int type_base10 = Integer.parseInt(matcher.group(2));
-        String type = Integer.toString(type_base10, 16);
-        int code_base10 = Integer.parseInt(matcher.group(3));
-        String code = Integer.toString(code_base10, 16);
-        int value_base10 = Integer.parseInt(matcher.group(4));
-        String value = Integer.toString(value_base10, 16);
+        int device = Integer.parseInt(matcher.group(1));
+        //String device = Integer.toString(device_base10, 16);
+        int type = Integer.parseInt(matcher.group(2));
+        //String type = Integer.toString(type_base10, 16);
+        int code = Integer.parseInt(matcher.group(3));
+        //String code = Integer.toString(code_base10, 16);
+        int value = Integer.parseInt(matcher.group(4));
+        //String value = Integer.toString(value_base10, 16);
+        //Java doesnt have tuples so...
+        Object[] event_tuple = new Object[5]; 
+        ArrayList<Object[]> events_list = new ArrayList<Object[]>();
+        event_tuple[0] = time; 
+        event_tuple[1] = device; 
+        event_tuple[2] = type; 
+        event_tuple[3] = code; 
+        event_tuple[4] = value;
+        events_list.add(event_tuple); 
         //button down
         if (type == EV_KEY){
           //if the touch screen has been toggled, let sync events handle the logic.
