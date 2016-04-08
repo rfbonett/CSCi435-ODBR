@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.Point;
 
 public class partition_events {
   public static void main(String[] args) {
@@ -24,11 +25,13 @@ public class partition_events {
     int was_finger_down = 0;
     int finger_down = 0;
     ArrayList<String> events = new ArrayList<String>();
-    ArrayList<String> coords = new ArrayList<String>();
+    Point coords = new Point();
     File input_file = new File(args[1]);
 
     //other typecastings 
     float start_time; 
+    double duration;
+
     //regex pattern
     String regex_pattern = "/[/s*(/d*/./d*)/] /dev/input/event(/d):  ([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})";
     //start the for loop
@@ -67,7 +70,7 @@ public class partition_events {
           }
           //for any other button, print the action after the button has been released. 
           else if (value == 0){
-            double duration = time - start_time;
+            duration = time - start_time;
             System.out.println(Double.toString(duration) + ',' + Double.toString(start_time) + ',' + Double.toString(time));
           }
           else if (value == 1){
@@ -86,11 +89,62 @@ public class partition_events {
             //finger_down = value != 0xffffffff;
           }
         } 
-
+        //Sync
+        else if (type == EV_ABS && code == SYN_REPORT){
+          //if the finger has changed
+          if (finger_down != was_finger_down){
+            //restart coordinate list
+            if (finger_down == 1){
+              start_time = time;
+              coords.move(x, y);
+            }
+            //If the finger is removed from the touchscreen, end the action and print the events.
+            else{
+              duration = time - start_time;
+              double initial_location = coords.getX();
+              //what is this trying to do
+              //int last_location = coords[len(coords) - 1];
+              String event_label = "";
+              int event_type = 0;
+              //distance formula here
+              //distance = yet to be implemented
+              int distance = 1; 
+              if (duration >= LONG_CLICK_DURATION){
+                event_label = "LONG_CLICK";
+                event_type = 1;
+                if (distance > CLICK_RING){
+                  event_label = "SWIPE";
+                  event_type = 1;
+                  if (distance > CLICK_RING){
+                    event_label = "SWIPE";
+                    event_type = 2;
+                    //print coords here
+                  }
+                }
+              }
+              else{
+                event_label = "CLICK";
+                //print coords
+                if (distance > CLICK_RING){
+                  event_label = "SWIPE";
+                  event_type = 2;
+                }
+              }
+              System.out.println(Integer.toString(event_type) + '#' + event_label + '#' + Integer.toString(distance) + '#' + Double.toString(duration) + '#' + Double.toString(initial_location) + '#' );
+              events.clear();
+              coords.move(0,0);
+            }
+            was_finger_down = finger_down;
+          }
+          //Append the current coordinates to the list
+          else{
+            //move coordinates
+          } 
+        }
       } 
     }
     catch (Exception e){
-        System.err.println(e.getMessage()); // handle exception
+        System.err.println("unrecognized event: " + e.getMessage()); // handle exception
     }
   }
 } 
