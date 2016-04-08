@@ -152,7 +152,8 @@ public class ReviewActivity extends FragmentActivity {
             //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
-            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  Interacted with " + BugReport.getInstance().getEventAtIndex(pos).getViewDescription());
+            int [] click = BugReport.getInstance().getGetEvent(pos);
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User " + BugReport.getInstance().getEventAtIndex(pos).getEventType() + " at x: " + click[0] + " y: " + click[1]);
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             //Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);

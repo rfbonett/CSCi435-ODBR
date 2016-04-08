@@ -229,7 +229,14 @@ class Events {
         text = e.getSource().getText();
         screenshotIndex = Globals.screenshot_index;
     }
-
+    public String getEventType(){
+        if(eventType == 2){
+            return "view long clicked";
+        }
+        else{
+            return "view clicked";
+        }
+    }
     public String getFilename(){
         return "screenshot" + screenshotIndex + ".png";
     }
