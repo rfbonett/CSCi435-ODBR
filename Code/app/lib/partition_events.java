@@ -26,6 +26,9 @@ public class partition_events {
     ArrayList<String> events = new ArrayList<String>();
     ArrayList<String> coords = new ArrayList<String>();
     File input_file = new File(args[1]);
+
+    //other typecastings 
+    float start_time; 
     //regex pattern
     String regex_pattern = "/[/s*(/d*/./d*)/] /dev/input/event(/d):  ([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})";
     //start the for loop
@@ -62,7 +65,17 @@ public class partition_events {
           if (code == BTN_TOUCH){
             finger_down = value;
           }
-        } 
+          //for any other button, print the action after the button has been released. 
+          else if (value == 0){
+            double duration = time - start_time;
+            System.out.println(Double.toString(duration) + ',' + Double.toString(start_time) + ',' + Double.toString(time));
+          }
+          else if (value == 1){
+            start_time = time;
+          }
+        }
+        //else if (type == EV_ABS){
+        //} 
 
       } 
     }
