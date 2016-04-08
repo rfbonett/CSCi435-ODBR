@@ -37,6 +37,15 @@ public class partition_events {
         }
         //insert regex stuff here
         Matcher matcher = Pattern.compile(regex_pattern).matcher(line);  
+        float time = Float.parseFloat(matcher.group(0));
+        int device_base10 = Integer.parseInt(matcher.group(1));
+        String device = Integer.toString(device_base10, 16);
+        int type_base10 = Integer.parseInt(matcher.group(2));
+        String type = Integer.toString(type_base10, 16);
+        int code_base10 = Integer.parseInt(matcher.group(3));
+        String code = Integer.toString(code_base10, 16);
+        int value_base10 = Integer.parseInt(matcher.group(4));
+        String value = Integer.toString(value_base10, 16);
         //button down
         if (type == EV_KEY){
           //if the touch screen has been toggled, let sync events handle the logic.
