@@ -29,9 +29,17 @@ public class partition_events {
     File input_file = new File(args[1]);
 
     //other typecastings 
+    float time;
+    int device;
+    int type;
+    int code;
+    int value;
     float start_time; 
     double duration;
-
+    double initial_location;
+    int event_type;
+    int distance;
+    
     //regex pattern
     String regex_pattern = "/[/s*(/d*/./d*)/] /dev/input/event(/d):  ([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})";
     //start the for loop
@@ -44,14 +52,14 @@ public class partition_events {
         }
         //insert regex stuff here
         Matcher matcher = Pattern.compile(regex_pattern).matcher(line);  
-        float time = Float.parseFloat(matcher.group(0));
-        int device = Integer.parseInt(matcher.group(1));
+        time = Float.parseFloat(matcher.group(0));
+        device = Integer.parseInt(matcher.group(1));
         //String device = Integer.toString(device_base10, 16);
-        int type = Integer.parseInt(matcher.group(2));
+        type = Integer.parseInt(matcher.group(2));
         //String type = Integer.toString(type_base10, 16);
-        int code = Integer.parseInt(matcher.group(3));
+        code = Integer.parseInt(matcher.group(3));
         //String code = Integer.toString(code_base10, 16);
-        int value = Integer.parseInt(matcher.group(4));
+        value = Integer.parseInt(matcher.group(4));
         //String value = Integer.toString(value_base10, 16);
         //Java doesnt have tuples so...
         Object[] event_tuple = new Object[5]; 
@@ -101,14 +109,14 @@ public class partition_events {
             //If the finger is removed from the touchscreen, end the action and print the events.
             else{
               duration = time - start_time;
-              double initial_location = coords.getX();
+              initial_location = coords.getX();
               //what is this trying to do
               //int last_location = coords[len(coords) - 1];
               String event_label = "";
-              int event_type = 0;
+              event_type = 0;
               //distance formula here
               //distance = yet to be implemented
-              int distance = 1; 
+              distance = 1; 
               if (duration >= LONG_CLICK_DURATION){
                 event_label = "LONG_CLICK";
                 event_type = 1;
