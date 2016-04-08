@@ -18,6 +18,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.hardware.Sensor;
+
+import org.w3c.dom.Element;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -107,7 +110,6 @@ public class LaunchAppActivity extends Activity {
                 return false;
             }
         });
-
     }
 
     private void getInstalledApplications() {
