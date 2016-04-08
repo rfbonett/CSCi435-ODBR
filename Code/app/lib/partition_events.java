@@ -1,5 +1,8 @@
-import java.io.File;
+import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class partition_events {
   public static void main(String[] args) {
     int EV_SYN = 0;
@@ -13,20 +16,52 @@ public class partition_events {
     int SYN_REPORT = 0;
     int BTN_TOUCH = 330;
 
-    float LONG_CLICK_DURATION = 0.5;
+    double LONG_CLICK_DURATION = 0.5;
     int CLICK_RING = 20;
     int x = 0;
     int y = 0;
-    boolean was_finger_down = False
-    boolean finger_down = False
-    ArrayList events = new ArrayList();
-    ArrayList coords = new ArrayList();
+    boolean was_finger_down = false;
+    boolean finger_down = false;
+    ArrayList<String> events = new ArrayList<String>();
+    ArrayList<String> coords = new ArrayList<String>();
     File input_file = new File(args[1]);
-    File sdcard = new File(sdCard.getAbsolutePath() + "/filename");;
-  }
+    //regex pattern
+    String regex_pattern = "/[/s*(/d*/./d*)/] /dev/input/event(/d):  ([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})";
+    //start the for loop
+    try (BufferedReader br = new BufferedReader(new FileReader(input_file))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        // process the line.
+        if (line.charAt(0) != '['){
+          continue;
+        }
+        //insert regex stuff here
+        Matcher matcher = Pattern.compile(regex_pattern).matcher(line);  
+        float time = Float.parseFloat(matcher.group(0));
+        int device_base10 = Integer.parseInt(matcher.group(1));
+        String device = Integer.toString(device_base10, 16);
+        int type_base10 = Integer.parseInt(matcher.group(2));
+        String type = Integer.toString(type_base10, 16);
+        int code_base10 = Integer.parseInt(matcher.group(3));
+        String code = Integer.toString(code_base10, 16);
+        int value_base10 = Integer.parseInt(matcher.group(4));
+        String value = Integer.toString(value_base10, 16);
+        //button down
+        if (type == EV_KEY){
+          //if the touch screen has been toggled, let sync events handle the logic.
+          if (code == BTN_TOUCH){
+            finger_down = value;
+          }
+        } 
 
-}
-pattern = re.compile(
+      } 
+    }
+    catch (Exception e){
+        System.err.println(e.getMessage()); // handle exception
+    }
+  }
+} 
+/*pattern = re.compile(
         r'\[\s*(\d*\.\d*)\] /dev/input/event(\d): ' \
         r'([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})')
 
@@ -47,4 +82,4 @@ for line in input_file:
 
         # If the touch screen has been toggled, let sync events
         # handle the logic.
-        if code == BTN_TOUCH:
+        */
