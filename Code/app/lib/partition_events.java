@@ -74,8 +74,18 @@ public class partition_events {
             start_time = time;
           }
         }
-        //else if (type == EV_ABS){
-        //} 
+        else if (type == EV_ABS){
+          if (code == ABS_X || code == ABS_MT_POSITION_X){
+            x = value;
+          }
+          else if (code == ABS_Y || code == ABS_MT_POSITION_Y){
+            y = value;
+          }
+          else if (code == ABS_MT_TRACKING_ID){
+            //what is this doing
+            //finger_down = value != 0xffffffff;
+          }
+        } 
 
       } 
     }
