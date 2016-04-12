@@ -141,7 +141,7 @@ public class SnapshotIntentService extends IntentService {
 
             //Start getevent in background, note the ampersand
             Log.v("Screenshot", "tried to start");
-            os.write(("/system/bin/getevent -lt > sdcard/events.txt & \n").getBytes("ASCII"));
+            os.write(("/system/bin/getevent -t > sdcard/events.txt & \n").getBytes("ASCII"));
             os.flush();
         } catch (Exception e) {}
 

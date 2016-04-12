@@ -57,6 +57,7 @@ public class BugReport {
         sensorGraphs.clear();
         sensorList.clear();
         eventList.clear();
+        getEventList.clear();
         title = "";
         reporterName = "";
         desiredOutcome = "";

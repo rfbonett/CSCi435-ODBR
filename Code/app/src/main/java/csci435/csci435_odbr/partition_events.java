@@ -1,20 +1,21 @@
 package csci435.csci435_odbr;
 
 import android.util.Log;
+import android.widget.Button;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class partition_events {
 
-    public partition_events(){
+    public partition_events() {
         super();
     }
 
-
-    public void parse() {
+    public void my_parse(){
         int EV_SYN = 0;
         int EV_KEY = 1;
         int EV_ABS = 3;
@@ -22,157 +23,166 @@ public class partition_events {
         int ABS_Y = 1;
         int ABS_MT_POSITION_X = 53;
         int ABS_MT_POSITION_Y = 54;
-        int ABS_MT_TRACKING_ID = 57;
+        int ABS_MT_TRACKING_ID = 58;
         int SYN_REPORT = 0;
         int BTN_TOUCH = 330;
-        Log.v("getEvent", "This occurs");
+        float time;
+        float start_time = 0;
+        float duration;
         double LONG_CLICK_DURATION = 0.5;
         int CLICK_RING = 20;
+        File input_file = new File("sdcard/events.txt");
         int x = 0;
         int y = 0;
         int was_finger_down = 0;
-        int finger_down = 0;
-        ArrayList<String> events = new ArrayList<String>();
-        ArrayList<int[]> coords = new ArrayList<int[]>();
-        File input_file = new File("sdcard/events.txt");
-        //regex pattern
-        String regex_pattern = "/[/s*(/d*/./d*)/] /dev/input/event(/d):  ([0-9a-f]{4}) ([0-9a-f]{4}) ([0-9a-f]{8})";
-        //start the for loop
+        boolean finger_down = false;
+        boolean up_occurred = false;
+        ArrayList<event> events = new ArrayList<event>();
+        ArrayList<double[]>coords = new ArrayList<double[]>();
+        double [] initial_location;
+        double [] last_location;
+        double distance;
+        int type;
+        int code;
+        int value;
+        int event_type = 0;
+        String event_label;
+        int i = 0;
+        String s = "";
         try {
             BufferedReader br = new BufferedReader(new FileReader(input_file));
-            String line;
-            int [] coord = {};
-            while ((line = br.readLine()) != null) {
-                // process the line.
-                if (line.charAt(0) != '[') {
+            while (br.ready()) {
+                i++;
+                Log.v("Numloops", i + "");
+                s = br.readLine();
+                if (s.charAt(0) != '[') {
                     continue;
                 }
-                //insert regex stuff here
+                String[] values = s.split(" ");
+                //partition the line right here, use the spaces as a delimiter
+                //values should now contain the time, device, type, code, and value
+                //values[0] = [time]
+                //values[1] = device
+                //values[2] = type
+                //values[3] = code
+                //values[4] = value
+                time = Float.parseFloat(values[0].substring(1, values[0].length() - 1));
+                type = Integer.parseInt(values[2], 16);
+                code = Integer.parseInt(values[3], 16);
+                value = Integer.parseInt(values[4], 16);
+                Log.v("Value", "time: " + time);
+                Log.v("Value", "type: " + type);
+                Log.v("Value", "code: " + code);
+                Log.v("Value", "value: " + value);
 
-                Log.v("getEvent", line.substring(line.length() - 20, line.length() - 12));
+                event e = new event(time, type, code, value);
+                events.add(e);
 
-                /*
-                //Matcher matcher = Pattern.compile(regex_pattern).matcher(line);
-                float time = Float.parseFloat(line.substring(1, 18));
-                //int device_base10 = Integer.parseInt(line.substring(line.length() - 37, line.length() - 19), 16);
-                //Log.v("getEvent", String.valueOf(device_base10));
-                int type_base10 = Integer.parseInt(line.substring(line.length()-18, line.length()-14), 16);
-                Log.v("getEvent", String.valueOf(type_base10));
-                int code_base10 = Integer.parseInt(line.substring(line.length() - 13, line.length() - 9), 16);
-                Log.v("getEvent", String.valueOf(code_base10));
-                int value_base10 = Integer.parseInt(line.substring(line.length() - 8, line.length()), 16);
-                Log.v("getEvent", String.valueOf(value_base10));
-                //int device_base10 = Integer.parseInt(matcher.group(1), 16);
-               // String device = Integer.toString(device_base10, 16);
-                //int type_base10 = Integer.parseInt(matcher.group(2), 16);
-                String type = Integer.toString(type_base10, 16);
-                //int code_base10 = Integer.parseInt(matcher.group(3), 16);
-                String code = Integer.toString(code_base10, 16);
-                //int value_base10 = Integer.parseInt(matcher.group(4), 16);
-                String value = Integer.toString(value_base10, 16);
-                //button down
-                */
-
-                if(line.contains("DOWN")){
-                    //we have a down event, read until we get up
-                    x = 0;
-                    y = 0;
-
-                    while(br.ready() && !line.contains("UP")){
-                        line = br.readLine();
-                    }
-
-                    if(br.ready()){
-                        line = br.readLine();
-                        if(br.ready()){
-                            //these are the x values
-                            line = br.readLine();
-                            x = Integer.parseInt(line.substring(line.length() - 20, line.length() -12 ), 16);
-                            if (br.ready()) {
-                                //these are the y values
-                                line = br.readLine();
-                                y = Integer.parseInt(line.substring(line.length() - 20, line.length() - 12), 16);
-                            }
-                        }
-                    }
-
-                    //send of x & y coordinates to bugReport
-                    BugReport.getInstance().addGetEvent(x, y);
-
-
-                }
-                /*
-                if (type_base10 == EV_KEY) {
-                    //if the touch screen has been toggled, let sync events handle the logic.
-                    if (code_base10 == BTN_TOUCH) {
-                        finger_down = value_base10;
-                    }
-                } else if (type_base10 == EV_ABS) {
-                    if (ABS_X == code_base10 || code_base10 == ABS_MT_POSITION_X) {
-                        x = value_base10;
-                    } else if (ABS_Y == code_base10 || code_base10 == ABS_MT_POSITION_Y) {
-                        y = value_base10;
-                    } else if (code_base10 == ABS_MT_TRACKING_ID) {
-                        if (value_base10 != 0xffffffff) {
-                            finger_down = value_base10;
-                        }
-
-                    }
-                }
-                else if(type_base10 == EV_SYN || code_base10 == SYN_REPORT) {
-                    // If the finger has changed:
-                    if (finger_down != was_finger_down) {
-                        float start_time = 0;
-                        if (finger_down == 0) {
+                if(type == EV_KEY){
+                    //some key has been made
+                    if(code == BTN_TOUCH){
+                        if(value == 1){
+                            //button down
+                            finger_down = true;
                             start_time = time;
-                            coords.clear();
-                            int[] coor = {x, y};
-                            coords.add(coor);
-                        } else {
-                            float duration = time - start_time;
-                            int[] initial_location = coords.get(0);
-                            int[] last_location = coords.get(coords.size() - 1);
-                            String event_label = "";
-                            int event_type = 0;
-                            double distance = Math.sqrt(
-                            (Math.pow(initial_location[0] - last_location[0], 2))+
-                            (Math.pow(initial_location[1] - last_location[0], 2)));
-
-
-                            if (duration >= LONG_CLICK_DURATION) {
-                                event_label = "LONG_CLICK";
-                                event_type = 1;
-                                if (distance > CLICK_RING) {
-                                    event_label = "SWIPE";
-                                    event_type = 2;
-                                    //#print coords
-                                } else {
-                                    event_label = "CLICK";
-                                    //#print coords
-                                    if (distance > CLICK_RING) {
-                                        event_label = "SWIPE";
-                                        event_type = 2;
-                                    }
-
-                                }
-                                Log.v("getEvent", "" + (event_type) + '#' + event_label + '#' + String.valueOf(distance) + '#' + String.valueOf(duration)+ '#' + String.valueOf(initial_location) + '#' + String.valueOf(last_location));
-                                events.clear();
-                                coords.clear();
-                                was_finger_down = finger_down;
-                            }
-                            //# Append the current coordinates to the list.
-                            else {
-                                int [] coord = {x, y};
-                                coords.add(coord);
-                            }
+                        }
+                        else if(value == 0){
+                            //button up
+                            up_occurred = true;
                         }
                     }
-                }*/
-            }
-        }
-        catch (Exception e){
-            //System.err.println(e.getMessage()); // handle exception
-        }
+                    else if(value == 0){
+                        //some key that wasn't button but value is up
+                    }
+                    else if(value == 1){
+                        //some key that wasn't button but value is down
 
+                    }
+                }
+                else if(type == EV_ABS){
+                    if (code == ABS_X || code == ABS_MT_POSITION_X) {
+                        x = value;
+                        if(up_occurred){
+                            finger_down = false;
+                        }
+                    } else if (code == ABS_Y || code == ABS_MT_POSITION_Y) {
+                        y = value;
+                    } else if (code == ABS_MT_TRACKING_ID) {
+                        if (value == 1) {
+                            finger_down = true;
+                        } else if (value == 0){
+                            finger_down = false;
+                        }
+                    }
+                }
+                else if(type == EV_SYN && code == SYN_REPORT){
+                    if(finger_down){
+                        double[] coord = {x, y};
+                        coords.add(coord);
+                    }
+                    else{
+                        if(up_occurred){
+                            double[] coord = {x, y};
+                            coords.add(coord);
+                            up_occurred = false;
+                        }
+                        duration = time - start_time;
+                        initial_location = coords.get(0);
+                        last_location = coords.get(coords.size() - 1);
+                        event_label = "";
+
+                        distance = Math.sqrt(Math.pow((initial_location[0] - last_location[0]), 2) + Math.pow(initial_location[1] - last_location[1], 2));
+
+                        if (duration >= LONG_CLICK_DURATION) {
+                            event_label = "LONG_CLICK";
+                            event_type = 1;
+                            if (distance > CLICK_RING) {
+                                event_label = "SWIPE";
+                                event_type = 2;
+                            }
+                        } else {
+                            event_label = "CLICK";
+                            if (distance > CLICK_RING) {
+                                event_label = "SWIPE";
+                                event_type = 2;
+                            }
+                        }
+                        BugReport.getInstance().addGetEvent((int)last_location[0], (int)last_location[1]);
+                        Log.v("getEvent", event_type + "#" + event_label + "#" + distance + "#" + duration + "#" + "x: " + initial_location[0] + " y: " + initial_location[1] + "#" + "x: " + last_location[0] + " y: " + last_location[1]);
+                        events.clear();
+                        coords.clear();
+                    }
+                }
+            }
+            } catch(Exception e){}
     }
-} 
+}
+
+class event{
+
+    float time;
+    int type;
+    int code;
+    int value;
+
+    public event(float ti, int t, int c, int v){
+        time = ti;
+        type = t;
+        code = c;
+        value = v;
+    }
+
+    public float get_time(){
+        return time;
+    }
+    public int get_type(){
+        return type;
+    }
+    public int get_code(){
+        return code;
+    }
+    public int get_value(){
+        return value;
+    }
+
+}

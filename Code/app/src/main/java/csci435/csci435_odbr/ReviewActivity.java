@@ -56,7 +56,7 @@ public class ReviewActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         partition_events pe = new partition_events();
-        pe.parse();
+        pe.my_parse();
 
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
