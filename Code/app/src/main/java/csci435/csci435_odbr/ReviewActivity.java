@@ -55,11 +55,6 @@ public class ReviewActivity extends FragmentActivity {
 
         super.onCreate(savedInstanceState);
 
-        partition_events pe = new partition_events();
-        pe.my_parse();
-        BugReport.getInstance().refineEventList();
-
-
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_review_report);
         //Sets the title and image

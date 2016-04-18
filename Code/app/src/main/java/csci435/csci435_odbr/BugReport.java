@@ -41,7 +41,6 @@ public class BugReport {
     private String reporterName = "";
     private String desiredOutcome = "";
     private String actualOutcome = "";
-    private int eventCount = 0;
     private int getEventIndex = 0;
 
     private static BugReport ourInstance = new BugReport();
@@ -62,15 +61,17 @@ public class BugReport {
         reporterName = "";
         desiredOutcome = "";
         actualOutcome = "";
-        eventCount = 0;
         getEventIndex = 0;
     }
 
     public void refineEventList(){
-        for(int i = 0; i < eventList.size(); i++){
+
+        Log.v("deleting", Globals.packageName);
+        for(int i = eventList.size() - 1; i >= 0; i--){
             //check to see if the package name matches the one for the app we are recording
-            if(!(eventList.get(i).getPackageName() == Globals.packageName)){
+            if(!eventList.get(i).getPackageName().equals(Globals.packageName)){
                 //delete the event from the list
+                Log.v("deleting", eventList.get(i).getPackageName());
                 eventList.remove(i);
             }
         }
@@ -95,10 +96,6 @@ public class BugReport {
 
     public int getNumEvents(){
         return eventList.size();
-    }
-
-    public void addCount(){
-        eventCount++;
     }
 
     public void addSensorData(Sensor s, SensorEvent e) {
@@ -214,7 +211,6 @@ public class BugReport {
         return title;
     }
     public int numSensors() {return sensorData.keySet().size();}
-    public int numEvents() {return eventCount;}
     public Sensor getSensor(int pos) {return sensorList.get(pos);}
 }
 

@@ -37,7 +37,6 @@ public class SnapshotIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
             File sdCard = Environment.getExternalStorageDirectory();
@@ -100,8 +99,6 @@ public class SnapshotIntentService extends IntentService {
                     toast.cancel();
                 }
             }, 500);
-
-
             su_screenshots = Runtime.getRuntime().exec("su", null, null);
 
         } catch (Exception e) {
@@ -154,6 +151,8 @@ public class SnapshotIntentService extends IntentService {
         //Kill the getevent process
         try {
             Log.v("Screenshot", "tried to kill");
+            os.write(("fflush(stdout)\n").getBytes("ASCII"));
+            os.flush();
             os.write(("kill $(pidof getevent)\n").getBytes("ASCII"));
             os.flush();
         } catch (Exception e) {}

@@ -136,17 +136,13 @@ public class RecordFloatingWidget extends Service {
                 if (raw[0] == 0) {
                     raw[0] = 1;
                     //fires the first time the button is clicked
-
                     RecordFloatingWidget.hideForScreenshot();
                     Globals.time_last_event = System.currentTimeMillis();
                     handler.post(widget_timer);
-
-
                     startScreenshots();
                     Globals.recording = true;
                 }
                 sensorDataLogger.togglePaused(isChecked);
-                Globals.trackUserEvents = !Globals.trackUserEvents;
             }
         });
 
@@ -154,8 +150,6 @@ public class RecordFloatingWidget extends Service {
 
     private void startScreenshots() {
         Intent intent = new Intent(this, SnapshotIntentService.class);
-        int index = BugReport.getInstance().numEvents();
-        intent.putExtra("index", index);
         startService(intent);
     }
 
@@ -250,6 +244,10 @@ public class RecordFloatingWidget extends Service {
         Globals.recording = false;
         Globals.trackUserEvents = false;
         SnapshotIntentService.finishWriting();
+
+        partition_events pe = new partition_events();
+        pe.my_parse();
+        BugReport.getInstance().refineEventList();
 
         //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM
 

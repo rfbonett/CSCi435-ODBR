@@ -51,7 +51,7 @@ public class AccessService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        //Log.v("AccessService", "Event: " + event.getWindowId());
+        Log.v("AccessService", "Event: " + event.getPackageName());
         if(Globals.recording) {
 
             BugReport.getInstance().addUserEvent(event);
@@ -67,13 +67,6 @@ public class AccessService extends AccessibilityService {
                 if(!(RecordFloatingWidget.widget_hidden)){
                     RecordFloatingWidget.hideForScreenshot();
                     RecordFloatingWidget.handler.post(RecordFloatingWidget.widget_timer);
-
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                 }
 
                 Log.v("Screenshot", "screenshot fired");
