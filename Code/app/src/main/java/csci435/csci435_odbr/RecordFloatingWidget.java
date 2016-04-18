@@ -26,10 +26,10 @@ import android.widget.CompoundButton;
 public class RecordFloatingWidget extends Service {
     public static boolean widget_hidden = false;
     static WindowManager wm;
-    static LinearLayout ll;
+    static LinearLayout ll, invis_ll;
     boolean visibility;
 
-    Handler handler = new Handler();
+    static Handler handler = new Handler();
 
     static ToggleButton options;
     static Button submit;
@@ -63,6 +63,7 @@ public class RecordFloatingWidget extends Service {
         final int[] raw = {0};
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         ll = new LinearLayout(this);
+        invis_ll = new LinearLayout(this);
 
 
         //Inflate the linear layout containing the buttons
@@ -160,18 +161,27 @@ public class RecordFloatingWidget extends Service {
 
 
     public static void hideForScreenshot() {
-        options.setVisibility(View.INVISIBLE);
-        pause.setVisibility(View.INVISIBLE);
-        submit.setVisibility(View.INVISIBLE);
+        /*
+        options.setVisibility(View.GONE);
+        pause.setVisibility(View.GONE);
+        submit.setVisibility(View.GONE);
+        wm.updateViewLayout(ll, invis_params);
+        */
+        wm.removeView(ll);
+
         widget_hidden = true;
-        //wm.updateViewLayout(ll, fill_params);
+
     }
 
     public static void restoreAfterScreenshot() {
         //wm.updateViewLayout(ll, parameters);
+        wm.addView(ll, parameters);
+
+        /*
         options.setVisibility(View.VISIBLE);
         pause.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
+        */
         widget_hidden = false;
     }
 
@@ -251,7 +261,7 @@ public class RecordFloatingWidget extends Service {
         onDestroy();
     }
 
-    public Runnable widget_timer = new Runnable() {
+    public static Runnable widget_timer = new Runnable() {
         @Override
         public void run() {
 

@@ -4,14 +4,12 @@ import android.util.Log;
 import android.widget.Button;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class partition_events {
 
     public partition_events() {
+        //shhhhhhhhhhhhhhhh
         super();
     }
 
@@ -38,9 +36,9 @@ public class partition_events {
         boolean finger_down = false;
         boolean up_occurred = false;
         ArrayList<event> events = new ArrayList<event>();
-        ArrayList<double[]>coords = new ArrayList<double[]>();
-        double [] initial_location;
-        double [] last_location;
+        ArrayList<int[]>coords = new ArrayList<int[]>();
+        int [] initial_location;
+        int [] last_location;
         double distance;
         int type;
         int code;
@@ -96,7 +94,6 @@ public class partition_events {
                     }
                     else if(value == 1){
                         //some key that wasn't button but value is down
-
                     }
                 }
                 else if(type == EV_ABS){
@@ -117,12 +114,12 @@ public class partition_events {
                 }
                 else if(type == EV_SYN && code == SYN_REPORT){
                     if(finger_down){
-                        double[] coord = {x, y};
+                        int[] coord = {x, y};
                         coords.add(coord);
                     }
                     else{
                         if(up_occurred){
-                            double[] coord = {x, y};
+                            int[] coord = {x, y};
                             coords.add(coord);
                             up_occurred = false;
                         }
@@ -147,7 +144,19 @@ public class partition_events {
                                 event_type = 2;
                             }
                         }
-                        BugReport.getInstance().addGetEvent((int)last_location[0], (int)last_location[1]);
+
+                        //Initialize a getEvent, add its attributes, then send to bugreport
+                        GetEvent get_event = new GetEvent();
+                        get_event.add_duration(duration);
+                        get_event.add_label(event_label);
+                        get_event.add_type(event_type);
+                        get_event.add_distance(distance);
+
+                        for(i = 0; i < coords.size(); i++){
+                            get_event.add_coords(coords.get(i));
+                        }
+
+                        BugReport.getInstance().addGetEvent(get_event);
                         Log.v("getEvent", event_type + "#" + event_label + "#" + distance + "#" + duration + "#" + "x: " + initial_location[0] + " y: " + initial_location[1] + "#" + "x: " + last_location[0] + " y: " + last_location[1]);
                         events.clear();
                         coords.clear();
@@ -156,6 +165,51 @@ public class partition_events {
             }
             } catch(Exception e){}
     }
+}
+
+class GetEvent{
+
+    ArrayList<int[]>coords = new ArrayList<int[]>();
+    int event_type;
+    String event_label;
+    double distance;
+    float duration;
+
+    public GetEvent(){
+        //just initializes?
+    }
+
+    public void add_type(int num){
+        event_type = num;
+    }
+    public void add_label(String s){
+        event_label = s;
+    }
+    public void add_distance(double d){
+        distance = d;
+    }
+    public void add_duration(float t){
+        duration = t;
+    }
+    public void add_coords(int [] coord){
+        coords.add(coord);
+    }
+    public int get_type(){
+        return event_type;
+    }
+    public String get_label(){
+        return event_label;
+    }
+    public double get_distance(){
+        return distance;
+    }
+    public float get_duration(){
+        return duration;
+    }
+    public ArrayList<int[]> get_coords(){
+        return coords;
+    }
+
 }
 
 class event{

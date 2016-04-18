@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public class AccessService extends AccessibilityService {
     Handler handler = new Handler();
-
+    /*
     public Runnable widget_timer = new Runnable() {
         @Override
         public void run() {
@@ -39,7 +39,7 @@ public class AccessService extends AccessibilityService {
 
         }
     };
-
+    */
     @Override
     public int onStartCommand(Intent intent, int flags, int startid) {
         Log.v("AccessService", "Starting");
@@ -66,7 +66,7 @@ public class AccessService extends AccessibilityService {
                 //hides until we want to reveal again
                 if(!(RecordFloatingWidget.widget_hidden)){
                     RecordFloatingWidget.hideForScreenshot();
-                    handler.post(widget_timer);
+                    RecordFloatingWidget.handler.post(RecordFloatingWidget.widget_timer);
 
                     try {
                         Thread.sleep(500);
@@ -75,8 +75,6 @@ public class AccessService extends AccessibilityService {
                     }
 
                 }
-
-
 
                 Log.v("Screenshot", "screenshot fired");
                 Globals.screenshot_index++;

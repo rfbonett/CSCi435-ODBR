@@ -57,6 +57,7 @@ public class ReviewActivity extends FragmentActivity {
 
         partition_events pe = new partition_events();
         pe.my_parse();
+        BugReport.getInstance().refineEventList();
 
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -147,12 +148,17 @@ public class ReviewActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             int pos = getArguments().getInt(ARG_OBJECT);
-            int max = Globals.screenshot_index;
+            int max = BugReport.getInstance().getNumEvents();
 
             //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
-            int [] click = BugReport.getInstance().getGetEvent(pos);
+
+            if(BugReport.getInstance().numGetEvents() < pos){
+                pos = BugReport.getInstance().numGetEvents() - 1;
+            }
+
+            int [] click = BugReport.getInstance().getEventAtIndex(pos).getGetEvent().get_coords().get(0);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User " + BugReport.getInstance().getEventAtIndex(pos).getEventType() + " at x: " + click[0] + " y: " + click[1]);
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
@@ -187,7 +193,7 @@ public class ReviewActivity extends FragmentActivity {
 
             //HERE WE NEED GET_EVENT DATA
 
-            int[] bounds = BugReport.getInstance().getGetEvent(pos);
+            int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getGetEvent().get_coords().get(0);
             int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), bounds[0], bounds[1]);
             c.drawCircle(point[0],point[1], 50, color);
             //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);

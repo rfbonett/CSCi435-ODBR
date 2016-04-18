@@ -36,13 +36,13 @@ public class BugReport {
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
-    private List<int[]> getEventList = new ArrayList<int[]>();
     private List<Events> eventList = new ArrayList<Events>();
     private String title = "";
     private String reporterName = "";
     private String desiredOutcome = "";
     private String actualOutcome = "";
     private int eventCount = 0;
+    private int getEventIndex = 0;
 
     private static BugReport ourInstance = new BugReport();
 
@@ -57,38 +57,45 @@ public class BugReport {
         sensorGraphs.clear();
         sensorList.clear();
         eventList.clear();
-        getEventList.clear();
+        //getEventList.clear();
         title = "";
         reporterName = "";
         desiredOutcome = "";
         actualOutcome = "";
         eventCount = 0;
+        getEventIndex = 0;
     }
 
-    public void addGetEvent(int x, int y){
-        int [] coords = new int [2];
-        coords[0] = x;
-        coords[1] = y;
-        getEventList.add(coords);
+    public void refineEventList(){
+        for(int i = 0; i < eventList.size(); i++){
+            //check to see if the package name matches the one for the app we are recording
+            if(!(eventList.get(i).getPackageName() == Globals.packageName)){
+                //delete the event from the list
+                eventList.remove(i);
+            }
+        }
     }
 
-    public int [] getGetEvent(int index){
-        if(index > getEventList.size() - 1){
-            return getEventList.get(getEventList.size() - 1);
+    public void addGetEvent(GetEvent get_event){
+        //only add getEvents if we have accessibility events to associate them with
+        if(getEventIndex < eventList.size()){
+            Events e = eventList.get(getEventIndex);
+            e.addGetEvent(get_event);
+            getEventIndex++;
         }
-        else {
-            return getEventList.get(index);
-        }
+    }
+
+    public int numGetEvents(){
+        return getEventIndex;
     }
 
     public void addUserEvent(AccessibilityEvent e) {
         eventList.add(new Events(e));
-    }
+}
 
     public int getNumEvents(){
         return eventList.size();
     }
-
 
     public void addCount(){
         eventCount++;
@@ -220,6 +227,7 @@ class Events {
     private CharSequence contentDescription;
     private CharSequence text;
     private int screenshotIndex;
+    private GetEvent getEvent;
 
     public Events(AccessibilityEvent e){
         packageName = e.getPackageName();
@@ -241,6 +249,9 @@ class Events {
     public String getFilename(){
         return "screenshot" + screenshotIndex + ".png";
     }
+    public String getPackageName(){
+        return packageName + "";
+    }
     public String getViewDescription() {
         char stopChar = '.';
         int start = className.length() - 1;
@@ -250,7 +261,6 @@ class Events {
         return (String) className.subSequence(start + 1, className.length()) + " " + contentDescription;
     }
 
-
     public void printData(){
         Log.v("Event: time", "" + timeStamp);
         Log.v("Event: type", "" + eventType);
@@ -258,6 +268,15 @@ class Events {
         Log.v("Event: class name", "" + className);
         Log.v("Event: description", "" + contentDescription);
         Log.v("Event: text", "" + text);
+    }
+
+    public void addGetEvent(GetEvent get_event) {
+        //we are adding the getEvent to the desired object
+        getEvent = get_event;
+    }
+
+    public GetEvent getGetEvent(){
+        return getEvent;
     }
 }
 
