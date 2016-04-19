@@ -22,6 +22,7 @@ import java.io.IOException;
  */
 public class AccessService extends AccessibilityService {
     Handler handler = new Handler();
+    boolean first = true;
     /*
     public Runnable widget_timer = new Runnable() {
         @Override
@@ -53,28 +54,32 @@ public class AccessService extends AccessibilityService {
 
         Log.v("AccessService", "Event: " + event.getPackageName());
         if(Globals.recording) {
+            if(first){
+                first = false;
+            }
+            else {
+                BugReport.getInstance().addUserEvent(event);
 
-            BugReport.getInstance().addUserEvent(event);
+                if (event.getPackageName().equals(Globals.packageName)) {
 
-            if(event.getPackageName().equals(Globals.packageName)){
+                    //We want to add events in an unbiased manner, but we only want to increment the screenshots
+                    //and fire them if they are fired on the app we are recording.
 
-                //We want to add events in an unbiased manner, but we only want to increment the screenshots
-                //and fire them if they are fired on the app we are recording.
+                    Globals.time_last_event = System.currentTimeMillis();
 
-                Globals.time_last_event = System.currentTimeMillis();
+                    //hides until we want to reveal again
+                    if (!(RecordFloatingWidget.widget_hidden)) {
+                        RecordFloatingWidget.hideForScreenshot();
+                        RecordFloatingWidget.handler.post(RecordFloatingWidget.widget_timer);
+                    }
 
-                //hides until we want to reveal again
-                if(!(RecordFloatingWidget.widget_hidden)){
-                    RecordFloatingWidget.hideForScreenshot();
-                    RecordFloatingWidget.handler.post(RecordFloatingWidget.widget_timer);
+                    Log.v("Screenshot", "screenshot fired");
+                    Globals.screenshot_index++;
+
+                    Context context = getApplicationContext();
+                    SnapshotIntentService.writeCheck();
+                    SnapshotIntentService.writeScreenshot(context);
                 }
-
-                Log.v("Screenshot", "screenshot fired");
-                Globals.screenshot_index++;
-
-                Context context = getApplicationContext();
-                SnapshotIntentService.writeCheck();
-                SnapshotIntentService.writeScreenshot(context);
             }
         }
     }

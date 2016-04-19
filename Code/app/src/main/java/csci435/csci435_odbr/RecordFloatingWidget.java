@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
@@ -26,7 +27,7 @@ import android.widget.CompoundButton;
 public class RecordFloatingWidget extends Service {
     public static boolean widget_hidden = false;
     static WindowManager wm;
-    static LinearLayout ll, invis_ll;
+    static LinearLayout ll;
     boolean visibility;
 
     static Handler handler = new Handler();
@@ -38,16 +39,17 @@ public class RecordFloatingWidget extends Service {
     final int animationTime = 100;
     float animationDist;
     float animationDistLong;
+    private boolean firstClick = true;
 
     final static WindowManager.LayoutParams parameters = new WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
             PixelFormat.TRANSPARENT);
 
 
-    private SensorDataLogger sensorDataLogger;
+    private static SensorDataLogger sensorDataLogger;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,10 +62,9 @@ public class RecordFloatingWidget extends Service {
 
         BugReport.getInstance().clearReport();
 
-        final int[] raw = {0};
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         ll = new LinearLayout(this);
-        invis_ll = new LinearLayout(this);
+        ll.setGravity(Gravity.CENTER);
 
 
         //Inflate the linear layout containing the buttons
@@ -72,26 +73,25 @@ public class RecordFloatingWidget extends Service {
 
 
         //Initialize Window Manager
-        parameters.x = 0;
-        parameters.y = 0;
-        parameters.gravity = Gravity.CENTER;
-        //ll.setBackgroundColor(0x88ff0000);
+        //parameters.gravity = Gravity.CENTER;
+        //parameters.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+        ll.setBackgroundColor(0x88A4C639);
 
 
         visibility = true;
-        options = (ToggleButton) ll.findViewById(R.id.optionsButton);
-        submit = (Button) ll.findViewById(R.id.submitButton);
-        pause = (ToggleButton) ll.findViewById(R.id.pauseButton);
+        //options = (ToggleButton) ll.findViewById(R.id.optionsButton);
+        //submit = (Button) ll.findViewById(R.id.submitButton);
+        //pause = (ToggleButton) ll.findViewById(R.id.pauseButton);
 
 
         wm.addView(ll, parameters);
 
-
-        animationDist = options.getY() - pause.getY();
-        animationDistLong = options.getY() - submit.getY();
-        moveDown(submit, animationDistLong);
-        moveDown(pause, animationDist);
+        //animationDist = options.getY() - pause.getY();
+        //animationDistLong = options.getY() - submit.getY();
+        //moveDown(submit, animationDistLong);
+        //moveDown(pause, animationDist);
         //Allow the button to be moved around the screen
+        /*
         options.setOnTouchListener(new View.OnTouchListener() {
             WindowManager.LayoutParams updatedParameters = parameters;
             double x;
@@ -126,11 +126,13 @@ public class RecordFloatingWidget extends Service {
                 return false;
             }
         });
-
+        */
         // Start Sensor Data Collection AsyncTask and set up pause/resume button
         sensorDataLogger = new SensorDataLogger();
-        Log.v("Screenshot", Globals.recording + "");
-
+        Log.v("Screenshot", Globals.recording + "helapsda");
+        //sensorDataLogger.togglePaused(true);
+        //startScreenshots();
+        /*
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (raw[0] == 0) {
@@ -145,6 +147,7 @@ public class RecordFloatingWidget extends Service {
                 sensorDataLogger.togglePaused(isChecked);
             }
         });
+        */
 
     }
 
@@ -153,47 +156,33 @@ public class RecordFloatingWidget extends Service {
         startService(intent);
     }
 
-
     public static void hideForScreenshot() {
-        /*
-        options.setVisibility(View.GONE);
-        pause.setVisibility(View.GONE);
-        submit.setVisibility(View.GONE);
-        wm.updateViewLayout(ll, invis_params);
-        */
         wm.removeView(ll);
-
         widget_hidden = true;
-
     }
 
-    public static void restoreAfterScreenshot() {
-        //wm.updateViewLayout(ll, parameters);
+    public static void restoreOverlay() {
+        //sensorDataLogger.togglePaused(true);
         wm.addView(ll, parameters);
-
-        /*
-        options.setVisibility(View.VISIBLE);
-        pause.setVisibility(View.VISIBLE);
-        submit.setVisibility(View.VISIBLE);
-        */
         widget_hidden = false;
     }
 
-
+/*
     private void rotate(View view) {
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
         anim.setDuration(animationTime);
         anim.start();
     }
-
+*/
+    /*
     private void moveDown(View view, float length) {
         view.setY(options.getY());
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, "translationY", length);
         anim.setDuration(animationTime);
         anim.start();
     }
-
-
+*/
+/*
     private void disappear(final View view) {
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
         anim.setDuration(animationTime);
@@ -204,24 +193,23 @@ public class RecordFloatingWidget extends Service {
                 view.setVisibility(View.GONE);
             }
         }, animationTime);
-
-
     }
-
+*/
+    /*
     private void appear(final View view) {
         view.setVisibility(View.VISIBLE);
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f);
         anim.setDuration(animationTime);
         anim.start();
     }
-
+    */
     @Override
     public void onDestroy() {
         super.onDestroy();
         stopSelf();
     }
 
-
+/*
     public void toggleButtons(View view) {
 
         rotate(options);
@@ -237,14 +225,30 @@ public class RecordFloatingWidget extends Service {
         }
         visibility = !visibility;
     }
+*/
+    public void recordEvents(View view){
+
+        hideForScreenshot();
+        Globals.time_last_event = System.currentTimeMillis();
+        handler.post(widget_timer);
+
+        if(firstClick){
+            firstClick = false;
+            startScreenshots();
+            Globals.recording = true;
+        }
+
+        //We shouldn't have to pause the sensor data since we are just flat recording everything
+        //sensorDataLogger.togglePaused(true);
+    }
 
     public void stopRecording(View view) {
         //Launch RecordActivity
         //Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
         Globals.recording = false;
         Globals.trackUserEvents = false;
+        //sensorDataLogger.togglePaused(false);
         SnapshotIntentService.finishWriting();
-
         partition_events pe = new partition_events();
         pe.my_parse();
         BugReport.getInstance().refineEventList();
@@ -264,9 +268,9 @@ public class RecordFloatingWidget extends Service {
         public void run() {
 
             //check to see if we have reached the condition.
-            if(System.currentTimeMillis() - Globals.time_last_event > 8000){
+            if(System.currentTimeMillis() - Globals.time_last_event > 6500){
                 //we dont want to loop anymore
-                RecordFloatingWidget.restoreAfterScreenshot();
+                RecordFloatingWidget.restoreOverlay();
             }
             else{
                 //check again 1 second later

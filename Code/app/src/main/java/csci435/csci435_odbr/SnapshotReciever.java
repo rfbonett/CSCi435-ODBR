@@ -19,7 +19,7 @@ public class SnapshotReciever extends BroadcastReceiver {
             RecordFloatingWidget.hideForScreenshot();
         }
         else{
-            RecordFloatingWidget.restoreAfterScreenshot();
+            //RecordFloatingWidget.restoreAfterScreenshot();
         }
 
     }

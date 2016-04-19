@@ -229,9 +229,9 @@ class Events {
         packageName = e.getPackageName();
         eventType = e.getEventType();
         timeStamp = e.getEventTime();
-        className = e.getSource().getClassName();
-        contentDescription = e.getSource().getContentDescription();
-        text = e.getSource().getText();
+        //className = e.getSource().getClassName();
+        //contentDescription = e.getSource().getContentDescription();
+        //text = e.getSource().getText();
         screenshotIndex = Globals.screenshot_index;
     }
     public String getEventType(){

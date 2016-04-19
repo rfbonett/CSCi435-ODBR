@@ -80,7 +80,6 @@ public class ReviewActivity extends FragmentActivity {
 
         Globals.availableHeightForImage = Globals.height - verticalSpacer;
 
-
         //partitionevents?
 
 
@@ -149,7 +148,7 @@ public class ReviewActivity extends FragmentActivity {
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
 
-            if(BugReport.getInstance().numGetEvents() < pos){
+            if(BugReport.getInstance().numGetEvents() <= pos ){
                 pos = BugReport.getInstance().numGetEvents() - 1;
             }
 
