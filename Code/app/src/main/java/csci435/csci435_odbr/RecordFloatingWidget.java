@@ -75,7 +75,7 @@ public class RecordFloatingWidget extends Service {
         //Initialize Window Manager
         //parameters.gravity = Gravity.CENTER;
         //parameters.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-        ll.setBackgroundColor(0x88A4C639);
+        ll.setBackgroundColor(0x8833B5E5);
 
 
         visibility = true;
