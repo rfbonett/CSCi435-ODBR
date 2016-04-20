@@ -1,6 +1,7 @@
 package csci435.csci435_odbr;
 
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -182,6 +183,25 @@ public class LaunchAppActivity extends Activity {
         Globals.screenshot = 1;
         Globals.trackUserEvents = false;
         startService(new Intent(this, RecordFloatingWidget.class));
+
+        //start SU process to clear the saved data within the application
+
+        try {
+            Process clear_app_data = Runtime.getRuntime().exec("su", null, null);
+            String cmd = "pm clear " + Globals.packageName;
+            OutputStream os = clear_app_data.getOutputStream();
+            os.write((cmd + "\n").getBytes("ASCII"));
+            os.flush();
+            os.write(("exit\n").getBytes());
+            os.flush();
+            os.close();
+
+            clear_app_data.waitFor();
+            Log.v("Launch_app_activity", "data cleared");
+
+        } catch (Exception e){}
+
+
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
