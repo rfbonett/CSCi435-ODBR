@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -111,6 +112,8 @@ public class LaunchAppActivity extends Activity {
                 return false;
             }
         });
+
+        getSensors();
     }
 
     private void getInstalledApplications() {
@@ -178,7 +181,6 @@ public class LaunchAppActivity extends Activity {
         }
 
         //launch data collection task and floating window
-        getSensors();
         Globals.recording = false;
         Globals.screenshot = 1;
         Globals.trackUserEvents = false;
@@ -213,13 +215,21 @@ public class LaunchAppActivity extends Activity {
 
     private void getSensors() {
         SensorManager sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Globals.sensors = new ArrayList<Sensor>(sMgr.getSensorList(Sensor.TYPE_ALL));
         Globals.sMgr = sMgr;
+        Globals.sensors = new ArrayList<Sensor>();
+        //Add every available sensor which has a description to the list of sensors
+        for (Sensor s : sMgr.getSensorList(Sensor.TYPE_ALL)) {
+            if (Globals.sensorDescription.get(s.getType()) != null) {
+                Globals.sensors.add(s);
+            }
+        }
+        ListView sensorList = (ListView) findViewById(R.id.optionsListView);
+        //TODO: Add sensors to list
     }
 }
 
 /**
- * A CustomAdapter is an adapter for a ListView that displays an icon and name for each element
+ * An InstalledApplicationsAdapter is an adapter for a ListView that displays an icon and name for each element
  */
 class CustomAdapter extends BaseAdapter {
 
