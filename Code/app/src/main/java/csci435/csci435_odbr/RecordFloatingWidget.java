@@ -228,7 +228,7 @@ public class RecordFloatingWidget extends Service {
         }
 
         //We shouldn't have to pause the sensor data since we are just flat recording everything
-        //sensorDataLogger.togglePaused(true);
+        sensorDataLogger.togglePaused(true);
     }
 
     public void startScreenshots(){
@@ -242,7 +242,7 @@ public class RecordFloatingWidget extends Service {
         Globals.recording = false;
         Globals.trackUserEvents = false;
         Globals.firstEvent = false;
-        //sensorDataLogger.togglePaused(false);
+        sensorDataLogger.togglePaused(false);
         GetEventIntentService.endGetEvent();
         SnapshotIntentService.endScreenshots();
         partition_events pe = new partition_events();
