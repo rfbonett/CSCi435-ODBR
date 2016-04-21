@@ -117,8 +117,6 @@ public class RecordActivity extends ActionBarActivity {
         updateBugReport();
 
         //startService(new Intent(this, RecordFloatingWidget.class));
-        Intent intent = new Intent(this, ReplayService.class);
-        startService(intent);
         //start SU process to clear the saved data within the application
 
         try {
@@ -135,6 +133,9 @@ public class RecordActivity extends ActionBarActivity {
             Log.v("Launch_app_activity", "data cleared");
 
         } catch (Exception e){}
+
+        Intent intent = new Intent(this, ReplayService.class);
+        startService(intent);
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);

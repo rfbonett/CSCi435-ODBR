@@ -16,6 +16,8 @@ import android.provider.Settings;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import static android.os.SystemClock.uptimeMillis;
+
 /**
  * Created by Brendan Otten on 2/17/2016.
  * resource: http://developer.android.com/guide/topics/ui/accessibility/services.html
@@ -55,6 +57,8 @@ public class AccessService extends AccessibilityService {
         Log.v("AccessService", "Event: " + event.getPackageName());
         if(Globals.recording) {
             if(first){
+                //we can get the start time of systemMillis
+                Globals.AccessibilityStart = event.getEventTime();
                 first = false;
             }
             else {
@@ -68,10 +72,10 @@ public class AccessService extends AccessibilityService {
                     Globals.time_last_event = System.currentTimeMillis();
 
                     //hides until we want to reveal again
-                    if (!(RecordFloatingWidget.widget_hidden)) {
-                        RecordFloatingWidget.hideForScreenshot();
-                        RecordFloatingWidget.handler.post(RecordFloatingWidget.widget_timer);
-                    }
+                    //if (!(RecordFloatingWidget.widget_hidden)) {
+                      //  RecordFloatingWidget.hideForScreenshot();
+                       // RecordFloatingWidget.handler.post(RecordFloatingWidget.widget_timer);
+                    //}
 
                     Log.v("Screenshot", "screenshot fired");
                     Globals.screenshot_index++;

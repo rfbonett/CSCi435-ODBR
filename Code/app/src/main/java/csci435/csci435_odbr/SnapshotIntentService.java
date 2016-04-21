@@ -45,17 +45,10 @@ public class SnapshotIntentService extends IntentService {
 
             //filename = "screenshot" + Globals.screenshot_index + ".png";
             try {
-                su_getEvent = Runtime.getRuntime().exec("su", null, null);
                 su_screenshots = Runtime.getRuntime().exec("su", null, null);
-
-                File fp = new File(sdCard+"/events.txt");
-                if(fp.exists()){
-                    fp.delete();
-                }
 
                 Globals.time_last_event = System.currentTimeMillis();
                 Globals.screenshot_index = 0;
-                startGetEvent();
                 writeCheck();
                 writeScreenshot(getApplicationContext());
             } catch (Exception e) {
@@ -69,6 +62,7 @@ public class SnapshotIntentService extends IntentService {
         }
 
     }
+
 
     public static void writeScreenshot(Context context){
 
@@ -107,12 +101,22 @@ public class SnapshotIntentService extends IntentService {
 
     }
 
+    public static void endScreenshots(){
+        try {
+            OutputStream os = su_screenshots.getOutputStream();
+            os.write(("exit\n").getBytes("ASCII"));
+            os.flush();
+            os.close();
+            su_screenshots.waitFor();
+        } catch (Exception e){}
+    }
+
     public static void writeCheck(){
 
         try {
 
-            OutputStream os = su_getEvent.getOutputStream();
-            InputStream is = su_getEvent.getInputStream();
+            OutputStream os = su_screenshots.getOutputStream();
+            InputStream is = su_screenshots.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             String s = "";
@@ -128,47 +132,6 @@ public class SnapshotIntentService extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-    }
-
-    public static void startGetEvent(){
-        try {
-
-            OutputStream os = su_getEvent.getOutputStream();
-
-            //Start getevent in background, note the ampersand
-            Log.v("Screenshot", "tried to start");
-            os.write(("/system/bin/getevent -t > sdcard/events.txt & \n").getBytes("ASCII"));
-            os.flush();
-        } catch (Exception e) {}
-
-    }
-
-    public static void stopGetEvent(){
-
-        OutputStream os = su_getEvent.getOutputStream();
-
-        //Kill the getevent process
-        try {
-            Log.v("Screenshot", "tried to kill");
-            os.write(("fflush(stdout)\n").getBytes("ASCII"));
-            os.flush();
-            os.write(("kill $(pidof getevent)\n").getBytes("ASCII"));
-            os.flush();
-        } catch (Exception e) {}
-    }
-
-
-    public static void finishWriting() {
-        OutputStream os = su_getEvent.getOutputStream();
-
-        try {
-            stopGetEvent();
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
     }
 

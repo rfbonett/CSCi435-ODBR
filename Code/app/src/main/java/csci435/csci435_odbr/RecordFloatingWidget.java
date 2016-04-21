@@ -3,23 +3,17 @@ package csci435.csci435_odbr;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
-import android.animation.ObjectAnimator;
 import android.widget.Button;
-import android.widget.CompoundButton;
 
 /**
  * Created by Rich on 2/16/16.
@@ -131,7 +125,7 @@ public class RecordFloatingWidget extends Service {
         sensorDataLogger = new SensorDataLogger();
         Log.v("Screenshot", Globals.recording + "helapsda");
         //sensorDataLogger.togglePaused(true);
-        //startScreenshots();
+
         /*
         pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -149,11 +143,6 @@ public class RecordFloatingWidget extends Service {
         });
         */
 
-    }
-
-    private void startScreenshots() {
-        Intent intent = new Intent(this, SnapshotIntentService.class);
-        startService(intent);
     }
 
     public static void hideForScreenshot() {
@@ -242,13 +231,19 @@ public class RecordFloatingWidget extends Service {
         //sensorDataLogger.togglePaused(true);
     }
 
+    public void startScreenshots(){
+        Intent intent = new Intent(this, SnapshotIntentService.class);
+        startService(intent);
+    }
+
     public void stopRecording(View view) {
         //Launch RecordActivity
         //Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
         Globals.recording = false;
         Globals.trackUserEvents = false;
         //sensorDataLogger.togglePaused(false);
-        SnapshotIntentService.finishWriting();
+        GetEventIntentService.endGetEvent();
+        SnapshotIntentService.endScreenshots();
         partition_events pe = new partition_events();
         pe.my_parse();
         BugReport.getInstance().refineEventList();

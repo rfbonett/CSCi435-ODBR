@@ -82,8 +82,8 @@ public class BugReport {
         if(getEventIndex < eventList.size()){
             Events e = eventList.get(getEventIndex);
             e.addGetEvent(get_event);
-            Float get_start = get_event.get_start() % 86400f;
-            Float access_start = e.getTimeStamp();
+            Float get_start = get_event.get_start() - Globals.GetEventStart;
+            long access_start = e.getTimeStamp() - Globals.AccessibilityStart;
             Log.v("Time", "GetEvent starts: " + get_start);
             Log.v("Time", "Accessibility starts: " + access_start);
             getEventIndex++;
@@ -226,7 +226,7 @@ public class BugReport {
 
 
 class Events {
-    private Float timeStamp;
+    private long timeStamp;
     private int eventType;
     private CharSequence packageName;
     private CharSequence className;
@@ -238,7 +238,7 @@ class Events {
     public Events(AccessibilityEvent e){
         packageName = e.getPackageName();
         eventType = e.getEventType();
-        timeStamp = (e.getEventTime() / 1000f) % 8600f ;
+        timeStamp = e.getEventTime();
         //className = e.getSource().getClassName();
         //contentDescription = e.getSource().getContentDescription();
         //text = e.getSource().getText();
@@ -267,7 +267,7 @@ class Events {
         return (String) className.subSequence(start + 1, className.length()) + " " + contentDescription;
     }
 
-    public Float getTimeStamp(){
+    public long getTimeStamp(){
         return timeStamp;
     }
 

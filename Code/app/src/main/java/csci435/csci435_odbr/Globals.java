@@ -25,6 +25,8 @@ public class Globals {
     public static int total_screenshots;
     public static int screenshot_index;
     public static long time_last_event;
+    public static long AccessibilityStart;
+    public static Float GetEventStart;
 
     public static SparseArray<String[]> sensorDescription = new SparseArray<String[]>();
     static {

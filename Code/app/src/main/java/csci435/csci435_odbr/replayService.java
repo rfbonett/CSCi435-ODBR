@@ -29,6 +29,7 @@ public class ReplayService extends IntentService {
         try {
             //we need to iterate through the events list
             for(int i = 0; i < BugReport.getInstance().getUserEvents().size(); i++){
+                Log.v("Replay service", "Event: " + i);
                 //For each event in the list we need to send that to the su, so:
                 su_replay = Runtime.getRuntime().exec("su", null, null);
                 os = su_replay.getOutputStream();

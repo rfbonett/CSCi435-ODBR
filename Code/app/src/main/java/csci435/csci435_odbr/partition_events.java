@@ -35,6 +35,7 @@ public class partition_events {
         int was_finger_down = 0;
         boolean finger_down = false;
         boolean up_occurred = false;
+        boolean first_time = true;
         ArrayList<event> events = new ArrayList<event>();
         ArrayList<int[]>coords = new ArrayList<int[]>();
         int [] initial_location;
@@ -64,7 +65,27 @@ public class partition_events {
                 //values[2] = type
                 //values[3] = code
                 //values[4] = value
+
+                //we're only going to keep the last 99999 seconds, so we're going to just take care of
+                //those digits
+
+                int time_start_index;
+
+                if(values[0].indexOf('.') != -1 && values[0].indexOf('.') >= 6){
+                    time_start_index = values[0].indexOf('.') - 5;
+                }
+                else{
+                    time_start_index = 1;
+                }
+
                 time = Float.parseFloat(values[0].substring(1, values[0].length() - 1));
+
+                if(first_time){
+                    first_time = false;
+                    Globals.GetEventStart = time;
+                }
+
+                Log.v("Time", "event time: " + time);
                 type = Integer.parseInt(values[2], 16);
                 code = Integer.parseInt(values[3], 16);
                 value = Integer.parseInt(values[4], 16);
@@ -104,12 +125,6 @@ public class partition_events {
                         }
                     } else if (code == ABS_Y || code == ABS_MT_POSITION_Y) {
                         y = value;
-                    } else if (code == ABS_MT_TRACKING_ID) {
-                        if (value == 1) {
-                            finger_down = true;
-                        } else if (value == 0){
-                            finger_down = false;
-                        }
                     }
                 }
                 else if(type == EV_SYN && code == SYN_REPORT){
@@ -123,6 +138,7 @@ public class partition_events {
                             coords.add(coord);
                             up_occurred = false;
                         }
+
                         duration = time - start_time;
                         initial_location = coords.get(0);
                         last_location = coords.get(coords.size() - 1);

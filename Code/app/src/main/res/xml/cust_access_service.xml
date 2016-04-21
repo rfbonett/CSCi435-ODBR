@@ -2,7 +2,6 @@
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:accessibilityEventTypes="typeViewLongClicked|typeViewClicked"
     android:accessibilityFeedbackType="feedbackSpoken"
-    android:notificationTimeout="100"
     android:settingsActivity=".LaunchAppActivity"
     android:canRetrieveWindowContent="true"
     android:accessibilityFlags="flagDefault"

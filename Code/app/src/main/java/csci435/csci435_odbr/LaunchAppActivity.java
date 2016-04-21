@@ -181,9 +181,8 @@ public class LaunchAppActivity extends Activity {
         }
 
         //launch data collection task and floating window
-        Globals.recording = false;
+        Globals.recording = true;
         Globals.screenshot = 1;
-        Globals.trackUserEvents = false;
         startService(new Intent(this, RecordFloatingWidget.class));
 
         //start SU process to clear the saved data within the application
@@ -203,7 +202,7 @@ public class LaunchAppActivity extends Activity {
 
         } catch (Exception e){}
 
-
+        startGetEvent();
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
@@ -211,6 +210,11 @@ public class LaunchAppActivity extends Activity {
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(reportApp);
+    }
+
+    private void startGetEvent() {
+        Intent intent = new Intent(this, GetEventIntentService.class);
+        startService(intent);
     }
 
     private void getSensors() {
