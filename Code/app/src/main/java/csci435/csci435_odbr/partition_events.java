@@ -78,7 +78,7 @@ public class partition_events {
                     time_start_index = 1;
                 }
 
-                time = Float.parseFloat(values[0].substring(1, values[0].length() - 1));
+                time = Float.parseFloat(values[0].substring(time_start_index, values[0].length() - 1));
 
                 if(first_time){
                     first_time = false;

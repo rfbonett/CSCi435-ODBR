@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.provider.Settings;
 import android.view.accessibility.AccessibilityEvent;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
@@ -36,6 +37,7 @@ public class BugReport {
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
+    private ArrayList<GetEvent> getEventList = new ArrayList<GetEvent>();
     private List<Events> eventList = new ArrayList<Events>();
     private String title = "";
     private String reporterName = "";
@@ -56,7 +58,7 @@ public class BugReport {
         sensorGraphs.clear();
         sensorList.clear();
         eventList.clear();
-        //getEventList.clear();
+        getEventList.clear();
         title = "";
         reporterName = "";
         desiredOutcome = "";
@@ -78,15 +80,41 @@ public class BugReport {
     }
 
     public void addGetEvent(GetEvent get_event){
-        //only add getEvents if we have accessibility events to associate them with
-        if(getEventIndex < eventList.size()){
-            Events e = eventList.get(getEventIndex);
-            e.addGetEvent(get_event);
-            Float get_start = get_event.get_start() - Globals.GetEventStart;
-            long access_start = e.getTimeStamp() - Globals.AccessibilityStart;
-            Log.v("Time", "GetEvent starts: " + get_start);
-            Log.v("Time", "Accessibility starts: " + access_start);
-            getEventIndex++;
+        //throw this into a getEventQueue
+        getEventList.add(get_event);
+        getEventIndex++;
+    }
+
+    public void matchEvents(){
+
+        //iterate over the eventList
+        boolean condition = true;
+        GetEvent get_event_to_add = new GetEvent();
+        int j = 0;
+        for(int i = 0; i < eventList.size(); i++) {
+            while(condition){
+                if (j < getEventList.size()) {
+                    GetEvent get_event = getEventList.get(j);
+                    Float time_dif_get_event = get_event.get_start() - Globals.GetEventStart;
+                    Float time_dif_accessibility = (eventList.get(i).getTimeStamp() - Globals.AccessibilityStart) / 1000f;
+
+                    if (time_dif_get_event >= time_dif_accessibility) {
+                        Log.v("GetEventQueue", "Reassigns getEvent");
+                        get_event_to_add = get_event;
+                        condition = false;
+                    }
+                    else{
+                        Log.v("GetEventQueue", "GE "+ time_dif_get_event + " : A " + time_dif_accessibility);
+                    }
+                }
+                else{
+                    Log.v("GetEventQueue", "We hit null");
+                    condition = false;
+                }
+                j++;
+            }
+            eventList.get(i).addGetEvent(get_event_to_add);
+            condition = true;
         }
     }
 
@@ -222,7 +250,10 @@ public class BugReport {
     }
     public int numSensors() {return sensorData.keySet().size();}
     public Sensor getSensor(int pos) {return sensorList.get(pos);}
+
 }
+
+
 
 
 class Events {

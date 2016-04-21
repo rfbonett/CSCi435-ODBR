@@ -24,7 +24,6 @@ import static android.os.SystemClock.uptimeMillis;
  */
 public class AccessService extends AccessibilityService {
     Handler handler = new Handler();
-    boolean first = true;
     /*
     public Runnable widget_timer = new Runnable() {
         @Override
@@ -56,10 +55,10 @@ public class AccessService extends AccessibilityService {
 
         Log.v("AccessService", "Event: " + event.getPackageName());
         if(Globals.recording) {
-            if(first){
+            if(Globals.firstEvent){
                 //we can get the start time of systemMillis
                 Globals.AccessibilityStart = event.getEventTime();
-                first = false;
+                Globals.firstEvent = false;
             }
             else {
                 BugReport.getInstance().addUserEvent(event);

@@ -118,7 +118,7 @@ public class ReviewActivity extends FragmentActivity {
 
         public UserEventPageAdapter(FragmentManager manager) {
             super(manager);
-            count = BugReport.getInstance().getNumEvents();
+            count = BugReport.getInstance().getUserEvents().size();
         }
 
         @Override
@@ -142,15 +142,11 @@ public class ReviewActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             int pos = getArguments().getInt(ARG_OBJECT);
-            int max = BugReport.getInstance().getNumEvents();
+            int max = BugReport.getInstance().getUserEvents().size();
 
             //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
-
-            if(BugReport.getInstance().numGetEvents() <= pos ){
-                pos = BugReport.getInstance().numGetEvents() - 1;
-            }
 
             int [] click = BugReport.getInstance().getEventAtIndex(pos).getGetEvent().get_coords().get(0);
             eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User " + BugReport.getInstance().getEventAtIndex(pos).getEventType() + " at x: " + click[0] + " y: " + click[1]);

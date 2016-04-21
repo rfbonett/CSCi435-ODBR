@@ -241,12 +241,15 @@ public class RecordFloatingWidget extends Service {
         //Log.v("Event count", "number of events: " + BugReport.getInstance().numEvents());
         Globals.recording = false;
         Globals.trackUserEvents = false;
+        Globals.firstEvent = false;
         //sensorDataLogger.togglePaused(false);
         GetEventIntentService.endGetEvent();
         SnapshotIntentService.endScreenshots();
         partition_events pe = new partition_events();
         pe.my_parse();
+        BugReport.getInstance().matchEvents();
         BugReport.getInstance().refineEventList();
+
 
         //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM
 

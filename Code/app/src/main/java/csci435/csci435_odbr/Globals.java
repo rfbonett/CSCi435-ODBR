@@ -27,6 +27,7 @@ public class Globals {
     public static long time_last_event;
     public static long AccessibilityStart;
     public static Float GetEventStart;
+    public static boolean firstEvent;
 
     public static SparseArray<String[]> sensorDescription = new SparseArray<String[]>();
     static {
