@@ -106,7 +106,7 @@
         android:id="@+id/stopRecordButton"
         android:layout_below="@+id/reviewButton"
         android:layout_centerHorizontal="true"
-        android:onClick="submitReport"
+        android:onClick="returnToRecordActivity"
         android:text="@string/submitReport"
         android:textColor="@drawable/button_color_selector"
         android:textSize="30sp"

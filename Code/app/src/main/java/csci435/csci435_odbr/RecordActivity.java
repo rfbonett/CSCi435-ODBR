@@ -36,6 +36,8 @@ public class RecordActivity extends ActionBarActivity {
         desiredOutcome = (EditText) findViewById(R.id.desiredOutcomeEditText);
         actualOutcome = (EditText) findViewById(R.id.actualOutcomeEditText);
 
+        fillDescriptions();
+
         //Set the image and title to the application icon and name
         TextView appName = (TextView) findViewById(R.id.appName);
         appName.setText("Bug Report for " + Globals.appName);
@@ -87,6 +89,12 @@ public class RecordActivity extends ActionBarActivity {
         BugReport.getInstance().setActualOutcome(actualOutcome.getText().toString());
     }
 
+    private void fillDescriptions(){
+        reporterName.setText(BugReport.getInstance().getReporterName());
+        reportTitle.setText(BugReport.getInstance().getTitle());
+        desiredOutcome.setText(BugReport.getInstance().getDesiredOutcome());
+        actualOutcome.setText(BugReport.getInstance().getActualOutcome());
+    }
 
     /**
      * Hands off to the ReviewActivity to review the report
@@ -95,10 +103,10 @@ public class RecordActivity extends ActionBarActivity {
     public void reviewReport(View view) {
         updateBugReport();
         Intent intent = new Intent(this, ReviewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         finish();
     }
-
 
     /**
      * Submits the report to the server, relaunches application

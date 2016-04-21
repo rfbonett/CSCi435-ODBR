@@ -103,9 +103,9 @@ public class ReviewActivity extends FragmentActivity {
      * Submits the report to the server, relaunches application
      * @param view
      */
-    public void submitReport(View view) {
-        BugReport.getInstance().toJSON();
-        Intent intent = new Intent(this, LaunchAppActivity.class);
+    public void returnToRecordActivity(View view) {
+        //BugReport.getInstance().toJSON();
+        Intent intent = new Intent(this, RecordActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         finish();

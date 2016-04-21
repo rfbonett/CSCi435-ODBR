@@ -82,6 +82,10 @@ public class BugReport {
         if(getEventIndex < eventList.size()){
             Events e = eventList.get(getEventIndex);
             e.addGetEvent(get_event);
+            Float get_start = get_event.get_start() % 86400f;
+            Float access_start = e.getTimeStamp();
+            Log.v("Time", "GetEvent starts: " + get_start);
+            Log.v("Time", "Accessibility starts: " + access_start);
             getEventIndex++;
         }
     }
@@ -210,13 +214,19 @@ public class BugReport {
     public String getTitle() {
         return title;
     }
+    public String getDesiredOutcome(){
+        return desiredOutcome;
+    }
+    public String getActualOutcome(){
+        return actualOutcome;
+    }
     public int numSensors() {return sensorData.keySet().size();}
     public Sensor getSensor(int pos) {return sensorList.get(pos);}
 }
 
 
 class Events {
-    private Long timeStamp;
+    private Float timeStamp;
     private int eventType;
     private CharSequence packageName;
     private CharSequence className;
@@ -228,7 +238,7 @@ class Events {
     public Events(AccessibilityEvent e){
         packageName = e.getPackageName();
         eventType = e.getEventType();
-        timeStamp = e.getEventTime();
+        timeStamp = (e.getEventTime() / 1000f) % 8600f ;
         //className = e.getSource().getClassName();
         //contentDescription = e.getSource().getContentDescription();
         //text = e.getSource().getText();
@@ -255,6 +265,10 @@ class Events {
             start--;
         }
         return (String) className.subSequence(start + 1, className.length()) + " " + contentDescription;
+    }
+
+    public Float getTimeStamp(){
+        return timeStamp;
     }
 
     public void printData(){

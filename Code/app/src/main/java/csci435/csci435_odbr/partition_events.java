@@ -151,6 +151,7 @@ public class partition_events {
                         get_event.add_label(event_label);
                         get_event.add_type(event_type);
                         get_event.add_distance(distance);
+                        get_event.add_start(start_time);
 
                         for(i = 0; i < coords.size(); i++){
                             get_event.add_coords(coords.get(i));
@@ -173,6 +174,7 @@ class GetEvent{
     int event_type;
     String event_label;
     double distance;
+    float start_time;
     float duration;
 
     public GetEvent(){
@@ -191,6 +193,7 @@ class GetEvent{
     public void add_duration(float t){
         duration = t;
     }
+    public void add_start(float t){start_time = t;}
     public void add_coords(int [] coord){
         coords.add(coord);
     }
@@ -206,6 +209,7 @@ class GetEvent{
     public float get_duration(){
         return duration;
     }
+    public float get_start(){return start_time;}
     public ArrayList<int[]> get_coords(){
         return coords;
     }
