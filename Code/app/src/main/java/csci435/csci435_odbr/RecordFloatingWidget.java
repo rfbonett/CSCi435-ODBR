@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 import android.widget.Button;
+import com.google.gson.Gson;
 
 /**
  * Created by Rich on 2/16/16.
