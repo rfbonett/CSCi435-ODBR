@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -13,6 +14,8 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.EditText;
+
+import java.io.OutputStream;
 
 
 /**
@@ -107,6 +110,41 @@ public class RecordActivity extends ActionBarActivity {
         startActivity(intent);
         finish();
     }
+
+    public void replayReport(View view){
+        //method to be called by review report, we're going to have to start a service, that runs and then
+        //also start the package.name app, then use the service to start inputting commands
+        updateBugReport();
+
+        //startService(new Intent(this, RecordFloatingWidget.class));
+        Intent intent = new Intent(this, ReplayService.class);
+        startService(intent);
+        //start SU process to clear the saved data within the application
+
+        try {
+            Process clear_app_data = Runtime.getRuntime().exec("su", null, null);
+            String cmd = "pm clear " + Globals.packageName;
+            OutputStream os = clear_app_data.getOutputStream();
+            os.write((cmd + "\n").getBytes("ASCII"));
+            os.flush();
+            os.write(("exit\n").getBytes());
+            os.flush();
+            os.close();
+
+            clear_app_data.waitFor();
+            Log.v("Launch_app_activity", "data cleared");
+
+        } catch (Exception e){}
+
+        //Launch application to be reported
+        Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
+        reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
+        reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        reportApp.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(reportApp);
+
+    }
+
 
     /**
      * Submits the report to the server, relaunches application

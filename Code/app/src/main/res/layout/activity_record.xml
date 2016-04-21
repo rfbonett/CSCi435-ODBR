@@ -94,23 +94,38 @@
         android:layout_below="@+id/actualOutcomeEditText"
         android:layout_centerHorizontal="true"
         android:textColor="@drawable/button_color_selector"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:background="@drawable/button_style_selector"/>
 
     <Button
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:layout_marginTop="16dp"
-        android:id="@+id/stopRecordButton"
+        android:id="@+id/replayButton"
         android:layout_below="@+id/reviewButton"
         android:layout_centerHorizontal="true"
-        android:onClick="returnToRecordActivity"
+        android:onClick="replayReport"
+        android:text="@string/replayReport"
+        android:textColor="@drawable/button_color_selector"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/button_style_selector" />
+
+    <Button
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="16dp"
+        android:id="@+id/stopRecordButton"
+        android:layout_below="@+id/replayButton"
+        android:layout_centerHorizontal="true"
+        android:onClick="submitReport"
         android:text="@string/submitReport"
         android:textColor="@drawable/button_color_selector"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:background="@drawable/button_style_selector" />
 </RelativeLayout>
