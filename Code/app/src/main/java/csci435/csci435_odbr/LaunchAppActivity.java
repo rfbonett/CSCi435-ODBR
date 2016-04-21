@@ -222,14 +222,19 @@ public class LaunchAppActivity extends Activity {
         SensorManager sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Globals.sMgr = sMgr;
         Globals.sensors = new ArrayList<Sensor>();
+        try {
+            Globals.sensors.add(sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+            Globals.sensors.add(sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+        } catch (Exception e) {
+            Log.e("LaunchAppActivity", "Could not find sensor");
+        }
         //Add every available sensor which has a description to the list of sensors
+        /*
         for (Sensor s : sMgr.getSensorList(Sensor.TYPE_ALL)) {
             if (Globals.sensorDescription.get(s.getType()) != null) {
                 Globals.sensors.add(s);
             }
-        }
-        ListView sensorList = (ListView) findViewById(R.id.optionsListView);
-        //TODO: Add sensors to list
+        } */
     }
 }
 
