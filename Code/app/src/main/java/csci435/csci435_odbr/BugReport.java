@@ -26,8 +26,7 @@ import android.graphics.Paint;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.view.accessibility.AccessibilityNodeInfo;
-import com.google.gson.GsonBuilder;
-import com.google.gson.Gson;
+
 
 /**
  * Created by Rich on 2/11/16.
@@ -152,12 +151,7 @@ public class BugReport {
      * Returns its data as a formatted JSON file; currently outputs data to LogCat
      * @return
      */
-    public String toJSON() {
-
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        System.out.println(gson.toJson(ourInstance));
-
+    public int toJSON() {
 
         //Log Title, Reporter Name and Description
         Log.v("BugReport", "Reporter: " + reporterName);
@@ -184,7 +178,7 @@ public class BugReport {
             Log.v("Event Number:", "" + i);
             eventList.get(i).printData();
         }
-        return gson.toJson(ourInstance);
+        return 1;
     }
 
     private String makeSensorDataReadable(float[] input) {
