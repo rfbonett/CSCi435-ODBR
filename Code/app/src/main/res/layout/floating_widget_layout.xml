@@ -8,14 +8,22 @@
         android:id="@+id/recordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Record"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_margin="15dp"
+        android:text="Record Inputs"
+        android:radius="20dp"
         android:onClick="recordEvents" />
 
     <Button
         android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_margin="15dp"
+        android:text="Submit Report"
+        android:radius="20dp"
         android:onClick="stopRecording" />
 
 
