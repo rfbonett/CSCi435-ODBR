@@ -1,5 +1,10 @@
 package csci435.csci435_odbr;
 
+import android.hardware.Sensor;
+import android.util.Log;
+
+import org.json.JSONObject;
+
 /**
  * Created by danielpark on 4/21/16.
  */
@@ -32,5 +37,23 @@ public class JsonModel {
         accelerometer_stream = "";
         gyroscope_stream = "";
         events = "";
+    }
+    public int tester() {
+        //Log Title, Reporter Name and Description
+        Log.v("JSON", "os_version: " + os_version);
+        Log.v("JSON", "device_type: " + device_type);
+
+        Log.v("JSON", "app_name: " + app_name);
+        Log.v("JSON", "app_version: " + app_version);
+
+        Log.v("JSON", "title: " + title);
+        Log.v("JSON", "name: " + name);
+
+        Log.v("JSON", "description_desired_outcome: " + description_desired_outcome);
+        Log.v("JSON", "description_actual_outcome: " + description_actual_outcome);
+
+        Log.v("JSON", "report_start_time: " + report_start_time);
+        Log.v("JSON", "report_end_time: " + report_end_time);
+        return 1;
     }
 }
