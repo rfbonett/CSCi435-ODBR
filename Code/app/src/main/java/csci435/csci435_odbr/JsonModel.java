@@ -2,7 +2,7 @@ package csci435.csci435_odbr;
 
 import android.hardware.Sensor;
 import android.util.Log;
-
+import com.google.gson.Gson;
 import org.json.JSONObject;
 
 /**
@@ -23,9 +23,14 @@ public class JsonModel {
     private String gyroscope_stream;
     private String events;
 
+    private static JsonModel model = new JsonModel();
+    public static JsonModel getInstance() {
+        return model;
+    }
+
     public void build_device() {
-        os_version = android.os.Build.VERSION.SDK_INT;
-        device_type = android.os.Build.MODEL;
+        JsonModel.getInstance().setOs_version();
+        JsonModel.getInstance().setDevice_type();
         app_name = "";
         app_version = "";
         title = BugReport.getInstance().getTitle();
@@ -40,13 +45,24 @@ public class JsonModel {
     }
 
     public void setDevice_type(){
+        device_type = android.os.Build.MODEL;
+    }
+    public String getDevice_type(){
+        return device_type;
+    }
 
+    public void setOs_version(){
+        os_version = android.os.Build.VERSION.SDK_INT;
+    }
+    public int getOs_version(){
+        return os_version;
     }
     public int tester() {
         build_device();
+
         //Log Title, Reporter Name and Description
-        Log.v("JSON", "os_version: " + os_version);
-        Log.v("JSON", "device_type: " + device_type);
+        Log.v("JSON", "os_version: " + JsonModel.getInstance().getOs_version());
+        Log.v("JSON", "device_type: " + JsonModel.getInstance().getDevice_type());
 
         Log.v("JSON", "app_name: " + app_name);
         Log.v("JSON", "app_version: " + app_version);
@@ -59,6 +75,15 @@ public class JsonModel {
 
         Log.v("JSON", "report_start_time: " + report_start_time);
         Log.v("JSON", "report_end_time: " + report_end_time);
+        JsonModel.getInstance().JavatoJson();
         return 1;
+    }
+
+    public int JavatoJson(){
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        System.out.println(gson.toJson(albums))
+
+
     }
 }
