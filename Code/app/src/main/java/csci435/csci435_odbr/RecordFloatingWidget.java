@@ -252,6 +252,7 @@ public class RecordFloatingWidget extends Service {
         BugReport.getInstance().refineEventList();
 
 
+
         //GENERATES ALL OF THE SCREENSHOTS AND ADDS THEM
 
         Intent intent = new Intent(RecordFloatingWidget.this, RecordActivity.class);

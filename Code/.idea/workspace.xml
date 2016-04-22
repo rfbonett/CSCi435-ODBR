@@ -6,13 +6,14 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="GetEvent" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48bc1a60-0b39-4d50-a169-bbd07552a937" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java" afterPath="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Code.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -79,16 +80,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BugReport.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BugReport.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5769231">
-              <caret line="180" column="32" selection-start-line="180" selection-start-column="32" selection-end-line="180" selection-end-column="32" />
+            <state vertical-scroll-proportion="-15.666667">
+              <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1176#1192#0" expanded="true" />
                 <element signature="e#1324#1334#0" expanded="true" />
                 <element signature="e#1388#1396#0" expanded="true" />
+                <element signature="e#8329#8330#0" expanded="true" />
+                <element signature="e#8357#8358#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -97,8 +100,8 @@
       <file leaf-file-name="RecordActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.555555">
-              <caret line="155" column="38" selection-start-line="155" selection-start-column="32" selection-end-line="155" selection-end-column="38" />
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -110,7 +113,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
+              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -128,11 +131,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RecordFloatingWidget.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="RecordFloatingWidget.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-44.555557">
-              <caret line="148" column="44" selection-start-line="148" selection-start-column="44" selection-end-line="148" selection-end-column="44" />
+            <state vertical-scroll-proportion="3.9166667">
+              <caret line="157" column="5" selection-start-line="157" selection-start-column="5" selection-end-line="157" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -1719,11 +1722,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/Globals.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/ReviewActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/LaunchAppActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java" />
       </list>
     </option>
   </component>
@@ -2060,7 +2063,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2483,16 +2486,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/LaunchAppActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="173" column="51" selection-start-line="173" selection-start-column="51" selection-end-line="173" selection-end-column="51" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.4444447">
@@ -2519,28 +2512,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/LaunchAppActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-44.555557">
-          <caret line="148" column="44" selection-start-line="148" selection-start-column="44" selection-end-line="148" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.555555">
-          <caret line="155" column="38" selection-start-line="155" selection-start-column="32" selection-end-line="155" selection-end-column="38" />
+          <caret line="173" column="51" selection-start-line="173" selection-start-column="51" selection-end-line="173" selection-end-column="51" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2549,13 +2524,43 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/BugReport.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5769231">
-          <caret line="180" column="32" selection-start-line="180" selection-start-column="32" selection-end-line="180" selection-end-column="32" />
+        <state vertical-scroll-proportion="-15.666667">
+          <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1176#1192#0" expanded="true" />
             <element signature="e#1324#1334#0" expanded="true" />
             <element signature="e#1388#1396#0" expanded="true" />
+            <element signature="e#8329#8330#0" expanded="true" />
+            <element signature="e#8357#8358#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/JsonModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/csci435/csci435_odbr/RecordFloatingWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.9166667">
+          <caret line="157" column="5" selection-start-line="157" selection-start-column="5" selection-end-line="157" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
