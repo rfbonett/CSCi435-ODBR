@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.provider.Settings;
+import android.util.SparseIntArray;
 import android.view.accessibility.AccessibilityEvent;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
@@ -37,6 +38,7 @@ public class BugReport {
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
+    private HashMap<Long, Integer> orientations = new HashMap<Long, Integer>();
     private ArrayList<GetEvent> getEventList = new ArrayList<GetEvent>();
     private List<Events> eventList = new ArrayList<Events>();
     private String title = "";
@@ -116,6 +118,10 @@ public class BugReport {
             eventList.get(i).addGetEvent(get_event_to_add);
             condition = true;
         }
+    }
+
+    public void addOrientationChange(long time, int orientation) {
+        orientations.put(time, orientation);
     }
 
     public int numGetEvents(){
@@ -266,6 +272,7 @@ class Events {
     private CharSequence text;
     private int screenshotIndex;
     private GetEvent getEvent;
+    private HashMap<Long, Integer> orientations;
 
     public Events(AccessibilityEvent e){
         packageName = e.getPackageName();
@@ -275,7 +282,9 @@ class Events {
         //contentDescription = e.getSource().getContentDescription();
         //text = e.getSource().getText();
         screenshotIndex = Globals.screenshot_index;
+        orientations = new HashMap<Long, Integer>();
     }
+
     public String getEventType(){
         if(eventType == 2){
             return "view long clicked";

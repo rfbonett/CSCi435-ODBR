@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -296,4 +297,16 @@ public class RecordFloatingWidget extends Service {
 
         }
     };
+}
+
+class OrientationChangeListener extends OrientationEventListener {
+
+    public OrientationChangeListener(Context context) {
+        super(context);
+    }
+
+    @Override
+    public void onOrientationChanged(int orientation) {
+        BugReport.getInstance().addOrientationChange(System.currentTimeMillis(), orientation);
+    }
 }
