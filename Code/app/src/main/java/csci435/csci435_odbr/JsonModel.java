@@ -22,25 +22,16 @@ public class JsonModel {
     private String description_actual_outcome;
     private double report_start_time;
     private double report_end_time;
-    private String accelerometer_stream;
-    private String gyroscope_stream;
+    //private List<float> accelerometer_streamlist;
+    //private String gyroscope_stream;
     private List<Events> eventList = new ArrayList<Events>();
-    List<JsonModel> json  = new ArrayList<JsonModel>();
 
     private static JsonModel model = new JsonModel();
     public static JsonModel getInstance() {
         return model;
     }
 
-    public class Event {
-        String screenshot;
-        double event_start_time;
-        double event_end_time;
-        //inputs
-        String hierarchy;
-        //Orientation
 
-    }
 
     public void build_device() {
         JsonModel.getInstance().setOs_version();
@@ -53,13 +44,8 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setReport_start_time();
         JsonModel.getInstance().setReport_end_time();
-        JsonModel.getInstance().setEvents();
+//        JsonModel.getInstance().setEvents();
 
-
-
-
-        accelerometer_stream = "";
-        gyroscope_stream = "";
 
     }
 
@@ -126,13 +112,20 @@ public class JsonModel {
         return report_end_time;
     }
 
-    public void setEvents(){
+    public void setAccelerometer_stream(){
         for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
             Log.v("FOR JSON:", "" + i);
             BugReport.getInstance().getEventList().get(i).printData();
-
         }
     }
+
+    //public void setEvents(){
+    //    for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
+    //        Log.v("FOR JSON:", "" + i);
+    //        BugReport.getInstance().getEventList().get(i).get/**/;
+    //    }
+    //}
+
     public List<Events> getEvents(){
         return eventList;
     }
@@ -160,9 +153,24 @@ public class JsonModel {
 
     public int JavatoJson(){
         GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
+        Gson gson = builder.setPrettyPrinting().create();
         System.out.println(gson.toJson(JsonModel.getInstance()));
         return 1;
 
     }
 }
+
+////class Event {
+//    String screenshot;
+//    double event_start_time;
+//    double event_end_time;
+//    //inputs
+//    String hierarchy;
+//    //Orientation
+//
+//    //public void setScreenshot(){
+//      //  screenshot = BugReport.getInstance().;
+//    //}
+//
+//
+//}
