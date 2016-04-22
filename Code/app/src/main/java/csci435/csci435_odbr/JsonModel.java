@@ -24,7 +24,7 @@ public class JsonModel {
     private double report_end_time;
     private String accelerometer_stream;
     private String gyroscope_stream;
-    private String events;
+    private List<Events> eventList = new ArrayList<Events>();
     List<JsonModel> json  = new ArrayList<JsonModel>();
 
     private static JsonModel model = new JsonModel();
@@ -33,24 +33,41 @@ public class JsonModel {
     }
 
     public class Event {
-
+        String screenshot;
+        double event_start_time;
+        double event_end_time;
+        //inputs
+        String hierarchy;
+        //Orientation
 
     }
+
     public void build_device() {
         JsonModel.getInstance().setOs_version();
         JsonModel.getInstance().setDevice_type();
         JsonModel.getInstance().setTitle();
-        app_name = "";
-        app_version = "";
+        JsonModel.getInstance().setApp_name();
+        //version couldn't be implemented yet
         JsonModel.getInstance().setName();
+        JsonModel.getInstance().setDescription_desired_outcome();
+        JsonModel.getInstance().setDescription_actual_outcome();
+        JsonModel.getInstance().setReport_start_time();
+        JsonModel.getInstance().setReport_end_time();
+        JsonModel.getInstance().setEvents();
 
 
-        description_actual_outcome = BugReport.getInstance().getActualOutcome();
-        report_start_time = RecordFloatingWidget.getReportStartTime();
-        report_end_time = RecordFloatingWidget.getReportEndTime();
+
+
         accelerometer_stream = "";
         gyroscope_stream = "";
-        events = "";
+
+    }
+
+    public void setApp_name(){
+        app_name = Globals.packageName;
+    }
+    public String getApp_name(){
+        return app_name;
     }
 
     public void setDevice_type(){
@@ -74,6 +91,13 @@ public class JsonModel {
         return name;
     }
 
+    public void setDescription_desired_outcome(){
+        description_desired_outcome = BugReport.getInstance().getDesiredOutcome();
+    }
+    public String getDescription_desired_outcome(){
+        return description_desired_outcome;
+    }
+
     public void setTitle(){
         title = BugReport.getInstance().getTitle();
     }
@@ -81,13 +105,37 @@ public class JsonModel {
         return title;
     }
 
-    public void setTitle(){
-        title = BugReport.getInstance().getTitle();
+    public void setDescription_actual_outcome(){
+        description_actual_outcome = BugReport.getInstance().getActualOutcome();
     }
-    public String getTitle(){
-        return title;
+    public String getDescription_actual_outcome(){
+        return description_actual_outcome;
     }
 
+    public void setReport_start_time(){
+        report_start_time = RecordFloatingWidget.getReportStartTime();
+    }
+    public double getReport_start_time(){
+        return report_start_time;
+    }
+
+    public void setReport_end_time(){
+        report_end_time = RecordFloatingWidget.getReportEndTime();
+    }
+    public double getReport_end_time(){
+        return report_end_time;
+    }
+
+    public void setEvents(){
+        for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
+            Log.v("FOR JSON:", "" + i);
+            BugReport.getInstance().getEventList().get(i).printData();
+
+        }
+    }
+    public List<Events> getEvents(){
+        return eventList;
+    }
     public int tester() {
         build_device();
 
@@ -99,13 +147,13 @@ public class JsonModel {
         Log.v("JSON", "app_version: " + app_version);
 
         Log.v("JSON", "title: " + JsonModel.getInstance().getTitle());
-        Log.v("JSON", "name: " + name);
+        Log.v("JSON", "name: " + JsonModel.getInstance().getName());
 
-        Log.v("JSON", "description_desired_outcome: " + description_desired_outcome);
-        Log.v("JSON", "description_actual_outcome: " + description_actual_outcome);
+        Log.v("JSON", "description_desired_outcome: " + JsonModel.getInstance().getDescription_desired_outcome());
+        Log.v("JSON", "description_actual_outcome: " + JsonModel.getInstance().getDescription_actual_outcome());
 
-        Log.v("JSON", "report_start_time: " + report_start_time);
-        Log.v("JSON", "report_end_time: " + report_end_time);
+        Log.v("JSON", "report_start_time: " + JsonModel.getInstance().getReport_start_time());
+        Log.v("JSON", "report_end_time: " + JsonModel.getInstance().getReport_end_time());
         JsonModel.getInstance().JavatoJson();
         return 1;
     }
