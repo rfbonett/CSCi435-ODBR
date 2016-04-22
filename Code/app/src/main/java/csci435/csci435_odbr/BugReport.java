@@ -151,7 +151,7 @@ public class BugReport {
      * Returns its data as a formatted JSON file; currently outputs data to LogCat
      * @return
      */
-    public int toJSON() {
+    public JSONObject toJSON() {
 
         //Log Title, Reporter Name and Description
         Log.v("BugReport", "Reporter: " + reporterName);
@@ -178,7 +178,7 @@ public class BugReport {
             Log.v("Event Number:", "" + i);
             eventList.get(i).printData();
         }
-        return 1;
+        return new JSONObject();
     }
 
     private String makeSensorDataReadable(float[] input) {
