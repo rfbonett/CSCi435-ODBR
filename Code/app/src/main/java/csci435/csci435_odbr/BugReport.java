@@ -150,7 +150,10 @@ public class BugReport {
      * Returns its data as a formatted JSON file; currently outputs data to LogCat
      * @return
      */
+<<<<<<< HEAD
 
+=======
+>>>>>>> bc100110bb8472e3433b02d4b74334eef3bda3aa
     public JSONObject toJSON() {
         //Log Title, Reporter Name and Description
         Log.v("BugReport", "Reporter: " + reporterName);
