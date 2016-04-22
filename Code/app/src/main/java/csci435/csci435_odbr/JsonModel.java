@@ -23,7 +23,7 @@ public class JsonModel {
     private String gyroscope_stream;
     private String events;
 
-    public void Java_toJson() {
+    public void build_device() {
         os_version = android.os.Build.VERSION.SDK_INT;
         device_type = android.os.Build.MODEL;
         app_name = "";
@@ -32,14 +32,18 @@ public class JsonModel {
         name = BugReport.getInstance().getReporterName();
         description_desired_outcome = BugReport.getInstance().getDesiredOutcome();
         description_actual_outcome = BugReport.getInstance().getActualOutcome();
-        report_start_time = 1;
-        report_end_time = 11;
+        report_start_time = RecordFloatingWidget.getReportStartTime();
+        report_end_time = RecordFloatingWidget.getReportEndTime();
         accelerometer_stream = "";
         gyroscope_stream = "";
         events = "";
     }
+
+    public void setDevice_type(){
+
+    }
     public int tester() {
-        Java_toJson();
+        build_device();
         //Log Title, Reporter Name and Description
         Log.v("JSON", "os_version: " + os_version);
         Log.v("JSON", "device_type: " + device_type);

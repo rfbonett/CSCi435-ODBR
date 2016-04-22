@@ -43,8 +43,8 @@ public class RecordFloatingWidget extends Service {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             PixelFormat.TRANSPARENT);
 
-    private long report_start_time;
-    private long report_end_time;
+    private static long report_start_time;
+    private static long report_end_time;
 
     private static SensorDataLogger sensorDataLogger;
 
@@ -53,12 +53,14 @@ public class RecordFloatingWidget extends Service {
     public void setReporterEndTime() {report_end_time = System.currentTimeMillis();}
 
     //getters for JSON
-    public long getReportStartTime(){
+    public static long getReportStartTime(){
         return report_start_time;
     }
-    public long getReportEndTime(){
+
+    public static long getReportEndTime(){
         return report_end_time;
     }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
