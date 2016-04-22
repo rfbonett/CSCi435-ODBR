@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 import android.widget.Button;
 
-
 /**
  * Created by Rich on 2/16/16.
  */
@@ -43,6 +42,8 @@ public class RecordFloatingWidget extends Service {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             PixelFormat.TRANSPARENT);
 
+    long report_start_time;
+    long report_end_time;
 
     private static SensorDataLogger sensorDataLogger;
 
@@ -57,11 +58,14 @@ public class RecordFloatingWidget extends Service {
 
         BugReport.getInstance().clearReport();
 
+        //get report start time
+        report_start_time = System.currentTimeMillis();
+
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         ll = new LinearLayout(this);
         ll.setGravity(Gravity.CENTER);
 
-
+        //
         //Inflate the linear layout containing the buttons
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.floating_widget_layout, ll);
@@ -229,7 +233,7 @@ public class RecordFloatingWidget extends Service {
         }
 
         //We shouldn't have to pause the sensor data since we are just flat recording everything
-        sensorDataLogger.togglePaused(true);
+        //sensorDataLogger.togglePaused(true);
     }
 
     public void startScreenshots(){
@@ -243,7 +247,7 @@ public class RecordFloatingWidget extends Service {
         Globals.recording = false;
         Globals.trackUserEvents = false;
         Globals.firstEvent = false;
-        sensorDataLogger.togglePaused(false);
+        //sensorDataLogger.togglePaused(false);
         GetEventIntentService.endGetEvent();
         SnapshotIntentService.endScreenshots();
         partition_events pe = new partition_events();
@@ -259,6 +263,9 @@ public class RecordFloatingWidget extends Service {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         ll.setVisibility(View.GONE);
+
+        //report end time
+        report_end_time = System.currentTimeMillis();
         onDestroy();
     }
 
