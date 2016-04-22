@@ -27,7 +27,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-
 /**
  * Created by Rich on 2/11/16.
  */
@@ -152,7 +151,6 @@ public class BugReport {
      * @return
      */
     public JSONObject toJSON() {
-
         //Log Title, Reporter Name and Description
         Log.v("BugReport", "Reporter: " + reporterName);
         Log.v("BugReport", "Title: " + title);
