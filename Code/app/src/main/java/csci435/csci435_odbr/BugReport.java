@@ -186,6 +186,10 @@ public class BugReport {
         return new JSONObject();
     }
 
+    public List<Events> getEventList(){
+        return eventList;
+
+    }
     private String makeSensorDataReadable(float[] input) {
         String s = "";
         for (float f : input) {
