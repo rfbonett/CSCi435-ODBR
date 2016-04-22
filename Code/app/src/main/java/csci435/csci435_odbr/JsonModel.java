@@ -32,7 +32,7 @@ public class JsonModel {
         name = BugReport.getInstance().getReporterName();
         description_desired_outcome = BugReport.getInstance().getDesiredOutcome();
         description_actual_outcome = BugReport.getInstance().getActualOutcome();
-        report_start_time = RecordFloatingWidget;
+        report_start_time = 1;
         report_end_time = 11;
         accelerometer_stream = "";
         gyroscope_stream = "";
