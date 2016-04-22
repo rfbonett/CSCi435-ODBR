@@ -3,7 +3,10 @@ package csci435.csci435_odbr;
 import android.hardware.Sensor;
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by danielpark on 4/21/16.
@@ -22,20 +25,26 @@ public class JsonModel {
     private String accelerometer_stream;
     private String gyroscope_stream;
     private String events;
+    List<JsonModel> json  = new ArrayList<JsonModel>();
 
     private static JsonModel model = new JsonModel();
     public static JsonModel getInstance() {
         return model;
     }
 
+    public class Event {
+
+
+    }
     public void build_device() {
         JsonModel.getInstance().setOs_version();
         JsonModel.getInstance().setDevice_type();
+        JsonModel.getInstance().setTitle();
         app_name = "";
         app_version = "";
-        title = BugReport.getInstance().getTitle();
-        name = BugReport.getInstance().getReporterName();
-        description_desired_outcome = BugReport.getInstance().getDesiredOutcome();
+        JsonModel.getInstance().setName();
+
+
         description_actual_outcome = BugReport.getInstance().getActualOutcome();
         report_start_time = RecordFloatingWidget.getReportStartTime();
         report_end_time = RecordFloatingWidget.getReportEndTime();
@@ -57,6 +66,28 @@ public class JsonModel {
     public int getOs_version(){
         return os_version;
     }
+
+    public void setName(){
+        name = BugReport.getInstance().getReporterName();
+    }
+    public String getName(){
+        return name;
+    }
+
+    public void setTitle(){
+        title = BugReport.getInstance().getTitle();
+    }
+    public String getTitle(){
+        return title;
+    }
+
+    public void setTitle(){
+        title = BugReport.getInstance().getTitle();
+    }
+    public String getTitle(){
+        return title;
+    }
+
     public int tester() {
         build_device();
 
@@ -67,7 +98,7 @@ public class JsonModel {
         Log.v("JSON", "app_name: " + app_name);
         Log.v("JSON", "app_version: " + app_version);
 
-        Log.v("JSON", "title: " + title);
+        Log.v("JSON", "title: " + JsonModel.getInstance().getTitle());
         Log.v("JSON", "name: " + name);
 
         Log.v("JSON", "description_desired_outcome: " + description_desired_outcome);
@@ -82,8 +113,8 @@ public class JsonModel {
     public int JavatoJson(){
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        System.out.println(gson.toJson(albums))
-
+        System.out.println(gson.toJson(JsonModel.getInstance()));
+        return 1;
 
     }
 }
