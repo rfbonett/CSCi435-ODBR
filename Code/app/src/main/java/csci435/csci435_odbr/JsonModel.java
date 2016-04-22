@@ -32,13 +32,14 @@ public class JsonModel {
         name = BugReport.getInstance().getReporterName();
         description_desired_outcome = BugReport.getInstance().getDesiredOutcome();
         description_actual_outcome = BugReport.getInstance().getActualOutcome();
-        report_start_time = 11;
+        report_start_time = RecordFloatingWidget;
         report_end_time = 11;
         accelerometer_stream = "";
         gyroscope_stream = "";
         events = "";
     }
     public int tester() {
+        Java_toJson();
         //Log Title, Reporter Name and Description
         Log.v("JSON", "os_version: " + os_version);
         Log.v("JSON", "device_type: " + device_type);

@@ -42,11 +42,22 @@ public class RecordFloatingWidget extends Service {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             PixelFormat.TRANSPARENT);
 
-    long report_start_time;
-    long report_end_time;
+    private long report_start_time;
+    private long report_end_time;
 
     private static SensorDataLogger sensorDataLogger;
 
+    //setters for JSON
+    public void setReportStartTime() {report_start_time = System.currentTimeMillis();}
+    public void setReporterEndTime() {report_end_time = System.currentTimeMillis();}
+
+    //getters for JSON
+    public long getReportStartTime(){
+        return report_start_time;
+    }
+    public long getReportEndTime(){
+        return report_end_time;
+    }
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -59,7 +70,7 @@ public class RecordFloatingWidget extends Service {
         BugReport.getInstance().clearReport();
 
         //get report start time
-        report_start_time = System.currentTimeMillis();
+        setReportStartTime();
 
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         ll = new LinearLayout(this);
@@ -265,7 +276,7 @@ public class RecordFloatingWidget extends Service {
         ll.setVisibility(View.GONE);
 
         //report end time
-        report_end_time = System.currentTimeMillis();
+        setReporterEndTime();
         onDestroy();
     }
 
