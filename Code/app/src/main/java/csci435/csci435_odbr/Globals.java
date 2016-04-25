@@ -19,15 +19,11 @@ public class Globals {
     public static boolean trackUserEvents;
     public static int width;
     public static int height;
-    public static int screenshot;
     public static int availableHeightForImage;
-    public static int wait;
-    public static int total_screenshots;
     public static int screenshot_index;
     public static long time_last_event;
     public static long AccessibilityStart;
     public static Float GetEventStart;
-    public static boolean firstEvent;
 
     public static SparseArray<String[]> sensorDescription = new SparseArray<String[]>();
     static {

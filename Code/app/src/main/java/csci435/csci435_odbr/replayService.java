@@ -25,11 +25,11 @@ public class ReplayService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         //we're going to have to do an SU thing here, but for now, lets just log something every 10 seconds
-
+/*
         try {
             //we need to iterate through the events list
             for(int i = 0; i < BugReport.getInstance().getUserEvents().size(); i++){
-                Log.v("Replay service", "Event: " + i);
+                Log.v("Replay service", "ReportEvent: " + i);
                 //For each event in the list we need to send that to the su, so:
                 su_replay = Runtime.getRuntime().exec("su", null, null);
                 os = su_replay.getOutputStream();
@@ -66,7 +66,7 @@ public class ReplayService extends IntentService {
             }
         } catch(Exception e){}
 
-
+    */
         Intent record_intent = new Intent(this, RecordActivity.class);
         record_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         record_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

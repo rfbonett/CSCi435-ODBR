@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,8 +34,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.hardware.Sensor;
-
-import org.w3c.dom.Element;
 
 /**
  * LaunchAppActivity displays a list of installed applications and a search bar.
@@ -64,6 +60,7 @@ public class LaunchAppActivity extends Activity {
 
         //Create a List of all installed applications
         getInstalledApplications();
+        getSensors();
 
         //Add the list of installed applications to the ListView
         ListView lv = (ListView) findViewById(R.id.installedAppsListView);
@@ -112,8 +109,6 @@ public class LaunchAppActivity extends Activity {
                 return false;
             }
         });
-
-        getSensors();
     }
 
     private void getInstalledApplications() {
@@ -137,6 +132,18 @@ public class LaunchAppActivity extends Activity {
                 return app1.getTitle().compareTo(app2.getTitle());
             }
         });
+    }
+
+    private void getSensors() {
+        SensorManager sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Globals.sMgr = sMgr;
+        Globals.sensors = new ArrayList<Sensor>();
+        try {
+            Globals.sensors.add(sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+            Globals.sensors.add(sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+        } catch (Exception e) {
+            Log.e("LaunchAppActivity", "Could not find sensor");
+        }
     }
 
     /**
@@ -182,8 +189,6 @@ public class LaunchAppActivity extends Activity {
 
         //launch data collection task and floating window
         Globals.recording = true;
-        Globals.firstEvent = true;
-        Globals.screenshot = 1;
         startService(new Intent(this, RecordFloatingWidget.class));
 
         //start SU process to clear the saved data within the application
@@ -216,25 +221,6 @@ public class LaunchAppActivity extends Activity {
     private void startGetEvent() {
         Intent intent = new Intent(this, GetEventIntentService.class);
         startService(intent);
-    }
-
-    private void getSensors() {
-        SensorManager sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Globals.sMgr = sMgr;
-        Globals.sensors = new ArrayList<Sensor>();
-        try {
-            Globals.sensors.add(sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
-            Globals.sensors.add(sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
-        } catch (Exception e) {
-            Log.e("LaunchAppActivity", "Could not find sensor");
-        }
-        //Add every available sensor which has a description to the list of sensors
-        /*
-        for (Sensor s : sMgr.getSensorList(Sensor.TYPE_ALL)) {
-            if (Globals.sensorDescription.get(s.getType()) != null) {
-                Globals.sensors.add(s);
-            }
-        } */
     }
 }
 
