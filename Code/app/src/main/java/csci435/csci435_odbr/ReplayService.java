@@ -2,6 +2,7 @@ package csci435.csci435_odbr;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -65,18 +66,29 @@ public class ReplayService extends IntentService {
             try {
                 Thread.sleep(wait_time);
                 for(int i = 0; i < BugReport.getInstance().numEvents(); i++) {
-                    Log.v("Replay service", "ReportEvent: " + i);
                     ReportEvent e = BugReport.getInstance().getEventAtIndex(i);
-                    int[] coords = e.getInputEvents().get(0);
+                    if (e.getInputEvents().size() < 3) {
+                        int[] coords = e.getInputEvents().get(0);
 
-                    cmd = "input tap " + String.valueOf(coords[0]) + " " + String.valueOf(coords[1]);
-                    os.write((cmd + "\n").getBytes("ASCII"));
-                    os.flush();
-                    Thread.sleep(e.getDuration());
+                        cmd = "input tap " + coords[0] + " " + coords[1];
+                        os.write((cmd + "\n").getBytes("ASCII"));
+                        os.flush();
+                    }
+                    else {
+                        int[] coordsStart = e.getInputEvents().get(0);
+                        int[] coordsEnd = e.getInputEvents().get(e.getInputEvents().size() - 1);
+                        String start = " " + coordsStart[0] + " " + coordsStart[1];
+                        String end = " " + coordsEnd[0] + " " + coordsEnd[1];
+                        cmd = "input swipe" + start + end + " " + e.getDuration();
+                        os.write((cmd + "\n").getBytes("ASCII"));
+                        os.flush();
+                    }
+                    Log.v("ReplayService", cmd);
+                    Thread.sleep(e.getWaitTime());
+
                 }
                 Thread.sleep(wait_time);
             } catch (Exception e) {Log.v("ReplayService", "Unable to replay event: " + cmd);}
-
 
             Intent record_intent = new Intent(ReplayService.this, RecordActivity.class);
             record_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -84,5 +96,6 @@ public class ReplayService extends IntentService {
             startActivity(record_intent);
         }
     }
+
 
 }

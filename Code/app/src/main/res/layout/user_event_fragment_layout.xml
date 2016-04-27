@@ -9,11 +9,20 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/userEventDescription"/>
 
-    <ImageView
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/userEventDescription"
-        android:id="@+id/screenshot"
-        android:src="@drawable/not_yet_implemented_blue"/>
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/screenshot"
+            android:src="@drawable/not_yet_implemented_blue"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/canvas" />
+    </FrameLayout>
+
 </RelativeLayout>

@@ -43,7 +43,7 @@ public class GetEventManager {
             String filename = directory + "events.txt";
             su = Runtime.getRuntime().exec("su", null, null);
             os = su.getOutputStream();
-            os.write(("/system/bin/getevent -t > " + filename + " & \n").getBytes("ASCII"));
+            os.write(("/system/bin/getevent -tt > " + filename + " & \n").getBytes("ASCII"));
             os.flush();
             recording = true;
         } catch (Exception e) {
@@ -69,5 +69,4 @@ public class GetEventManager {
         File file = new File(directory + "events.txt");
         GetEventParser.parse(file);
     }
-
 }

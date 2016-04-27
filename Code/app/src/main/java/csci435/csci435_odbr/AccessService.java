@@ -16,8 +16,6 @@ import java.io.File;
  */
 public class AccessService extends AccessibilityService {
 
-    private boolean exited = true;
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startid) {
         return super.onStartCommand(intent, flags, startid);
@@ -29,11 +27,10 @@ public class AccessService extends AccessibilityService {
         Log.v("AccessService", "Event: " + AccessibilityEvent.eventTypeToString(event.getEventType()));
         if (Globals.recording) {
             if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_HOVER_EXIT) {
-                exited = true;
-                return;
+                Globals.exited = true;
             }
-            if (exited) {
-                exited = false;
+            else if (Globals.exited) {
+                Globals.exited = false;
                 Globals.time_last_event = System.currentTimeMillis();
                 Log.v("AccessService", "ReportEvent: " + event.getPackageName());
                 ReportEvent e = new ReportEvent(event.getEventTime());

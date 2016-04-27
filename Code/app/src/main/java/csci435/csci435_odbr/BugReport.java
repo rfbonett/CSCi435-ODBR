@@ -98,23 +98,25 @@ public class BugReport {
         for (ReportEvent e :  eventList) {
             e.setTime(e.getTime() - reportEventStartTime);
         }
-        int i = 0;
-        ReportEvent cur, last = eventList.get(i);
-        while (++i < eventList.size()) {
-            cur = eventList.get(i);
-            last.setDuration(cur.getTime() - last.getTime());
-            last = cur;
-        }
         //Match events
         try {
             int ndx = 0;
             for (ReportEvent e : eventList) {
                 ndx = closestGetEvent(e.getTime(), ndx);
+                e.setDuration(getEventList.get(ndx).getDuration());
                 for (int[] coord : getEventList.get(ndx).get_coords()) {
                     e.addInputEvents(coord);
                 }
             }
         } catch (Exception e) {Log.v("BugReport", "Error matching GetEvents to ReportEvents");}
+        int i = 0;
+        ReportEvent cur, last = eventList.get(i);
+        while (++i < eventList.size()) {
+            cur = eventList.get(i);
+            long time = cur.getTime() - last.getTime() - last.getDuration();
+            last.setWaitTime(time > 0 ? time : 0);
+            last = cur;
+        }
     }
 
     private int closestGetEvent(long time, int ndx) {

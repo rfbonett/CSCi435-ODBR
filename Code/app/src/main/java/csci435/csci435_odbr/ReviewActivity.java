@@ -139,7 +139,7 @@ public class ReviewActivity extends FragmentActivity {
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
 
             ReportEvent e = BugReport.getInstance().getEventAtIndex(pos);
-            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User clicked at x: " + e.getInputEvents().get(0)[0] + " y: " + e.getInputEvents().get(0)[1]);
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ") " + e.getEventDescription());
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             Bitmap screenBitmap = e.getScreenshot().getBitmap();
