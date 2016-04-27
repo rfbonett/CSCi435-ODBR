@@ -44,7 +44,7 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setReport_start_time();
         JsonModel.getInstance().setReport_end_time();
-//        JsonModel.getInstance().setEvents();
+        JsonModel.getInstance().setEvents();
 
 
     }
@@ -125,6 +125,9 @@ public class JsonModel {
     //        BugReport.getInstance().getEventList().get(i).get/**/;
     //    }
     //}
+    public void setEvents(){
+        eventList = BugReport.getInstance().getEventList();
+    }
 
     public List<Events> getEvents(){
         return eventList;
