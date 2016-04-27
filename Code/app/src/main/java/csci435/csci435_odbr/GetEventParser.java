@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class GetEventParser {
 
     public static void parse(File input_file) {
+        Globals.parsing = true;
         int EV_SYN = 0;
         int EV_KEY = 1;
         int EV_ABS = 3;
@@ -125,7 +126,7 @@ public class GetEventParser {
                             up_occurred = false;
                         }
 
-                        duration = time - start_time;
+                        duration = 1000*(time - start_time);
                         initial_location = coords.get(0);
                         last_location = coords.get(coords.size() - 1);
                         event_label = "";
@@ -169,6 +170,7 @@ public class GetEventParser {
             } catch(Exception e){}
         BugReport.getInstance().matchGetEventsToReportEvents();
         BugReport.getInstance().printGetEvents();
+        Globals.parsing = false;
     }
 }
 

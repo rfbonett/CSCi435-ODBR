@@ -20,6 +20,8 @@ public class Globals {
     public static int height;
     public static int availableHeightForImage;
     public static long time_last_event;
+    public static boolean exited = false;
+    public static boolean parsing = false;
 
     public static SparseArray<String[]> sensorDescription = new SparseArray<String[]>();
     static {
