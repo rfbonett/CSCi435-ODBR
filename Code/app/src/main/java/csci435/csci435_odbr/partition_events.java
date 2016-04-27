@@ -1,7 +1,6 @@
 package csci435.csci435_odbr;
 
 import android.util.Log;
-import android.widget.Button;
 
 import java.io.*;
 import java.util.*;
@@ -9,7 +8,6 @@ import java.util.*;
 public class partition_events {
 
     public partition_events() {
-        //shhhhhhhhhhhhhhhh
         super();
     }
 
@@ -36,7 +34,7 @@ public class partition_events {
         boolean finger_down = false;
         boolean up_occurred = false;
         boolean first_time = true;
-        ArrayList<event> events = new ArrayList<event>();
+        ArrayList<partitionevent> events = new ArrayList<partitionevent>();
         ArrayList<int[]>coords = new ArrayList<int[]>();
         int [] initial_location;
         int [] last_location;
@@ -94,7 +92,7 @@ public class partition_events {
                 Log.v("Value", "code: " + code);
                 Log.v("Value", "value: " + value);
 
-                event e = new event(time, type, code, value);
+                partitionevent e = new partitionevent(time, type, code, value);
                 events.add(e);
 
                 if(type == EV_KEY){
@@ -232,14 +230,14 @@ class GetEvent{
 
 }
 
-class event{
+class partitionevent {
 
     float time;
     int type;
     int code;
     int value;
 
-    public event(float ti, int t, int c, int v){
+    public partitionevent(float ti, int t, int c, int v){
         time = ti;
         type = t;
         code = c;

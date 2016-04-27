@@ -28,9 +28,22 @@ import android.hardware.Sensor;
 /**
  * Created by Rich on 2/11/16.
  */
-public class SensorDataLogger implements SensorEventListener {
+public class SensorDataManager implements SensorEventListener {
 
     HashMap<Sensor, float[]> lastLoggedData = new HashMap<Sensor, float[]>();
+
+    public void startRecording() {
+        for (Sensor s : Globals.sensors) {
+            Globals.sMgr.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+
+    public void stopRecording() {
+        Globals.sMgr.unregisterListener(this);
+    }
+
+
     /**
      * Adds sensor data to the BugReport
      * @param event
@@ -40,21 +53,6 @@ public class SensorDataLogger implements SensorEventListener {
         if (!Arrays.equals(lastLoggedData.get(event.sensor), event.values)) {
             BugReport.getInstance().addSensorData(event.sensor, event);
             lastLoggedData.put(event.sensor, event.values);
-        }
-    }
-
-    /**
-     * If paused, resumes recording by registering listener for all sensors.
-     * If not paused, unregisters listener for all sensors.
-     */
-    public void togglePaused(boolean paused) {
-        if (paused) {
-            for (Sensor s : Globals.sensors) {
-                Globals.sMgr.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
-            }
-        }
-        else {
-            Globals.sMgr.unregisterListener(this);
         }
     }
 

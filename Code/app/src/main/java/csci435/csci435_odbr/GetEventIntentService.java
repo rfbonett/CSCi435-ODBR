@@ -58,7 +58,7 @@ public class GetEventIntentService extends IntentService {
         try {
 
             //Start getevent in background, note the ampersand
-            Log.v("Screenshot", "tried to start");
+            Log.v("Getevent", "tried to start");
             os.write(("/system/bin/getevent -t > sdcard/events.txt & \n").getBytes("ASCII"));
             os.flush();
         } catch (Exception e) {}
@@ -68,14 +68,17 @@ public class GetEventIntentService extends IntentService {
     public static void endGetEvent(){
         //Kill the getevent process
         try {
-            Log.v("Screenshot", "tried to kill");
+            Log.v("Getevent", "tried to kill");
             os.write(("fflush(stdout)\n").getBytes("ASCII"));
             os.flush();
             os.write(("kill $(pidof getevent)\n").getBytes("ASCII"));
             os.flush();
             os.write(("exit\n").getBytes("ASCII"));
             os.flush();
+            os.close();
+            su_getEvent.getInputStream().close();
             su_getEvent.waitFor();
+            Globals.recording = false;
         } catch (Exception e) {}
     }
 
