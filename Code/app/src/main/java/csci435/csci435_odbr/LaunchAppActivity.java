@@ -208,19 +208,12 @@ public class LaunchAppActivity extends Activity {
 
         } catch (Exception e){}
 
-        startGetEvent();
-
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
         reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(reportApp);
-    }
-
-    private void startGetEvent() {
-        Intent intent = new Intent(this, GetEventIntentService.class);
-        startService(intent);
     }
 }
 

@@ -16,6 +16,8 @@ import java.io.File;
  */
 public class AccessService extends AccessibilityService {
 
+    private boolean exited = true;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startid) {
         return super.onStartCommand(intent, flags, startid);
@@ -24,19 +26,25 @@ public class AccessService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.v("AccessService", "Event!");
+        Log.v("AccessService", "Event: " + AccessibilityEvent.eventTypeToString(event.getEventType()));
         if (Globals.recording) {
-            Globals.time_last_event = System.currentTimeMillis();
-            Log.v("AccessService", "ReportEvent: " + event.getPackageName());
-            ReportEvent e = new ReportEvent(event.getEventTime());
+            if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_HOVER_EXIT) {
+                exited = true;
+                return;
+            }
+            if (exited) {
+                exited = false;
+                Globals.time_last_event = System.currentTimeMillis();
+                Log.v("AccessService", "ReportEvent: " + event.getPackageName());
+                ReportEvent e = new ReportEvent(event.getEventTime());
 
-            if (event.getPackageName().equals(Globals.packageName)) {
-                Log.v("AccessService", "Adding and adjusting event");
-                BugReport.getInstance().addEvent(e, getRootInActiveWindow());
+                if (event.getPackageName().equals(Globals.packageName)) {
+                    Log.v("AccessService", "Adding and adjusting event");
+                    BugReport.getInstance().addEvent(e, getRootInActiveWindow());
+                }
             }
         }
     }
-
 
     @Override
     public void onInterrupt() {}

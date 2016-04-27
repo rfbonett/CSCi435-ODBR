@@ -22,14 +22,25 @@ public class ScreenshotManager {
     private String directory;
     private String filename;
     private int screenshot_index;
+    private Process process;
 
     public ScreenshotManager() {
         screenshot_index = 0;
         directory = "sdcard/Screenshots/";
         filename = "screenshot" + screenshot_index + ".png";
-        service = Executors.newSingleThreadExecutor();
+        service = Executors.newCachedThreadPool();
         File dir = new File(directory);
-        dir.mkdir();
+        if (dir.exists()) {
+            for (File f : dir.listFiles()) {
+                f.delete();
+            }
+        }
+        else {
+            dir.mkdir();
+        }
+        try {
+            process = Runtime.getRuntime().exec("su", null, null);
+        } catch (Exception e) {Log.e("ScreenshotTask", "Could not start process! Check su permissions.");}
     }
 
     /**
@@ -38,43 +49,37 @@ public class ScreenshotManager {
      * @return Most recently processed Screenshot object
      */
     public Screenshot takeScreenshot() {
-        if (currentTask == null || currentTask.isDone()) {
-            screenshot_index += 1;
-            filename = "screenshot" + screenshot_index + ".png";
-            currentTask = service.submit(new ScreenshotTask(directory + filename));
-        }
+        screenshot_index += 1;
+        filename = "screenshot" + screenshot_index + ".png";
+        currentTask = service.submit(new ScreenshotTask(directory + filename));
         return new Screenshot(directory + filename);
     }
-}
 
-class ScreenshotTask implements Runnable {
 
-    private Process process;
-    private String filename;
+    class ScreenshotTask implements Runnable {
 
-    public ScreenshotTask(String filename) {
-        this.filename = filename;
-        try {
-            process = Runtime.getRuntime().exec("su", null, null);
-        } catch (Exception e) {Log.e("ScreenshotTask", "Could not start process! Check su permissions.");}
-    }
+        private String file;
 
-    @Override
-    public void run() {
-        OutputStream os = process.getOutputStream();
-        try {
-            os.write(("/system/bin/screencap -p " + filename + "\n").getBytes("ASCII"));
-            os.flush();
-            os.write(("exit\n").getBytes("ASCII"));
-            os.flush();
-            os.close();
-            process.waitFor();
-        } catch (Exception e) {
-            Log.e("ScreenshotTask", "Error taking screenshot.");
+        public ScreenshotTask(String filename) {
+            this.file = filename;
         }
-    }
 
+        @Override
+        public void run() {
+            OutputStream os = process.getOutputStream();
+            try {
+                os.write(("/system/bin/screencap -p " + file + "& \n").getBytes("ASCII"));
+                os.flush();
+                process.waitFor();
+            } catch (Exception e) {
+                Log.e("ScreenshotTask", "Error taking screenshot.");
+            }
+        }
+
+    }
 }
+
+
 
 /**
  * A Screenshot object consists of a filename and functionality to access the image

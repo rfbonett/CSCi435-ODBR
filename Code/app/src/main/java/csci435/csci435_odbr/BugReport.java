@@ -41,7 +41,6 @@ public class BugReport {
 
     private BugReport() {
         clearReport();
-        initializeManagers();
     }
 
     public void clearReport() {
@@ -53,6 +52,7 @@ public class BugReport {
         reporterName = "";
         desiredOutcome = "";
         actualOutcome = "";
+        initializeManagers();
     }
 
     private void initializeManagers() {
@@ -66,6 +66,54 @@ public class BugReport {
         getEventList.add(get_event);
     }
 
+    public void printGetEvents() {
+        for (GetEvent e : getEventList) {
+            e.printValues();
+        }
+        for (ReportEvent e : eventList) {
+            Log.v("GetEvent", "ReportEvent: " + e.getData());
+        }
+    }
+
+    public void matchGetEventsToReportEvents() {
+        if (getEventList.size() == 0 || eventList.size() == 0) {
+            return;
+        }
+
+        //Normalize times
+        long getEventStartTime = getEventList.get(0).getStart();
+        long reportEventStartTime = eventList.get(0).getTime();
+        for (GetEvent e : getEventList) {
+            e.setStart(e.getStart() - getEventStartTime);
+        }
+        for (ReportEvent e :  eventList) {
+            e.setTime(e.getTime() - reportEventStartTime);
+        }
+        int i = 0;
+        ReportEvent cur, last = eventList.get(i);
+        while (++i < eventList.size()) {
+            cur = eventList.get(i);
+            last.setDuration(cur.getTime() - last.getTime());
+            last = cur;
+        }
+        //Match events
+        try {
+            int ndx = 0;
+            for (ReportEvent e : eventList) {
+                ndx = closestGetEvent(e.getTime(), ndx);
+                for (int[] coord : getEventList.get(ndx).get_coords()) {
+                    e.addInputEvents(coord);
+                }
+            }
+        } catch (Exception e) {Log.v("BugReport", "Error matching GetEvents to ReportEvents");}
+    }
+
+    private int closestGetEvent(long time, int ndx) {
+        while (ndx + 1 < getEventList.size() && getEventList.get(ndx + 1).getStart() - time < time - getEventList.get(ndx).getStart()) {
+            ++ndx;
+        }
+        return ndx;
+    }
 
     public void addEvent(ReportEvent e, AccessibilityNodeInfo node) {
         e.addHierarchyDump(hdm.takeHierarchyDump(node));

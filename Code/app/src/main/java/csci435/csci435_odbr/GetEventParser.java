@@ -2,16 +2,15 @@ package csci435.csci435_odbr;
 
 import android.util.Log;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 
-public class partition_events {
 
-    public partition_events() {
-        super();
-    }
+public class GetEventParser {
 
-    public void my_parse(){
+    public static void parse(File input_file) {
         int EV_SYN = 0;
         int EV_KEY = 1;
         int EV_ABS = 3;
@@ -27,15 +26,12 @@ public class partition_events {
         float duration;
         double LONG_CLICK_DURATION = 0.5;
         int CLICK_RING = 20;
-        File input_file = new File("sdcard/events.txt");
         int x = 0;
         int y = 0;
         int was_finger_down = 0;
         boolean finger_down = false;
         boolean up_occurred = false;
-        boolean first_time = true;
-        ArrayList<partitionevent> events = new ArrayList<partitionevent>();
-        ArrayList<int[]>coords = new ArrayList<int[]>();
+        ArrayList<int[]> coords = new ArrayList<int[]>();
         int [] initial_location;
         int [] last_location;
         double distance;
@@ -64,13 +60,13 @@ public class partition_events {
                 //values[3] = code
                 //values[4] = value
 
-                //we're only going to keep the last 99999 seconds, so we're going to just take care of
+                //we're only going to keep the last 9999 seconds, so we're going to just take care of
                 //those digits
 
                 int time_start_index;
 
                 if(values[0].indexOf('.') != -1 && values[0].indexOf('.') >= 6){
-                    time_start_index = values[0].indexOf('.') - 5;
+                    time_start_index = values[0].indexOf('.') - 4;
                 }
                 else{
                     time_start_index = 1;
@@ -78,12 +74,6 @@ public class partition_events {
 
                 time = Float.parseFloat(values[0].substring(time_start_index, values[0].length() - 1));
 
-                if(first_time){
-                    first_time = false;
-                    Globals.GetEventStart = time;
-                }
-
-                Log.v("Time", "event time: " + time);
                 type = Integer.parseInt(values[2], 16);
                 code = Integer.parseInt(values[3], 16);
                 value = Integer.parseInt(values[4], 16);
@@ -92,8 +82,6 @@ public class partition_events {
                 Log.v("Value", "code: " + code);
                 Log.v("Value", "value: " + value);
 
-                partitionevent e = new partitionevent(time, type, code, value);
-                events.add(e);
 
                 if(type == EV_KEY){
                     //some key has been made
@@ -160,25 +148,27 @@ public class partition_events {
                         }
 
                         //Initialize a getEvent, add its attributes, then send to bugreport
+                        //Convert time to millis to match with System.currentTimeMillis();
                         GetEvent get_event = new GetEvent();
-                        get_event.add_duration(duration);
-                        get_event.add_label(event_label);
-                        get_event.add_type(event_type);
-                        get_event.add_distance(distance);
-                        get_event.add_start(start_time);
+                        get_event.setDuration(Float.valueOf(duration).longValue());
+                        get_event.setLabel(event_label);
+                        get_event.setType(event_type);
+                        get_event.setDistance(distance);
+                        get_event.setStart(Float.valueOf(start_time * 1000).longValue());
 
                         for(i = 0; i < coords.size(); i++){
-                            get_event.add_coords(coords.get(i));
+                            get_event.addCoords(coords.get(i));
                         }
 
                         BugReport.getInstance().addGetEvent(get_event);
-                        Log.v("getEvent", event_type + "#" + event_label + "#" + distance + "#" + duration + "#" + "x: " + initial_location[0] + " y: " + initial_location[1] + "#" + "x: " + last_location[0] + " y: " + last_location[1]);
-                        events.clear();
+                        //Log.v("getEvent", event_type + "#" + event_label + "#" + distance + "#" + duration + "#" + "x: " + initial_location[0] + " y: " + initial_location[1] + "#" + "x: " + last_location[0] + " y: " + last_location[1]);
                         coords.clear();
                     }
                 }
             }
             } catch(Exception e){}
+        BugReport.getInstance().matchGetEventsToReportEvents();
+        BugReport.getInstance().printGetEvents();
     }
 }
 
@@ -188,27 +178,23 @@ class GetEvent{
     int event_type;
     String event_label;
     double distance;
-    float start_time;
-    float duration;
+    long start_time;
+    long duration;
 
-    public GetEvent(){
-        //just initializes?
-    }
-
-    public void add_type(int num){
+    public void setType(int num){
         event_type = num;
     }
-    public void add_label(String s){
+    public void setLabel(String s){
         event_label = s;
     }
-    public void add_distance(double d){
+    public void setDistance(double d){
         distance = d;
     }
-    public void add_duration(float t){
+    public void setDuration(long t){
         duration = t;
     }
-    public void add_start(float t){start_time = t;}
-    public void add_coords(int [] coord){
+    public void setStart(long t){start_time = t;}
+    public void addCoords(int[] coord){
         coords.add(coord);
     }
     public int get_type(){
@@ -220,41 +206,19 @@ class GetEvent{
     public double get_distance(){
         return distance;
     }
-    public float get_duration(){
+    public long getDuration(){
         return duration;
     }
-    public float get_start(){return start_time;}
+    public long getStart(){return start_time;}
     public ArrayList<int[]> get_coords(){
         return coords;
     }
-
-}
-
-class partitionevent {
-
-    float time;
-    int type;
-    int code;
-    int value;
-
-    public partitionevent(float ti, int t, int c, int v){
-        time = ti;
-        type = t;
-        code = c;
-        value = v;
-    }
-
-    public float get_time(){
-        return time;
-    }
-    public int get_type(){
-        return type;
-    }
-    public int get_code(){
-        return code;
-    }
-    public int get_value(){
-        return value;
+    public void printValues() {
+        String inputs = "";
+        for (int[] coord : coords) {
+            inputs += " " + coord[0] + "|" + coord[1];
+        }
+        Log.v("GetEvent", "Time: " + start_time + " | Coords: " + inputs);
     }
 
 }
