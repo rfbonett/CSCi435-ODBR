@@ -9,10 +9,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,7 +31,14 @@ public class HierarchyDumpManager {
         filename = "dump" + dump_index + ".xml";
         service = Executors.newCachedThreadPool();
         File dir = new File(directory);
-        dir.mkdir();
+        if (dir.exists()) {
+            for (File f : dir.listFiles()) {
+                f.delete();
+            }
+        }
+        else {
+            dir.mkdir();
+        }
     }
 
     public HierarchyDump takeHierarchyDump(AccessibilityNodeInfo root) {

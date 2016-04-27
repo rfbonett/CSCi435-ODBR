@@ -28,6 +28,7 @@ public class RecordFloatingWidget extends Service {
             PixelFormat.TRANSPARENT);
 
     private SensorDataManager sdm;
+    private GetEventManager gem;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -51,9 +52,11 @@ public class RecordFloatingWidget extends Service {
 
         wm.addView(ll, parameters);
 
-        // Start Sensor Data Collection
+        // Start Sensor Data and GetEvent Data Collection
+        gem = new GetEventManager();
         sdm = new SensorDataManager();
         sdm.startRecording();
+
     }
 
     public static void hideOverlay() {
@@ -72,19 +75,18 @@ public class RecordFloatingWidget extends Service {
 
 
     public void recordEvents(View view){
-        hideOverlay();
-        handler.post(widget_timer);
+        gem.startRecording();
         Globals.recording = true;
         Globals.time_last_event = System.currentTimeMillis();
+        hideOverlay();
+        handler.post(widget_timer);
     }
 
 
     public void stopRecording(View view) {
         sdm.stopRecording();
-        GetEventIntentService.endGetEvent();
-        while (Globals.recording) {}
-        partition_events pe = new partition_events();
-        pe.my_parse();
+        gem.stopRecording();
+        gem.parseEvents();
 
 
         Intent intent = new Intent(RecordFloatingWidget.this, RecordActivity.class);
@@ -95,14 +97,15 @@ public class RecordFloatingWidget extends Service {
         onDestroy();
     }
 
-    public static Runnable widget_timer = new Runnable() {
+    public Runnable widget_timer = new Runnable() {
         @Override
         public void run() {
 
             //check to see if we have reached the condition.
             if(System.currentTimeMillis() - Globals.time_last_event > 3000){
                 //we dont want to loop anymore
-                RecordFloatingWidget.restoreOverlay();
+                restoreOverlay();
+                Globals.recording = false;
             }
             else{
                 //check again 1 second later

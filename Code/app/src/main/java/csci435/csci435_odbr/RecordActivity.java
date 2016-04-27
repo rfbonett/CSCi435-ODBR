@@ -137,13 +137,12 @@ public class RecordActivity extends ActionBarActivity {
         Intent intent = new Intent(this, ReplayService.class);
         startService(intent);
 
-        //Launch application to be reported
+        Log.v("ReplayService", "Starting activity: " + Globals.packageName);
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
         reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(reportApp);
-
     }
 
 

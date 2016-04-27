@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public class ReportEvent {
     private long timestamp;
+    private long duration = 0;
     private int type;
     private Screenshot screenShot;
     private HierarchyDump dump;
@@ -31,6 +32,18 @@ public class ReportEvent {
         dump = d;
     }
 
+    public void setType(int t) {
+        type = t;
+    }
+
+    public void setTime(long t) {
+        timestamp = t;
+    }
+
+    public void setDuration(long d) {
+        duration = d;
+    }
+
     public String getData() {
         return "Time: " + timestamp + " | Screenshot: " + screenShot.getFilename() + " | Dump: " + dump.getFilename();
     }
@@ -50,5 +63,13 @@ public class ReportEvent {
     public String getWidgetDescription() {
         Node widget = dump.getViewAtCoordinates(inputs.get(0)[0], inputs.get(0)[1]);
         return widget.getNodeName(); //TODO improve description
+    }
+
+    public long getTime() {
+        return timestamp;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 }

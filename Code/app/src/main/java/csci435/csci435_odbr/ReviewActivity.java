@@ -139,8 +139,7 @@ public class ReviewActivity extends FragmentActivity {
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
 
             ReportEvent e = BugReport.getInstance().getEventAtIndex(pos);
-            //eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User " + BugReport.getInstance().getEventAtIndex(pos).getEventType() + " at x: " + click[0] + " y: " + click[1]);
-            eventDescription.setText(e.getData());
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User clicked at x: " + e.getInputEvents().get(0)[0] + " y: " + e.getInputEvents().get(0)[1]);
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             Bitmap screenBitmap = e.getScreenshot().getBitmap();
@@ -159,8 +158,8 @@ public class ReviewActivity extends FragmentActivity {
             color.setStrokeWidth(5);
 
             for (int[] inputEvent : BugReport.getInstance().getEventAtIndex(pos).getInputEvents()) {
-                int x = inputEvent[1];
-                int y = inputEvent[2];
+                int x = inputEvent[0];
+                int y = inputEvent[1];
                 int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), x, y);
                 c.drawCircle(point[0],point[1], 10, color);
             }
@@ -175,6 +174,7 @@ public class ReviewActivity extends FragmentActivity {
             center[1] = height * bheight / Globals.height;
             return center;
         }
+
     }
 
 
