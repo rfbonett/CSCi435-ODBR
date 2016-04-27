@@ -22,6 +22,8 @@ public class BugReport {
     private static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
     private static int MAX_ITEMS_TO_PRINT = 10;
 
+    private final long report_start_time = 0;
+    private long report_end_time;
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private ArrayList<GetEvent> getEventList = new ArrayList<GetEvent>();
@@ -66,6 +68,13 @@ public class BugReport {
         getEventList.add(get_event);
     }
 
+    public long getReport_start_time(){
+        return report_start_time;
+    }
+
+    public long getReport_end_time(){
+        return report_end_time;
+    }
     public void printGetEvents() {
         for (GetEvent e : getEventList) {
             e.printValues();
