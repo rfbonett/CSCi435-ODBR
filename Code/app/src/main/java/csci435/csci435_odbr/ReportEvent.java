@@ -102,4 +102,8 @@ public class ReportEvent {
     public long getWaitTime() {
         return timeUntilNextEvent;
     }
+
+    public String getHierarchy() {
+        return dump.getFilename();
+    }
 }

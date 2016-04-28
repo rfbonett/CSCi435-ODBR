@@ -41,9 +41,22 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         //JsonModel.getInstance().setReport_start_time();
         //JsonModel.getInstance().setReport_end_time();
-        JsonModel.getInstance().getEvents();
+
 
         //for eventList
+        for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
+            Log.v("FOR bug eventList:", "" + i);
+            Log.v("FOR bug eventList:", "" + BugReport.getInstance().getEventList().get(i).getData());
+
+            Event temp = new Event();
+            temp.screenshot = BugReport.getInstance().getEventList().get(i).getScreenshot().getFilename();
+            temp.event_start_time = BugReport.getInstance().getEventList().get(i).getTime();
+            temp.event_end_time = BugReport.getInstance().getEventList().get(i).getTime() + BugReport.getInstance().getEventList().get(i).getDuration();
+            temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
+            temp.hierarchy = BugReport.getInstance().getEventList().get(i).getHierarchy();
+            JsonModel.getInstance().eventList.add(temp);
+        }
+        JsonModel.getInstance().getEvents();
     }
 
     public void setApp_name(){
@@ -145,12 +158,15 @@ public class JsonModel {
         Log.v("JSON", "report_start_time: " + JsonModel.getInstance().getReport_start_time());
         Log.v("JSON", "report_end_time: " + JsonModel.getInstance().getReport_end_time());
 
-        for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
-            Log.v("TESTER", "DOES IT GET HERE????");
-            //Log.v("FOR JSON:", "" + i);
-            //Log.v("FOR JSON:", "" + BugReport.getInstance().getEventList().get(i).getData());
-        }
 
+        for(int i = 0; i < eventList.size(); i++){
+            Log.v("FOR JSON eventList:", "" + i);
+            Log.v("FOR JSON eventList:", "screenshot" + eventList.get(i).screenshot);
+            Log.v("FOR JSON eventList:", "starttime" + eventList.get(i).event_start_time);
+            Log.v("FOR JSON eventList:", "endtime" + eventList.get(i).event_end_time);
+            Log.v("FOR JSON eventList:", "inputList" + eventList.get(i).inputList);
+            Log.v("FOR JSON eventList:", "hierarchy" + eventList.get(i).hierarchy);
+        }
         JsonModel.getInstance().JavatoJson();
         return 1;
     }
@@ -168,9 +184,9 @@ class Event {
     String screenshot;
     double event_start_time;
     double event_end_time;
-    List<inputs> inputList;
+    List<int[]> inputList;
     String hierarchy;
-    String Orientation;
+    //String Orientation;
 
     //public void setScreenshot(){
       //  screenshot = BugReport.getInstance().;
@@ -178,7 +194,4 @@ class Event {
 
 }
 
-class inputs{
 
-
-}
