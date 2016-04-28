@@ -53,7 +53,9 @@ public class JsonModel {
             temp.event_start_time = BugReport.getInstance().getEventList().get(i).getTime();
             temp.event_end_time = BugReport.getInstance().getEventList().get(i).getTime() + BugReport.getInstance().getEventList().get(i).getDuration();
             temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
+            temp.description = BugReport.getInstance().getEventList().get(i).getEventDescription();
             temp.hierarchy = BugReport.getInstance().getEventList().get(i).getHierarchy();
+
             JsonModel.getInstance().eventList.add(temp);
         }
         JsonModel.getInstance().getEvents();
@@ -165,6 +167,7 @@ public class JsonModel {
             Log.v("FOR JSON eventList:", "starttime" + eventList.get(i).event_start_time);
             Log.v("FOR JSON eventList:", "endtime" + eventList.get(i).event_end_time);
             Log.v("FOR JSON eventList:", "inputList" + eventList.get(i).inputList);
+            Log.v("FOR JSON eventList:", "desc" + eventList.get(i).description);
             Log.v("FOR JSON eventList:", "hierarchy" + eventList.get(i).hierarchy);
         }
         JsonModel.getInstance().JavatoJson();
@@ -185,7 +188,9 @@ class Event {
     double event_start_time;
     double event_end_time;
     List<int[]> inputList;
+    String description;
     String hierarchy;
+
     //String Orientation;
 
     //public void setScreenshot(){
