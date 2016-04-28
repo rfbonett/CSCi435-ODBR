@@ -3,9 +3,11 @@ package csci435.csci435_odbr;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 
 /**
  * Created by danielpark on 4/21/16.
@@ -14,15 +16,13 @@ public class JsonModel {
     private String device_type;
     private int os_version;
     private String app_name;
-    private String app_version;
     private String title;
     private String name;
     private String description_desired_outcome;
     private String description_actual_outcome;
-    private double report_start_time;
-    private double report_end_time;
-    //private List<float> accelerometer_streamlist;
-    //private String gyroscope_stream;
+    private HashMap<Sensor, SensorDataList> sensorData;
+    private static int MAX_ITEMS_TO_PRINT = 10;
+
     private List<Event> eventList = new ArrayList<Event>();
 
     private static JsonModel model = new JsonModel();
@@ -35,13 +35,24 @@ public class JsonModel {
         JsonModel.getInstance().setDevice_type();
         JsonModel.getInstance().setTitle();
         JsonModel.getInstance().setApp_name();
-        //version couldn't be implemented yet
         JsonModel.getInstance().setName();
         JsonModel.getInstance().setDescription_desired_outcome();
         JsonModel.getInstance().setDescription_actual_outcome();
-        //JsonModel.getInstance().setReport_start_time();
-        //JsonModel.getInstance().setReport_end_time();
 
+        sensorData = BugReport.getInstance().getSensorData();
+        for (Sensor s : sensorData.keySet()) {
+            Log.v("JSONModel", "|*************************************************|");
+            Log.v("JSONModel", "Data for Sensor: " + s.getName());
+            Log.v("JSONModel", "Type of Sensor: " + s.getType());
+            SensorDataList data = sensorData.get(s);
+            long timeStart = data.getTime(0);
+            for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
+                Log.v("JSONModel", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + BugReport.getInstance().makeSensorDataReadable(data.getValues(i)));
+            }
+            int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
+            Log.v("JSONModel", "And " + (printed > 0 ? printed : 0) + " more");
+            Log.v("JSONModel", "|*************************************************|");
+        }
 
         //for eventList
         for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
@@ -111,8 +122,9 @@ public class JsonModel {
     }
 
     public double getReport_start_time(){
-        return report_start_time;
+        return 0;
     }
+
     //get the last event of eventList + duration
     public double getReport_end_time(){
         int last_item = BugReport.getInstance().getEventList().size() - 1;
@@ -122,20 +134,7 @@ public class JsonModel {
         return BugReport.getInstance().getEventList().get(last_item).getTime() + BugReport.getInstance().getEventList().get(last_item).getDuration();
 
     }
-/*
-    public void setAccelerometer_stream(){
-        for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
-            Log.v("FOR JSON:", "" + i);
-            BugReport.getInstance().getEventList().get(i).printData();
-        }
-*/
 
-    //public void setEvents(){
-    //    for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
-    //        Log.v("FOR JSON:", "" + i);
-    //        BugReport.getInstance().getEventList().get(i).get/**/;
-    //    }
-    //}
     public List<ReportEvent> getEvents(){
         return BugReport.getInstance().getEventList();
     }
@@ -149,7 +148,7 @@ public class JsonModel {
         Log.v("JSON", "device_type: " + JsonModel.getInstance().getDevice_type());
 
         Log.v("JSON", "app_name: " + app_name);
-        Log.v("JSON", "app_version: " + app_version);
+//        Log.v("JSON", "app_version: " + app_version);
 
         Log.v("JSON", "title: " + JsonModel.getInstance().getTitle());
         Log.v("JSON", "name: " + JsonModel.getInstance().getName());

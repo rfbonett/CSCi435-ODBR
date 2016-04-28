@@ -68,13 +68,11 @@ public class BugReport {
         getEventList.add(get_event);
     }
 
-    public long getReport_start_time(){
-        return report_start_time;
+    public HashMap<Sensor, SensorDataList> getSensorData(){
+        return sensorData;
     }
 
-    public long getReport_end_time(){
-        return report_end_time;
-    }
+
     public void printGetEvents() {
         for (GetEvent e : getEventList) {
             e.printValues();
@@ -178,7 +176,7 @@ public class BugReport {
     }
 
 
-    private String makeSensorDataReadable(float[] input) {
+    public String makeSensorDataReadable(float[] input) {
         String s = "";
         for (float f : input) {
             s +=  f + " | ";
