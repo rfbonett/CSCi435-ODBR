@@ -20,7 +20,6 @@ public class JsonModel {
     private String name;
     private String description_desired_outcome;
     private String description_actual_outcome;
-    private HashMap<Sensor, SensorDataList> sensorData;
     private static int MAX_ITEMS_TO_PRINT = 10;
 
     private List<Accelerometer> accelerometerStream = new ArrayList<Accelerometer>();
@@ -41,15 +40,19 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_desired_outcome();
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setEvents();
+        JsonModel.getInstance().setSensorData();
 
         //for sensor data
-        sensorData = BugReport.getInstance().getSensorData();
-        for (Sensor s : sensorData.keySet()) {
+
+    }
+
+    public void setSensorData(){
+        for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
             Log.v("JSONModel", "||||||||||||||||");
             Log.v("JSONModel", "Data for Sensor: " + s.getName());
             Log.v("JSONModel", "Type of Sensor: " + s.getType());
 
-            SensorDataList data = sensorData.get(s);
+            SensorDataList data =  BugReport.getInstance().getSensorData().get(s);
             long timeStart = data.getTime(0);
 
 
@@ -61,7 +64,7 @@ public class JsonModel {
                     accelerometer.x = data.getValues(i)[0];
                     accelerometer.y = data.getValues(i)[1];
                     accelerometer.z = data.getValues(i)[2];
-                    accelerometerStream.add(accelerometer);
+                    JsonModel.getInstance().accelerometerStream.add(accelerometer);
                 }
 
             }
@@ -74,24 +77,12 @@ public class JsonModel {
                     gyroscope.x = data.getValues(i)[0];
                     gyroscope.y = data.getValues(i)[1];
                     gyroscope.z = data.getValues(i)[2];
-                    gyroscopeStream.add(gyroscope);
+                    JsonModel.getInstance().gyroscopeStream.add(gyroscope);
                 }
-
             }
-
-
-
-            for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
-                Log.v("JSONModel", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + BugReport.getInstance().makeSensorDataReadable(data.getValues(i)));
-            }
-            int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
-            Log.v("JSONModel", "And " + (printed > 0 ? printed : 0) + " more");
-            Log.v("JSONModel", "|*************************************************|");
         }
-
-
+        return;
     }
-
     public void setApp_name(){
         app_name = Globals.packageName;
     }
