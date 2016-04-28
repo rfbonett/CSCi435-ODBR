@@ -23,6 +23,8 @@ public class JsonModel {
     private HashMap<Sensor, SensorDataList> sensorData;
     private static int MAX_ITEMS_TO_PRINT = 10;
 
+    private List<Accelerometer> accelerometerStream = new ArrayList<Accelerometer>();
+    private List<Gyroscope> gyroscopeStream = new ArrayList<Gyroscope>();
     private List<Event> eventList = new ArrayList<Event>();
 
     private static JsonModel model = new JsonModel();
@@ -38,14 +40,47 @@ public class JsonModel {
         JsonModel.getInstance().setName();
         JsonModel.getInstance().setDescription_desired_outcome();
         JsonModel.getInstance().setDescription_actual_outcome();
+        JsonModel.getInstance().setEvents();
 
+        //for sensor data
         sensorData = BugReport.getInstance().getSensorData();
         for (Sensor s : sensorData.keySet()) {
-            Log.v("JSONModel", "|*************************************************|");
+            Log.v("JSONModel", "||||||||||||||||");
             Log.v("JSONModel", "Data for Sensor: " + s.getName());
             Log.v("JSONModel", "Type of Sensor: " + s.getType());
+
             SensorDataList data = sensorData.get(s);
             long timeStart = data.getTime(0);
+
+
+            if (s.getType() == Sensor.TYPE_ACCELEROMETER){
+                for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
+                    Log.v("ACCELEROMETER", "Time: " + "Data: " + BugReport.getInstance().makeSensorDataReadable(data.getValues(i)));
+                    Accelerometer accelerometer = new Accelerometer();
+                    accelerometer.time = data.getTime(i) - timeStart;
+                    accelerometer.x = data.getValues(i)[0];
+                    accelerometer.y = data.getValues(i)[1];
+                    accelerometer.z = data.getValues(i)[2];
+                    accelerometerStream.add(accelerometer);
+                }
+
+            }
+
+            else if (s.getType() == Sensor.TYPE_GYROSCOPE){
+                for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
+                    Log.v("GYROSCOPE", "Time: " + "Data: " + BugReport.getInstance().makeSensorDataReadable(data.getValues(i)));
+                    Gyroscope gyroscope = new Gyroscope();
+                    gyroscope.time = data.getTime(i) - timeStart;
+                    gyroscope.x = data.getValues(i)[0];
+                    gyroscope.y = data.getValues(i)[1];
+                    gyroscope.z = data.getValues(i)[2];
+                    gyroscopeStream.add(gyroscope);
+                }
+
+            }
+
+
+
             for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
                 Log.v("JSONModel", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + BugReport.getInstance().makeSensorDataReadable(data.getValues(i)));
             }
@@ -54,22 +89,7 @@ public class JsonModel {
             Log.v("JSONModel", "|*************************************************|");
         }
 
-        //for eventList
-        for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
-            Log.v("FOR bug eventList:", "" + i);
-            Log.v("FOR bug eventList:", "" + BugReport.getInstance().getEventList().get(i).getData());
 
-            Event temp = new Event();
-            temp.screenshot = BugReport.getInstance().getEventList().get(i).getScreenshot().getFilename();
-            temp.event_start_time = BugReport.getInstance().getEventList().get(i).getTime();
-            temp.event_end_time = BugReport.getInstance().getEventList().get(i).getTime() + BugReport.getInstance().getEventList().get(i).getDuration();
-            temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
-            temp.description = BugReport.getInstance().getEventList().get(i).getEventDescription();
-            temp.hierarchy = BugReport.getInstance().getEventList().get(i).getHierarchy();
-
-            JsonModel.getInstance().eventList.add(temp);
-        }
-        JsonModel.getInstance().getEvents();
     }
 
     public void setApp_name(){
@@ -135,8 +155,23 @@ public class JsonModel {
 
     }
 
-    public List<ReportEvent> getEvents(){
-        return BugReport.getInstance().getEventList();
+    public List<Event> setEvents(){
+        //for eventList
+        for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
+            Log.v("FOR bug eventList:", "" + i);
+            Log.v("FOR bug eventList:", "" + BugReport.getInstance().getEventList().get(i).getData());
+
+            Event temp = new Event();
+            temp.screenshot = BugReport.getInstance().getEventList().get(i).getScreenshot().getFilename();
+            temp.event_start_time = BugReport.getInstance().getEventList().get(i).getTime();
+            temp.event_end_time = BugReport.getInstance().getEventList().get(i).getTime() + BugReport.getInstance().getEventList().get(i).getDuration();
+            temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
+            temp.description = BugReport.getInstance().getEventList().get(i).getEventDescription();
+            temp.hierarchy = BugReport.getInstance().getEventList().get(i).getHierarchy();
+
+            JsonModel.getInstance().eventList.add(temp);
+        }
+        return JsonModel.getInstance().eventList;
     }
 
 
@@ -189,13 +224,21 @@ class Event {
     List<int[]> inputList;
     String description;
     String hierarchy;
-
     //String Orientation;
+}
 
-    //public void setScreenshot(){
-      //  screenshot = BugReport.getInstance().;
-    //}
+class Accelerometer {
+    double time;
+    double x;
+    double y;
+    double z;
+}
 
+class Gyroscope {
+    double time;
+    double x;
+    double y;
+    double z;
 }
 
 
