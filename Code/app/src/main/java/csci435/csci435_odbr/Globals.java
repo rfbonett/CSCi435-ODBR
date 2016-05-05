@@ -16,18 +16,12 @@ public class Globals {
     public static ArrayList<Sensor> sensors;
     public static SensorManager sMgr;
     public static boolean recording;
-    public static boolean trackUserEvents;
     public static int width;
     public static int height;
-    public static int screenshot;
     public static int availableHeightForImage;
-    public static int wait;
-    public static int total_screenshots;
-    public static int screenshot_index;
     public static long time_last_event;
-    public static long AccessibilityStart;
-    public static Float GetEventStart;
-    public static boolean firstEvent;
+    public static boolean exited = false;
+    public static boolean parsing = false;
 
     public static SparseArray<String[]> sensorDescription = new SparseArray<String[]>();
     static {
