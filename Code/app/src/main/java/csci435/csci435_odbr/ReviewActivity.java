@@ -52,6 +52,7 @@ public class ReviewActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -78,6 +79,10 @@ public class ReviewActivity extends FragmentActivity {
         displaySensorData(sensorDataButton);
 
         Globals.availableHeightForImage = Globals.height - verticalSpacer;
+
+        //partitionevents?
+
+
     }
 
 
@@ -94,7 +99,12 @@ public class ReviewActivity extends FragmentActivity {
         userEventsButton.setChecked(true);
     }
 
+    /**
+     * Submits the report to the server, relaunches application
+     * @param view
+     */
     public void returnToRecordActivity(View view) {
+        //BugReport.getInstance().toJSON();
         Intent intent = new Intent(this, RecordActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
@@ -108,7 +118,7 @@ public class ReviewActivity extends FragmentActivity {
 
         public UserEventPageAdapter(FragmentManager manager) {
             super(manager);
-            count = BugReport.getInstance().numEvents();
+            count = BugReport.getInstance().getUserEvents().size();
         }
 
         @Override
@@ -131,18 +141,32 @@ public class ReviewActivity extends FragmentActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             int pos = getArguments().getInt(ARG_OBJECT);
-            int max = BugReport.getInstance().numEvents();
+            int max = BugReport.getInstance().getUserEvents().size();
 
+            //String viewDesc = BugReport.getInstance().getUserEvents().get(pos).getViewDesc();
             View rootView = inflater.inflate(R.layout.user_event_fragment_layout, container, false);
             TextView eventDescription = (TextView) rootView.findViewById(R.id.userEventDescription);
 
-            ReportEvent e = BugReport.getInstance().getEventAtIndex(pos);
-            eventDescription.setText("(" + (pos + 1) + "/" + max + ") " + e.getEventDescription());
+            int [] click = BugReport.getInstance().getEventAtIndex(pos).getGetEvent().get_coords().get(0);
+            eventDescription.setText("(" + (pos + 1) + "/" + max + ")  User " + BugReport.getInstance().getEventAtIndex(pos).getEventType() + " at x: " + click[0] + " y: " + click[1]);
 
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
-            Bitmap screenBitmap = e.getScreenshot().getBitmap();
+            //Bitmap screenBitmap = BugReport.getInstance().getScreenshotAtIndex(pos);
+            //different way to get this bitmap
+            //int size = BugReport.getInstance().getListSize();
+            //Log.v("Screenshot", "size: "+ size);
+            File sdCard = Environment.getExternalStorageDirectory();
+            File directory = new File(sdCard.getAbsolutePath() + "/ScreenShots");
+            Events event = BugReport.getInstance().getEventAtIndex(pos);
+            Log.v("Screenshot", "filename: " + event.getFilename());
+            File yourFile = new File(directory, event.getFilename());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap screenBitmap = BitmapFactory.decodeFile(yourFile.getAbsolutePath(), options);
+            //BugReport.getInstance().addScreenshot(screen); //screenshot is added here so shouldn't be a problem
+
+
 
             if (screenBitmap != null) {
                 screenshot.setImageBitmap(screenBitmap);
@@ -157,13 +181,12 @@ public class ReviewActivity extends FragmentActivity {
             color.setStyle(Paint.Style.STROKE);
             color.setStrokeWidth(5);
 
-            for (int[] inputEvent : BugReport.getInstance().getEventAtIndex(pos).getInputEvents()) {
-                int x = inputEvent[0];
-                int y = inputEvent[1];
-                int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), x, y);
-                c.drawCircle(point[0],point[1], 10, color);
-            }
+            //HERE WE NEED GET_EVENT DATA
 
+            int[] bounds = BugReport.getInstance().getEventAtIndex(pos).getGetEvent().get_coords().get(0);
+            int[] point = getTransformedBoundsInScreen(bScaled.getWidth(), bScaled.getHeight(), bounds[0], bounds[1]);
+            c.drawCircle(point[0],point[1], 50, color);
+            //c.drawRect(BugReport.getInstance().getEventAtIndex(pos).getScreenRect(), color);
             screenshot.setImageBitmap(bScaled);
             return rootView;
         }
@@ -174,7 +197,6 @@ public class ReviewActivity extends FragmentActivity {
             center[1] = height * bheight / Globals.height;
             return center;
         }
-
     }
 
 
@@ -184,7 +206,7 @@ public class ReviewActivity extends FragmentActivity {
 
         public SensorDataPageAdapter(FragmentManager manager) {
             super(manager);
-            count = Globals.sensors.size();
+            count = BugReport.getInstance().numSensors();
         }
 
         @Override
@@ -209,15 +231,14 @@ public class ReviewActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             int pos = getArguments().getInt(ARG_OBJECT);
-            int max = Globals.sensors.size();
-            Sensor s = Globals.sensors.get(pos);
+            int max = BugReport.getInstance().numSensors();
+            Sensor s = BugReport.getInstance().getSensor(pos);
             View rootView = inflater.inflate(R.layout.sensor_data_fragment_layout, container, false);
             TextView sensorTitle = (TextView) rootView.findViewById(R.id.sensorTitle);
-            if (s != null) {
-                sensorTitle.setText("(" + (pos + 1) + "/" + max + ")  " + s.getName());
-                ImageView sensorGraph = (ImageView) rootView.findViewById(R.id.sensorGraph);
-                sensorGraph.setImageBitmap(BugReport.getInstance().drawSensorData(s));
-            }
+            sensorTitle.setText("(" + (pos + 1) + "/" + max + ")  " + s.getName());
+
+            ImageView sensorGraph = (ImageView) rootView.findViewById(R.id.sensorGraph);
+            sensorGraph.setImageBitmap(BugReport.getInstance().drawSensorData(s));
             return rootView;
         }
     }
@@ -263,4 +284,5 @@ public class ReviewActivity extends FragmentActivity {
     }
 
 }
+
 

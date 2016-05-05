@@ -8,27 +8,49 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".LaunchAppActivity">
+    tools:context="csci435.csci435_odbr.LaunchAppActivity">
 
-    <ImageView
-        android:id="@+id/searchIcon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/magnifying_glass" />
-
-    <EditText
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/searchBar"
-        android:layout_toEndOf="@+id/searchIcon"
-        android:layout_alignParentTop="true"
-        android:maxLines="1"
-        android:inputType="textVisiblePassword"
-        android:imeOptions="actionDone"/>
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/installedAppsListView"
-        android:layout_below="@+id/searchBar" />
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/magnifying_glass" />
+
+        <ImageButton
+            android:id="@+id/optionsButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@mipmap/ic_gear"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchBar"
+            android:layout_toEndOf="@+id/searchIcon"
+            android:layout_toStartOf="@+id/optionsButton"
+            android:layout_alignParentTop="true"
+            android:maxLines="1"
+            android:inputType="textVisiblePassword"
+            android:imeOptions="actionDone"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/optionsListView"
+            android:layout_below="@+id/searchBar"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/installedAppsListView"
+            android:layout_below="@+id/optionsListView" />
+    </RelativeLayout>
 </RelativeLayout>

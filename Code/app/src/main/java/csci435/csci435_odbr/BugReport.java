@@ -1,18 +1,31 @@
 package csci435.csci435_odbr;
 
+import java.lang.reflect.Array;
+import java.util.AbstractQueue;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
 
 import org.json.JSONObject;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.provider.Settings;
+import android.util.SparseIntArray;
+import android.view.accessibility.AccessibilityEvent;
 import android.graphics.Bitmap;
+import android.util.SparseArray;
 import android.util.Log;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
@@ -24,14 +37,15 @@ public class BugReport {
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
+    private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
+    private HashMap<Long, Integer> orientations = new HashMap<Long, Integer>();
     private ArrayList<GetEvent> getEventList = new ArrayList<GetEvent>();
-    private List<ReportEvent> eventList = new ArrayList<ReportEvent>();
+    private List<Events> eventList = new ArrayList<Events>();
     private String title = "";
     private String reporterName = "";
     private String desiredOutcome = "";
     private String actualOutcome = "";
-    private ScreenshotManager sm;
-    private HierarchyDumpManager hdm;
+    private int getEventIndex = 0;
 
     private static BugReport ourInstance = new BugReport();
 
@@ -39,93 +53,92 @@ public class BugReport {
         return ourInstance;
     }
 
-    private BugReport() {
-        clearReport();
-    }
+    private BugReport() {}
 
     public void clearReport() {
         sensorData.clear();
         sensorGraphs.clear();
+        sensorList.clear();
         eventList.clear();
         getEventList.clear();
         title = "";
         reporterName = "";
         desiredOutcome = "";
         actualOutcome = "";
-        initializeManagers();
+        getEventIndex = 0;
     }
 
-    private void initializeManagers() {
-        sm = new ScreenshotManager();
-        hdm = new HierarchyDumpManager();
-    }
+    public void refineEventList(){
 
+        Log.v("deleting", Globals.packageName);
+        for(int i = eventList.size() - 1; i >= 0; i--){
+            //check to see if the package name matches the one for the app we are recording
+            if(!eventList.get(i).getPackageName().equals(Globals.packageName)){
+                //delete the event from the list
+                Log.v("deleting", eventList.get(i).getPackageName());
+                eventList.remove(i);
+            }
+        }
+    }
 
     public void addGetEvent(GetEvent get_event){
         //throw this into a getEventQueue
         getEventList.add(get_event);
+        getEventIndex++;
     }
 
-    public void printGetEvents() {
-        for (GetEvent e : getEventList) {
-            e.printValues();
-        }
-        for (ReportEvent e : eventList) {
-            Log.v("GetEvent", "ReportEvent: " + e.getData());
-        }
-    }
+    public void matchEvents(){
 
-    public void matchGetEventsToReportEvents() {
-        if (getEventList.size() == 0 || eventList.size() == 0) {
-            return;
-        }
+        //iterate over the eventList
+        boolean condition = true;
+        GetEvent get_event_to_add = new GetEvent();
+        int j = 0;
+        for(int i = 0; i < eventList.size(); i++) {
+            while(condition){
+                if (j < getEventList.size()) {
+                    GetEvent get_event = getEventList.get(j);
+                    Float time_dif_get_event = get_event.get_start() - Globals.GetEventStart;
+                    Float time_dif_accessibility = (eventList.get(i).getTimeStamp() - Globals.AccessibilityStart) / 1000f;
 
-        //Normalize times
-        long getEventStartTime = getEventList.get(0).getStart();
-        long reportEventStartTime = eventList.get(0).getTime();
-        for (GetEvent e : getEventList) {
-            e.setStart(e.getStart() - getEventStartTime);
-        }
-        for (ReportEvent e :  eventList) {
-            e.setTime(e.getTime() - reportEventStartTime);
-        }
-        //Match events
-        try {
-            int ndx = 0;
-            for (ReportEvent e : eventList) {
-                ndx = closestGetEvent(e.getTime(), ndx);
-                e.setDuration(getEventList.get(ndx).getDuration());
-                for (int[] coord : getEventList.get(ndx).get_coords()) {
-                    e.addInputEvents(coord);
+                    if (time_dif_get_event >= time_dif_accessibility) {
+                        Log.v("GetEventQueue", "Reassigns getEvent");
+                        get_event_to_add = get_event;
+                        condition = false;
+                    }
+                    else{
+                        Log.v("GetEventQueue", "GE "+ time_dif_get_event + " : A " + time_dif_accessibility);
+                    }
                 }
+                else{
+                    Log.v("GetEventQueue", "We hit null");
+                    condition = false;
+                }
+                j++;
             }
-        } catch (Exception e) {Log.v("BugReport", "Error matching GetEvents to ReportEvents");}
-        int i = 0;
-        ReportEvent cur, last = eventList.get(i);
-        while (++i < eventList.size()) {
-            cur = eventList.get(i);
-            long time = cur.getTime() - last.getTime() - last.getDuration();
-            last.setWaitTime(time > 0 ? time : 0);
-            last = cur;
+            eventList.get(i).addGetEvent(get_event_to_add);
+            condition = true;
         }
     }
 
-    private int closestGetEvent(long time, int ndx) {
-        while (ndx + 1 < getEventList.size() && getEventList.get(ndx + 1).getStart() - time < time - getEventList.get(ndx).getStart()) {
-            ++ndx;
-        }
-        return ndx;
+    public void addOrientationChange(long time, int orientation) {
+        orientations.put(time, orientation);
     }
 
-    public void addEvent(ReportEvent e, AccessibilityNodeInfo node) {
-        e.addHierarchyDump(hdm.takeHierarchyDump(node));
-        e.addScreenshot(sm.takeScreenshot());
-        eventList.add(e);
+    public int numGetEvents(){
+        return getEventIndex;
     }
 
+    public void addUserEvent(AccessibilityEvent e) {
+        eventList.add(new Events(e));
+}
+
+    public int getNumEvents(){
+        return eventList.size();
+    }
 
     public void addSensorData(Sensor s, SensorEvent e) {
-        if (!sensorData.containsKey(s)) {
+        if (!sensorList.contains(s)) {
+            sensorList.add(s);
             sensorData.put(s, new SensorDataList());
         }
         sensorData.get(s).addData(e.timestamp, e.values.clone());
@@ -165,10 +178,18 @@ public class BugReport {
             Log.v("BugReport", "|*************************************************|");
         }
 
+        //Log UserEvent data
+        for(int i = 0; i < eventList.size(); i++){
+            Log.v("Event Number:", "" + i);
+            eventList.get(i).printData();
+        }
         return new JSONObject();
     }
 
+    public List<Events> getEventList(){
+        return eventList;
 
+    }
     private String makeSensorDataReadable(float[] input) {
         String s = "";
         for (float f : input) {
@@ -219,6 +240,13 @@ public class BugReport {
 
 
     /* Getters */
+    public List<Events> getUserEvents() {
+        return eventList;
+    }
+    public Events getEventAtIndex(int ndx) {
+        return eventList.get(ndx);
+    }
+
     public String getReporterName() {
         return reporterName;
     }
@@ -231,14 +259,79 @@ public class BugReport {
     public String getActualOutcome(){
         return actualOutcome;
     }
-    public List<ReportEvent> getEventList() {
-        return eventList;
+    public int numSensors() {return sensorData.keySet().size();}
+    public Sensor getSensor(int pos) {return sensorList.get(pos);}
+
+}
+
+
+
+
+class Events {
+    private long timeStamp;
+    private int eventType;
+    private CharSequence packageName;
+    private CharSequence className;
+    private CharSequence contentDescription;
+    private CharSequence text;
+    private int screenshotIndex;
+    private GetEvent getEvent;
+    private HashMap<Long, Integer> orientations;
+
+    public Events(AccessibilityEvent e){
+        packageName = e.getPackageName();
+        eventType = e.getEventType();
+        timeStamp = e.getEventTime();
+        //className = e.getSource().getClassName();
+        //contentDescription = e.getSource().getContentDescription();
+        //text = e.getSource().getText();
+        screenshotIndex = Globals.screenshot_index;
+        orientations = new HashMap<Long, Integer>();
     }
-    public int numEvents() {
-        return eventList.size();
+
+    public String getEventType(){
+        if(eventType == 2){
+            return "view long clicked";
+        }
+        else{
+            return "view clicked";
+        }
     }
-    public ReportEvent getEventAtIndex(int ndx) {
-        return eventList.get(ndx);
+    public String getFilename(){
+        return "screenshot" + screenshotIndex + ".png";
+    }
+    public String getPackageName(){
+        return packageName + "";
+    }
+    public String getViewDescription() {
+        char stopChar = '.';
+        int start = className.length() - 1;
+        while (start > 0 && !(stopChar == className.charAt(start))) {
+            start--;
+        }
+        return (String) className.subSequence(start + 1, className.length()) + " " + contentDescription;
+    }
+
+    public long getTimeStamp(){
+        return timeStamp;
+    }
+
+    public void printData(){
+        Log.v("Event: time", "" + timeStamp);
+        Log.v("Event: type", "" + eventType);
+        Log.v("Event: package name", "" + packageName);
+        Log.v("Event: class name", "" + className);
+        Log.v("Event: description", "" + contentDescription);
+        Log.v("Event: text", "" + text);
+    }
+
+    public void addGetEvent(GetEvent get_event) {
+        //we are adding the getEvent to the desired object
+        getEvent = get_event;
+    }
+
+    public GetEvent getGetEvent(){
+        return getEvent;
     }
 }
 

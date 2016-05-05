@@ -1,9 +1,10 @@
 package csci435.csci435_odbr;
 
+import android.hardware.Sensor;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class JsonModel {
     private double report_end_time;
     //private List<float> accelerometer_streamlist;
     //private String gyroscope_stream;
-    private List<ReportEvent> eventList = new ArrayList<ReportEvent>();
+    private List<Events> eventList = new ArrayList<Events>();
 
     private static JsonModel model = new JsonModel();
     public static JsonModel getInstance() {
@@ -43,7 +44,7 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setReport_start_time();
         JsonModel.getInstance().setReport_end_time();
-        JsonModel.getInstance().setEvents();
+//        JsonModel.getInstance().setEvents();
 
 
     }
@@ -96,7 +97,7 @@ public class JsonModel {
     public String getDescription_actual_outcome(){
         return description_actual_outcome;
     }
-    /*
+
     public void setReport_start_time(){
         report_start_time = RecordFloatingWidget.getReportStartTime();
     }
@@ -115,8 +116,8 @@ public class JsonModel {
         for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
             Log.v("FOR JSON:", "" + i);
             BugReport.getInstance().getEventList().get(i).printData();
-        } */
-
+        }
+    }
 
     //public void setEvents(){
     //    for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
@@ -124,10 +125,10 @@ public class JsonModel {
     //        BugReport.getInstance().getEventList().get(i).get/**/;
     //    }
     //}
-    public void setEvents(){
-        eventList = BugReport.getInstance().getEventList();
-    }
 
+    public List<Events> getEvents(){
+        return eventList;
+    }
     public int tester() {
         build_device();
 
@@ -144,8 +145,8 @@ public class JsonModel {
         Log.v("JSON", "description_desired_outcome: " + JsonModel.getInstance().getDescription_desired_outcome());
         Log.v("JSON", "description_actual_outcome: " + JsonModel.getInstance().getDescription_actual_outcome());
 
-        //Log.v("JSON", "report_start_time: " + JsonModel.getInstance().getReport_start_time());
-        //Log.v("JSON", "report_end_time: " + JsonModel.getInstance().getReport_end_time());
+        Log.v("JSON", "report_start_time: " + JsonModel.getInstance().getReport_start_time());
+        Log.v("JSON", "report_end_time: " + JsonModel.getInstance().getReport_end_time());
         JsonModel.getInstance().JavatoJson();
         return 1;
     }
@@ -159,7 +160,7 @@ public class JsonModel {
     }
 }
 
-////class ReportEvent {
+////class Event {
 //    String screenshot;
 //    double event_start_time;
 //    double event_end_time;
