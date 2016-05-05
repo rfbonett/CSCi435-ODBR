@@ -35,6 +35,8 @@ public class BugReport {
     private static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
     private static int MAX_ITEMS_TO_PRINT = 10;
 
+    private final long report_start_time = 0;
+    private long report_end_time;
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
@@ -87,6 +89,7 @@ public class BugReport {
         getEventIndex++;
     }
 
+<<<<<<< HEAD
     public void matchEvents(){
 
         //iterate over the eventList
@@ -108,6 +111,44 @@ public class BugReport {
                     else{
                         Log.v("GetEventQueue", "GE "+ time_dif_get_event + " : A " + time_dif_accessibility);
                     }
+=======
+    public HashMap<Sensor, SensorDataList> getSensorData(){
+        return sensorData;
+    }
+
+
+    public void printGetEvents() {
+        for (GetEvent e : getEventList) {
+            e.printValues();
+        }
+        for (ReportEvent e : eventList) {
+            Log.v("GetEvent", "ReportEvent: " + e.getData());
+        }
+    }
+
+    public void matchGetEventsToReportEvents() {
+        if (getEventList.size() == 0 || eventList.size() == 0) {
+            return;
+        }
+
+        //Normalize times
+        long getEventStartTime = getEventList.get(0).getStart();
+        long reportEventStartTime = eventList.get(0).getTime();
+        for (GetEvent e : getEventList) {
+            e.setStart(e.getStart() - getEventStartTime);
+        }
+        for (ReportEvent e :  eventList) {
+            e.setTime(e.getTime() - reportEventStartTime);
+        }
+        //Match events
+        try {
+            int ndx = 0;
+            for (ReportEvent e : eventList) {
+                ndx = closestGetEvent(e.getTime(), ndx);
+                e.setDuration(getEventList.get(ndx).getDuration());
+                for (int[] coord : getEventList.get(ndx).get_coords()) {
+                    e.addInputEvents(coord);
+>>>>>>> 1f3a05ff9059b48ae4ea9a013c55409b4bd2e5f3
                 }
                 else{
                     Log.v("GetEventQueue", "We hit null");
@@ -189,8 +230,12 @@ public class BugReport {
     public List<Events> getEventList(){
         return eventList;
 
+<<<<<<< HEAD
     }
     private String makeSensorDataReadable(float[] input) {
+=======
+    public String makeSensorDataReadable(float[] input) {
+>>>>>>> 1f3a05ff9059b48ae4ea9a013c55409b4bd2e5f3
         String s = "";
         for (float f : input) {
             s +=  f + " | ";
