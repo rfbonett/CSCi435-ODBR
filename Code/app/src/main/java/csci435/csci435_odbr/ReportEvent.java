@@ -5,26 +5,31 @@ import android.util.Log;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Rich on 4/22/16.
  */
 public class ReportEvent {
     short EV_ABS = 3;
-    short ABS_X = 0;
-    short ABS_Y = 1;
-    short ABS_MT_POSITION_X = 53;
-    short ABS_MT_POSITION_Y = 54;
+    Integer ABS_X;
+    Integer ABS_Y;
+    Integer ABS_MT_POSITION_X;
+    Integer ABS_MT_POSITION_Y;
+    Integer ABS_MT_TRACKING_ID;
+    Integer ABS_MT_PRESSURE;
 
     private long timeUntilNextEvent;
     private Screenshot screenShot;
     private HierarchyDump dump;
     private ArrayList<GetEvent> inputs; //[time, x, y]
     private String device;
+    int idNum;
 
-    public ReportEvent(String device) {
+    public ReportEvent(String device, HashMap<String, Integer> hashmap) {
         this.device = device;
         inputs = new ArrayList<GetEvent>();
+        setAbsValues(hashmap);
     }
 
     public void addScreenshot(Screenshot s) {
@@ -39,6 +44,9 @@ public class ReportEvent {
         inputs.add(e);
     }
 
+    public void addIDNum(int i){
+        idNum = i;
+    }
 
     public void setWaitTime(long t) {
         timeUntilNextEvent = t;
@@ -80,6 +88,15 @@ public class ReportEvent {
         return "widget";
     }
 
+    private void setAbsValues(HashMap<String, Integer> hashmap){
+        ABS_MT_POSITION_X = hashmap.get("ABS_MT_POSITION_X");
+        ABS_MT_POSITION_Y = hashmap.get("ABS_MT_POSITION_Y");
+        ABS_MT_TRACKING_ID = hashmap.get("ABS_MT_TRACKING_ID");
+        ABS_MT_PRESSURE = hashmap.get("ABS_MT_PRESSURE");
+        ABS_X = hashmap.get("ABS_X");
+        ABS_Y = hashmap.get("ABS_Y");
+
+    }
 
     public Screenshot getScreenshot() {
         return screenShot;

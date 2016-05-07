@@ -22,7 +22,7 @@
         android:layout_below="@+id/recordButton"
         android:paddingTop="120dp">
         <SeekBar
-            android:layout_width="400dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:id="@+id/slideBar"
             android:background="@drawable/slidebar"
