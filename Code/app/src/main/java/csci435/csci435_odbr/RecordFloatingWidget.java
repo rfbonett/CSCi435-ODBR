@@ -25,9 +25,9 @@ import org.w3c.dom.Text;
  * Created by Rich on 2/16/16.
  */
 public class RecordFloatingWidget extends Service {
-    static WindowManager wm;
-    static LinearLayout ll;
-    static Handler handler = new Handler();
+    WindowManager wm;
+    LinearLayout ll;
+    Handler handler = new Handler();
 
     final static WindowManager.LayoutParams parameters = new WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -67,12 +67,13 @@ public class RecordFloatingWidget extends Service {
 
     }
 
-    public static void hideOverlay() {
+    public void hideOverlay() {
         wm.removeView(ll);
     }
 
-    public static void restoreOverlay() {
+    public void restoreOverlay() {
         wm.addView(ll, parameters);
+        stopRecording();
     }
 
     @Override
@@ -100,8 +101,6 @@ public class RecordFloatingWidget extends Service {
             public void run() {
                 sdm.stopRecording();
                 gem.stopRecording();
-                ll.setVisibility(View.GONE);
-                onDestroy();
             }
         });
     }
@@ -156,7 +155,13 @@ public class RecordFloatingWidget extends Service {
                 remove(recordButton);
                 remove(slideBarText);
                 remove(seekBar);
-                stopRecording();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ll.setVisibility(View.GONE);
+                        onDestroy();
+                    }
+                });
             }
         }
     }
