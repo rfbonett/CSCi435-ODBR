@@ -27,12 +27,7 @@ public class GetEventManager {
     int EV_KEY = 1;
     int EV_ABS = 3;
 
-    ArrayList<String> abs_name_list = new ArrayList<String>();
-    HashMap<String, Integer> abs_code_hashMap = new HashMap<String, Integer>();
-
-    int ABS_MT_TRACKING_ID = 0x0039;
     int SYN_REPORT = 0;
-    int BTN_TOUCH = 330;
     int TOUCH_DOWN = 1;
     int TOUCH_UP = 0;
 
@@ -43,7 +38,6 @@ public class GetEventManager {
         sm = new ScreenshotManager();
         hdm = new HierarchyDumpManager();
     }
-
 
     public void startRecording() {
         if (recording) {
@@ -73,68 +67,10 @@ public class GetEventManager {
         }
     }
 
-
-    private ArrayList<String> getInputDevices() {
-        ArrayList<String> devices = new ArrayList<String>();
-        Log.v("GetEventManager", "getInputDevices");
-        boolean adding = false;
-        boolean touch_found = false;
-        int line_index = 0;
-        try {
-            Process su = Runtime.getRuntime().exec("su", null, null);
-            OutputStream os = su.getOutputStream();
-            os.write(("getevent -li\n").getBytes("ASCII"));
-            os.flush();
-            os.close();
-            BufferedReader res = new BufferedReader(new InputStreamReader(su.getInputStream()));
-            String line;
-            while ((line = res.readLine()) != null) {
-                String[] parts = line.split(" ");
-                if ("add".equals(parts[0])) {
-                    //transition to adding stage
-                    devices.add(parts[3]);
-                    Log.v("GetEventManager", "device: " + parts[3]);
-                }
-                if (line.contains("ABS_")){
-                    for(int i = 0; i < parts.length; i++){
-                        if(parts[i].contains("ABS_")){
-                            abs_name_list.add(parts[i]);
-                            //Log.v("ABS", "Added: "+ parts[i]);
-                        }
-                    }
-                }
-            }
-            su.destroy();
-            //we have to read to get the ABS values
-            su = Runtime.getRuntime().exec("su", null, null);
-            os = su.getOutputStream();
-            os.write(("getevent -i\n").getBytes("ASCII"));
-            os.flush();
-            os.close();
-            res = new BufferedReader(new InputStreamReader(su.getInputStream()));
-            int hashIndex = 0;
-            while ((line = res.readLine()) != null) {
-                String[] parts = line.split(" ");
-                if(line.contains("ABS")){
-                    abs_code_hashMap.put(abs_name_list.get(hashIndex), Integer.parseInt(parts[parts.length - 15], 16));
-                    //Log.v("ABS", abs_name_list.get(hashIndex) + " : " + Integer.valueOf(parts[parts.length - 15], 16));
-                    line = res.readLine();
-                    hashIndex++;
-                    while(line.contains("resolution") && line.contains("value")){
-                        parts = line.split(" ");
-                        abs_code_hashMap.put(abs_name_list.get(hashIndex), Integer.parseInt(parts[parts.length-15], 16));
-                        //Log.v("ABS", abs_name_list.get(hashIndex) + " : " + Integer.parseInt(parts[parts.length - 15], 16));
-                        line = res.readLine();
-                        hashIndex++;
-                    }
-                }
-
-            }
-            su.destroy();
-
-        } catch (Exception e) {Log.v("Main", "Error getting input devices");}
-        return devices;
+    private ArrayList<String> getInputDevices(){
+        return GetEventDeviceInfo.getInstance().getInputDevices();
     }
+
 
 
     class GetEventTask implements Runnable {
@@ -163,7 +99,7 @@ public class GetEventManager {
         @Override
         public void run() {
             try {
-                event = new ReportEvent(device, abs_code_hashMap);
+                event = new ReportEvent(device);
                 while (is.read(res) > 0) {
                     Globals.time_last_event = System.currentTimeMillis();
                     GetEvent getevent = new GetEvent(res);
@@ -181,7 +117,7 @@ public class GetEventManager {
                             event.addGetEvent(getevent);
                         } while (getevent.getCode() != SYN_REPORT);
                         BugReport.getInstance().addEvent(event);
-                        event = new ReportEvent(device, abs_code_hashMap);
+                        event = new ReportEvent(device);
                     }
                 }
             } catch (Exception e) {
@@ -190,10 +126,10 @@ public class GetEventManager {
         }
 
         private boolean fingerDown(GetEvent e) {
-            if (e.getType() == EV_KEY && e.getCode() == BTN_TOUCH && e.getValue() == TOUCH_DOWN) {
+            if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_DOWN) {
                 return true;
             }
-            Integer value = abs_code_hashMap.get("ABS_MT_TRACKING_ID");
+            Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
             if(value == null){
                 return false;
             }
@@ -203,10 +139,10 @@ public class GetEventManager {
         }
 
         private boolean fingerUp(GetEvent e) {
-            if (e.getType() == EV_KEY && e.getCode() == BTN_TOUCH && e.getValue() == TOUCH_UP) {
+            if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_UP) {
                 return true;
             }
-            Integer value = abs_code_hashMap.get("ABS_MT_TRACKING_ID");
+            Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
             if(value == null){
                 return false;
             }

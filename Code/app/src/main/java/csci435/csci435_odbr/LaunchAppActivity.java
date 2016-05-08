@@ -109,6 +109,9 @@ public class LaunchAppActivity extends Activity {
                 return false;
             }
         });
+
+        GetEventDeviceInfo.getInstance().setDeviceData();
+
     }
 
     private void getInstalledApplications() {

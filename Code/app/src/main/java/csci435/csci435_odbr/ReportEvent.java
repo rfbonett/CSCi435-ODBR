@@ -12,12 +12,6 @@ import java.util.HashMap;
  */
 public class ReportEvent {
     short EV_ABS = 3;
-    Integer ABS_X;
-    Integer ABS_Y;
-    Integer ABS_MT_POSITION_X;
-    Integer ABS_MT_POSITION_Y;
-    Integer ABS_MT_TRACKING_ID;
-    Integer ABS_MT_PRESSURE;
 
     private long timeUntilNextEvent;
     private Screenshot screenShot;
@@ -26,10 +20,9 @@ public class ReportEvent {
     private String device;
     int idNum;
 
-    public ReportEvent(String device, HashMap<String, Integer> hashmap) {
+    public ReportEvent(String device) {
         this.device = device;
         inputs = new ArrayList<GetEvent>();
-        setAbsValues(hashmap);
     }
 
     public void addScreenshot(Screenshot s) {
@@ -88,16 +81,6 @@ public class ReportEvent {
         return "widget";
     }
 
-    private void setAbsValues(HashMap<String, Integer> hashmap){
-        ABS_MT_POSITION_X = hashmap.get("ABS_MT_POSITION_X");
-        ABS_MT_POSITION_Y = hashmap.get("ABS_MT_POSITION_Y");
-        ABS_MT_TRACKING_ID = hashmap.get("ABS_MT_TRACKING_ID");
-        ABS_MT_PRESSURE = hashmap.get("ABS_MT_PRESSURE");
-        ABS_X = hashmap.get("ABS_X");
-        ABS_Y = hashmap.get("ABS_Y");
-
-    }
-
     public Screenshot getScreenshot() {
         return screenShot;
     }
@@ -148,10 +131,20 @@ public class ReportEvent {
     }
 
     private boolean xPos(GetEvent e) {
-        return e.getType() == EV_ABS && (e.getCode() == ABS_X || e.getCode() == ABS_MT_POSITION_X);
+        if(GetEventDeviceInfo.getInstance().isTypeA()){
+            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_X");
+        }
+        else{
+            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_X");
+        }
     }
 
     private boolean yPos(GetEvent e) {
-        return e.getType() == EV_ABS && (e.getCode() == ABS_Y || e.getCode() == ABS_MT_POSITION_Y);
+        if(GetEventDeviceInfo.getInstance().isTypeA()){
+            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_Y");
+        }
+        else{
+            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_Y");
+        }
     }
 }
