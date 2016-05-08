@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,13 +160,16 @@ public class JsonModel {
             Event temp = new Event();
 
             //byteArray http://stackoverflow.com/questions/4989182/converting-java-bitmap-to-byte-array
+            try{
+                Bitmap bmp = BugReport.getInstance().getEventList().get(i).getScreenshot().getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                temp.screenshot = new String(byteArray, "iso-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            };
 
-            Bitmap bmp = BugReport.getInstance().getEventList().get(i).getScreenshot().getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            temp.screenshot = Base64.encodeToString(byteArray, Base64.DEFAULT);
             temp.event_start_time = BugReport.getInstance().getEventList().get(i).getStartTime();
             temp.event_end_time = BugReport.getInstance().getEventList().get(i).getStartTime() + BugReport.getInstance().getEventList().get(i).getDuration();
             temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
@@ -201,7 +205,6 @@ public class JsonModel {
         for(int i = 0; i < eventList.size(); i++){
             Log.v("FOR JSON eventList:", "" + i);
             Log.v("FOR JSON eventList:", "screenshot" + eventList.get(i).screenshot);
-            Log.v("FOR JSON eventList:", "-----------");
             Log.v("FOR JSON eventList:", "starttime" + eventList.get(i).event_start_time);
             Log.v("FOR JSON eventList:", "endtime" + eventList.get(i).event_end_time);
             Log.v("FOR JSON eventList:", "inputList" + eventList.get(i).inputList);
