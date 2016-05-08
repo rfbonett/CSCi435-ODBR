@@ -108,9 +108,10 @@ public class GetEventManager {
                     if (fingerDown(getevent)) {
                         event.addScreenshot(sm.takeScreenshot());
                         event.addHierarchyDump(hdm.takeHierarchyDump());
-                        event.addIDNum(getevent.getValue());
+                        Log.v("GetEventTouch", "FingerDown");
                     }
                     else if (fingerUp(getevent)) {
+                        Log.v("GetEventTouch", "FingerUp");
                         do {
                             is.read(res);
                             getevent = new GetEvent(res);
@@ -126,29 +127,40 @@ public class GetEventManager {
         }
 
         private boolean fingerDown(GetEvent e) {
-            if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_DOWN) {
-                return true;
+
+            if(GetEventDeviceInfo.getInstance().isTypeA()){
+                Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
+                if(value == null){
+                    return false;
+                }
+                else {
+                    return e.getCode() == value && e.getValue() != 0xffffffff;
+                }
             }
-            Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
-            if(value == null){
-                return false;
+            else if(!GetEventDeviceInfo.getInstance().isTypeA()) {
+                if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_DOWN) {
+                    return true;
+                }
             }
-            else {
-                return e.getCode() == value && e.getValue() != 0xffffffff;
-            }
+            return false;
         }
 
         private boolean fingerUp(GetEvent e) {
-            if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_UP) {
-                return true;
+            if(GetEventDeviceInfo.getInstance().isTypeA()){
+                Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
+                if(value == null){
+                    return false;
+                }
+                else {
+                    return e.getCode() == value && e.getValue() == 0xffffffff;
+                }
             }
-            Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
-            if(value == null){
-                return false;
+            else if(!GetEventDeviceInfo.getInstance().isTypeA()) {
+                if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_UP) {
+                    return true;
+                }
             }
-            else {
-                return e.getCode() == value && e.getValue() == 0xffffffff;
-            }
+            return false;
         }
 
     }

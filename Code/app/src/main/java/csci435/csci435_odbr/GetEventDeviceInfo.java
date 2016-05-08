@@ -104,6 +104,7 @@ public class GetEventDeviceInfo {
                             break;
                         }
                     }
+
                 }
 
                 if ("add".equals(parts[0])) {
@@ -133,19 +134,7 @@ public class GetEventDeviceInfo {
             int keyIndex = 0;
             while ((line = res.readLine()) != null) {
                 String[] parts = line.split(" ");
-                if (line.contains("ABS")) {
-                    GetEventDeviceInfo.getInstance().add_code(abs_name_list.get(absIndex), Integer.parseInt(parts[parts.length - 15], 16));
-                    //Log.v("ABS", abs_name_list.get(hashIndex) + " : " + Integer.valueOf(parts[parts.length - 15], 16));
-                    line = res.readLine();
-                    absIndex++;
-                    while (line.contains("resolution") && line.contains("value")) {
-                        parts = line.split(" ");
-                        GetEventDeviceInfo.getInstance().add_code(abs_name_list.get(absIndex), Integer.parseInt(parts[parts.length - 15], 16));
-                        //Log.v("ABS", abs_name_list.get(hashIndex) + " : " + Integer.parseInt(parts[parts.length - 15], 16));
-                        line = res.readLine();
-                        absIndex++;
-                    }
-                }
+
                 if (btn_touch_found) {
                     //we have the start of a key line
                     if(line.contains("KEY") && line.contains("(") && line.contains(")")){
@@ -177,7 +166,19 @@ public class GetEventDeviceInfo {
                             }
                         }
                     }
-
+                }
+                if (line.contains("ABS")) {
+                    GetEventDeviceInfo.getInstance().add_code(abs_name_list.get(absIndex), Integer.parseInt(parts[parts.length - 15], 16));
+                    Log.v("ABS", abs_name_list.get(absIndex) + " : " + Integer.valueOf(parts[parts.length - 15], 16));
+                    line = res.readLine();
+                    absIndex++;
+                    while (line.contains("resolution") && line.contains("value")) {
+                        parts = line.split(" ");
+                        GetEventDeviceInfo.getInstance().add_code(abs_name_list.get(absIndex), Integer.parseInt(parts[parts.length - 15], 16));
+                        Log.v("ABS", abs_name_list.get(absIndex) + " : " + Integer.parseInt(parts[parts.length - 15], 16));
+                        line = res.readLine();
+                        absIndex++;
+                    }
                 }
 
             }
@@ -185,7 +186,7 @@ public class GetEventDeviceInfo {
             device_info_hashmap.put("BTN_TOUCH", key_info_hashmap.get("BTN_TOUCH"));
             su.destroy();
 
-            if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") != null ){
+            if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") == null ){
                 typeA = true;
             }
 

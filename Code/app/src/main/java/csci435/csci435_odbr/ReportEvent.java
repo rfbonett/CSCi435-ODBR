@@ -131,20 +131,10 @@ public class ReportEvent {
     }
 
     private boolean xPos(GetEvent e) {
-        if(GetEventDeviceInfo.getInstance().isTypeA()){
-            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_X");
-        }
-        else{
-            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_X");
-        }
+        return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_X") || e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_X")) ;
     }
 
     private boolean yPos(GetEvent e) {
-        if(GetEventDeviceInfo.getInstance().isTypeA()){
-            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_Y");
-        }
-        else{
-            return e.getType() == EV_ABS && e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_Y");
-        }
+        return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_Y") || e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_Y")) ;
     }
 }
