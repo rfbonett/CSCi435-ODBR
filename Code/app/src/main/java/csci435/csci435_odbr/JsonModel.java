@@ -13,6 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.Object;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.File;
+
 
 /**
  * Created by danielpark on 4/21/16.
@@ -36,7 +44,7 @@ public class JsonModel {
         return model;
     }
 
-    public void build_device() {
+    public void build_device() throws Exception {
         JsonModel.getInstance().setOs_version();
         JsonModel.getInstance().setDevice_type();
         JsonModel.getInstance().setApp_version();
@@ -155,7 +163,7 @@ public class JsonModel {
 
     }
 
-    public List<Event> setEvents(){
+    public List<Event> setEvents() throws Exception {
         //for eventList
         for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
             Log.v("FOR bug eventList:", "" + i);
@@ -178,15 +186,46 @@ public class JsonModel {
             temp.event_end_time = BugReport.getInstance().getEventList().get(i).getStartTime() + BugReport.getInstance().getEventList().get(i).getDuration();
             temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
             temp.description = BugReport.getInstance().getEventList().get(i).getEventDescription();
-            temp.hierarchy = BugReport.getInstance().getEventList().get(i).getHierarchy();
+            String hierarchy_filename = BugReport.getInstance().getEventList().get(i).getHierarchy().getFilename();
+            //get contents of hierarchy
+            //http://www.java2s.com/Code/Java/File-Input-Output/ConvertInputStreamtoString.htm
+            Log.v("THIS IS HIERARCHY FILE", "hierarchy filename: " + hierarchy_filename);
+            temp.hierarchy = getStringFromFile(hierarchy_filename);
+
+
 
             JsonModel.getInstance().eventList.add(temp);
         }
         return JsonModel.getInstance().eventList;
     }
 
+    public static String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
 
-    public int tester() {
+    public static String getStringFromFile (String filePath) throws Exception {
+        try{
+            File fl = new File(filePath);
+            FileInputStream fin = new FileInputStream(fl);
+            String ret = convertStreamToString(fin);
+            //Make sure you close all streams.
+            fin.close();
+            return ret;
+        }
+        catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        return "Error";
+    }
+
+    public int tester() throws Exception {
         build_device();
 
         //Log Title, Reporter Name and Description
@@ -234,7 +273,7 @@ class Event {
     double event_end_time;
     List<GetEvent> inputList;
     String description;
-    HierarchyDump hierarchy;
+    String hierarchy;
     //String Orientation;
 }
 
