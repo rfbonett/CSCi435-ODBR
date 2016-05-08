@@ -39,6 +39,7 @@ public class JsonModel {
     public void build_device() {
         JsonModel.getInstance().setOs_version();
         JsonModel.getInstance().setDevice_type();
+        JsonModel.getInstance().setApp_version();
         JsonModel.getInstance().setTitle();
         JsonModel.getInstance().setApp_name();
         JsonModel.getInstance().setName();
@@ -46,11 +47,14 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setEvents();
         JsonModel.getInstance().setSensorData();
-
-        //for sensor data
-
     }
 
+    public void setApp_version(){
+        //http://android.stackexchange.com/questions/2016/how-can-you-tell-which-version-of-an-app-is-on-your-android-phone
+        //adb shell dumpsys package com.google.android.apps.photos | grep versionName
+
+
+    }
     public void setSensorData(){
         for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
             Log.v("JSONModel", "||||||||||||||||");
