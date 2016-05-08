@@ -20,7 +20,7 @@ import java.lang.Object;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
-
+import java.io.OutputStream;
 
 /**
  * Created by danielpark on 4/21/16.
@@ -28,6 +28,7 @@ import java.io.File;
 public class JsonModel {
     private String device_type;
     private int os_version;
+    private String app_version;
     private String app_name;
     private String title;
     private String name;
@@ -57,11 +58,26 @@ public class JsonModel {
         JsonModel.getInstance().setSensorData();
     }
 
-    public void setApp_version(){
+    public String setApp_version(){
         //http://android.stackexchange.com/questions/2016/how-can-you-tell-which-version-of-an-app-is-on-your-android-phone
         //adb shell dumpsys package com.google.android.apps.photos | grep versionName
+        try {
+            Process su = Runtime.getRuntime().exec("su", null, null);
+            OutputStream os = su.getOutputStream();
+            os.write(("dumpsys package " + Globals.packageName + "| grep versionName\n").getBytes("ASCII"));
+            os.flush();
+            os.write(("exit\n").getBytes("ASCII"));
+            os.flush();
+            su.waitFor();
+            BufferedReader res = new BufferedReader(new InputStreamReader(su.getInputStream()));
+            String line;
+            while ((line = res.readLine()) != null) {
+                String[] parts = line.split("=");
+                app_version = parts[1];
+            }
+        } catch (Exception e){}
 
-
+        return "error occurred";
     }
     public void setSensorData(){
         for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
@@ -233,7 +249,7 @@ public class JsonModel {
         Log.v("JSON", "device_type: " + JsonModel.getInstance().getDevice_type());
 
         Log.v("JSON", "app_name: " + app_name);
-//        Log.v("JSON", "app_version: " + app_version);
+        Log.v("JSON", "app_version: " + app_version);
 
         Log.v("JSON", "title: " + JsonModel.getInstance().getTitle());
         Log.v("JSON", "name: " + JsonModel.getInstance().getName());
