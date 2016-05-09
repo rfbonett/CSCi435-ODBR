@@ -66,37 +66,26 @@ public class GetEventDeviceInfo {
 
                 if(line.contains("KEY") && line.contains("(") && line.contains(")")){
                     //we have the start of a key line
-                    if (line.contains("BTN_TOUCH")) {
-                        for (int i = 0; i < parts.length; i++) {
-                            if (parts[i].equals("BTN_TOUCH")) {
-                                btn_touch_found = true;
-                                Log.v("GetEventDeviceInfo", "Button touch found");
-                                break;
-                            }
-                        }
-                    }
                     for(int i = 0; i < parts.length; i++){
                         if(!parts[i].equals("") && !parts[i].equals("KEY") && !parts[i].contains("(") && !parts[i].contains(")")){
                             key_name_list.add(parts[i]);
+                            if(parts[i].equals("BTN_TOUCH")){
+                                btn_touch_found = true;
+                                Log.v("GetEventDeviceInfo", "Button touch found");
+                            }
                         }
                     }
                     line = res.readLine();
                     parts = line.split(" ");
                     while(!line.contains(":")){
 
-                        if (line.contains("BTN_TOUCH")) {
-                            for (int i = 0; i < parts.length; i++) {
-                                if (parts[i].equals("BTN_TOUCH")) {
-                                    btn_touch_found = true;
-                                    Log.v("GetEventDeviceInfo", "Button touch found");
-                                    break;
-                                }
-                            }
-                        }
-
                         for(int i = 0; i < parts.length; i++ ){
                             if(!parts[i].equals("") && !parts[i].equals("KEY") && !parts[i].contains("(") && !parts[i].contains(")")){
                                 key_name_list.add(parts[i]);
+                                if(parts[i].equals("BTN_TOUCH")){
+                                    btn_touch_found = true;
+                                    Log.v("GetEventDeviceInfo", "Button touch found");
+                                }
                                 //Log.v("GetEventDeviceInfo", "Added: " + parts[i]);
                             }
                         }
@@ -111,19 +100,9 @@ public class GetEventDeviceInfo {
 
                 }
 
-                if ("add".equals(parts[0])) {
-                    //transition to adding stage
-                    devices.add(parts[3]);
-                    Log.v("GetEventManager", "device: " + parts[3]);
-                }
-
+                parseAdd(parts);
                 if (line.contains("ABS_")) {
-                    for (int i = 0; i < parts.length; i++) {
-                        if (parts[i].contains("ABS_")) {
-                            abs_name_list.add(parts[i]);
-                            //Log.v("ABS", "Added: "+ parts[i]);
-                        }
-                    }
+                    parseNameAbs(parts);
                 }
             }
             su.destroy();
@@ -138,7 +117,6 @@ public class GetEventDeviceInfo {
             int keyIndex = 0;
             while ((line = res.readLine()) != null) {
                 String[] parts = line.split(" ");
-                //comment?
                 if (btn_touch_found) {
                     //we have the start of a key line
                     if(line.contains("KEY") && line.contains("(") && line.contains(")")){
@@ -190,20 +168,41 @@ public class GetEventDeviceInfo {
             device_info_hashmap.put("BTN_TOUCH", key_info_hashmap.get("BTN_TOUCH"));
             su.destroy();
 
-            if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") == null ){
-                typeA = true;
-            }
-            else{
-                if(device_info_hashmap.get("ABS_MT_SLOT") != null){
-                    typeMultiB = true;
-                }
-                else{
-                    typeMultiA = true;
-                }
-            }
+            set_device_type();
 
         } catch (Exception e) {
             Log.v("Main", "Error getting input devices");
+        }
+    }
+
+    private void parseAdd(String [] parts){
+        if ("add".equals(parts[0])) {
+            //transition to adding stage
+            devices.add(parts[3]);
+            Log.v("GetEventManager", "device: " + parts[3]);
+        }
+    }
+
+    private void parseNameAbs(String [] parts){
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].contains("ABS_")) {
+                    abs_name_list.add(parts[i]);
+                    //Log.v("ABS", "Added: "+ parts[i]);
+                }
+            }
+    }
+
+    private void set_device_type(){
+        if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") == null ){
+            typeA = true;
+        }
+        else{
+            if(device_info_hashmap.get("ABS_MT_SLOT") != null){
+                typeMultiB = true;
+            }
+            else{
+                typeMultiA = true;
+            }
         }
     }
 
