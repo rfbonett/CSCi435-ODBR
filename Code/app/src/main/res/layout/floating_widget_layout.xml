@@ -7,37 +7,22 @@
         android:id="@+id/recordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:layout_margin="15dp"
         android:text="Record Inputs"
         android:radius="20dp"
         android:onClick="recordEvents"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
-    <FrameLayout
+
+    <Button
+        android:id="@+id/submitReportButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/recordButton"
-        android:paddingTop="120dp">
-        <SeekBar
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/slideBar"
-            android:background="@drawable/slidebar"
-            android:thumb="@drawable/thumb"
-            android:progressDrawable="@drawable/slidebarprogress"
-            android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/slideBarText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit Report >>>"
-            android:textSize="20sp"
-            android:textColor="@color/background_holo_light"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+        android:layout_marginTop="60dp"
+        android:text="Submit Report"
+        android:radius="20dp"
+        android:onClick="submitReport" />
 
 
 </RelativeLayout>

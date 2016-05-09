@@ -59,10 +59,11 @@
         android:id="@+id/viewPager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/pageToggle"
+        android:layout_above="@+id/submitButton"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="24dp"
-        android:layout_below="@+id/pageToggle"
         android:layout_centerHorizontal="true">
 
     </android.support.v4.view.ViewPager>

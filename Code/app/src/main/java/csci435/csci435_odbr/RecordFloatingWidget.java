@@ -56,15 +56,11 @@ public class RecordFloatingWidget extends Service {
         inflater.inflate(R.layout.floating_widget_layout, ll);
         ll.setBackgroundColor(0x8833B5E5);
         wm.addView(ll, parameters);
-        SeekBar s = (SeekBar) ll.findViewById(R.id.slideBar);
-        s.setOnSeekBarChangeListener(new SlideBarListener());
 
         // Prepare Report, start Data collection
         BugReport.getInstance().clearReport();
         gem = new GetEventManager();
         sdm = new SensorDataManager();
-        sdm.startRecording();
-
     }
 
     public void hideOverlay() {
@@ -76,19 +72,26 @@ public class RecordFloatingWidget extends Service {
         stopRecording();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void submitReport(View v) {
+        ll.setVisibility(View.GONE);
         Intent intent = new Intent();
         intent.setClass(this, RecordActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        onDestroy();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         stopSelf();
     }
 
 
     public void recordEvents(View view){
         gem.startRecording();
+        sdm.startRecording();
         Globals.time_last_event = System.currentTimeMillis();
         hideOverlay();
         handler.post(widget_timer);
@@ -122,66 +125,4 @@ public class RecordFloatingWidget extends Service {
         }
     };
 
-
-    class SlideBarListener implements SeekBar.OnSeekBarChangeListener {
-
-        private int maximum = 100;
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(final SeekBar seekBar) {
-            if (seekBar.getProgress() < maximum) {
-                ValueAnimator anim = ValueAnimator.ofInt(seekBar.getProgress(), 0);
-                anim.setDuration(5*(seekBar.getProgress()));
-                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int animProgress = (Integer) animation.getAnimatedValue();
-                        seekBar.setProgress(animProgress);
-                    }
-                });
-                anim.start();
-            }
-            else {
-                Button recordButton = (Button) ll.findViewById(R.id.recordButton);
-                TextView slideBarText = (TextView) ll.findViewById(R.id.slideBarText);
-                recordButton.setClickable(false);
-                remove(recordButton);
-                remove(slideBarText);
-                remove(seekBar);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ll.setVisibility(View.GONE);
-                        onDestroy();
-                    }
-                });
-            }
-        }
-    }
-
-    private void remove(final View view) {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
-        anim.setDuration(400);
-        anim.start();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                view.setVisibility(View.GONE);
-            }
-        }, 400);
-    }
-
-    private void rotate(View view) {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
-        anim.setDuration(100);
-        anim.setRepeatCount(ObjectAnimator.INFINITE);
-        anim.start();
-    }
 }

@@ -23,6 +23,8 @@ public class GetEventDeviceInfo {
     private boolean typeA = false;
     private boolean typeMultiA = false;
     private boolean typeMultiB = false;
+    private int maxX;
+    private int maxY;
 
     public static GetEventDeviceInfo getInstance() {
         return ourInstance;
@@ -48,6 +50,14 @@ public class GetEventDeviceInfo {
     }
     public boolean isMultiTouchA(){return typeMultiA;}
     public boolean isMultiTouchB(){return typeMultiB;}
+
+    public int getMaxX() {
+        return maxX;
+    }
+
+    public int getMaxY() {
+        return maxY;
+    }
 
     public void setDeviceData() {
         Log.v("GetEventDeviceInfo", "settingInfo");
@@ -158,6 +168,22 @@ public class GetEventDeviceInfo {
                         parts = line.split(" ");
                         GetEventDeviceInfo.getInstance().add_code(abs_name_list.get(absIndex), Integer.parseInt(parts[parts.length - 15], 16));
                         Log.v("ABS", abs_name_list.get(absIndex) + " : " + Integer.parseInt(parts[parts.length - 15], 16));
+
+                        if ("ABS_MT_POSITION_X".equals(abs_name_list.get(absIndex)) || "ABS_X".equals(abs_name_list.get(absIndex))) {
+                            for (int ndx = 0; ndx < parts.length; ndx++) {
+                                if ("max".equals(parts[ndx])) {
+                                    maxX = Integer.parseInt(parts[ndx + 1].replace(",", ""));
+                                }
+                            }
+                        }
+                        if ("ABS_MT_POSITION_Y".equals(abs_name_list.get(absIndex)) || "ABS_Y".equals(abs_name_list.get(absIndex))) {
+                            for (int ndx = 0; ndx < parts.length; ndx++) {
+                                if ("max".equals(parts[ndx])) {
+                                    maxY = Integer.parseInt(parts[ndx + 1].replace(",", ""));
+                                }
+                            }
+                        }
+
                         line = res.readLine();
                         absIndex++;
                     }
@@ -184,12 +210,12 @@ public class GetEventDeviceInfo {
     }
 
     private void parseNameAbs(String [] parts){
-            for (int i = 0; i < parts.length; i++) {
-                if (parts[i].contains("ABS_")) {
-                    abs_name_list.add(parts[i]);
-                    //Log.v("ABS", "Added: "+ parts[i]);
-                }
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].contains("ABS_")) {
+                abs_name_list.add(parts[i]);
+                //Log.v("ABS", "Added: "+ parts[i]);
             }
+        }
     }
 
     private void set_device_type(){

@@ -1,10 +1,13 @@
 package csci435.csci435_odbr;
 
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -111,23 +114,56 @@ public class ReportEvent {
         return device;
     }
 
-    public ArrayList<int[]> getInputCoordinates() {
-        ArrayList<int[]> coords = new ArrayList<int[]>();
-        ArrayList<Integer> xCoords = new ArrayList<Integer>();
-        ArrayList<Integer> yCoords = new ArrayList<Integer>();
+    /**
+     * Retrieve a list of input traces
+     * @return a list of lists, where each list contains the coordinates for one touch input
+     */
+    public SparseArray<ArrayList<int[]>> getInputCoordinates() {
+        SparseArray<ArrayList<int[]>> traces = new SparseArray<ArrayList<int[]>>();
+        SparseArray<int[]> coords = new SparseArray<int[]>();
+        SparseIntArray slots = new SparseIntArray();
+        int activeSlot = 0;
+
+        int NOT_FOUND = -1;
+        int CLEAN = 0;
+        int DIRTY = 1;
+
+        coords.put(activeSlot, new int[] {-1, -1});
+        traces.put(activeSlot, new ArrayList<int[]>());
         for (GetEvent e : inputs) {
+            if (slot(e)) {
+                activeSlot = e.getValue();
+                if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
+                    coords.put(activeSlot, new int[] {-1, -1});
+                    traces.put(activeSlot, new ArrayList<int[]>());
+                }
+            }
             if (xPos(e)) {
-                xCoords.add(e.getValue());
+                coords.get(activeSlot)[0] = e.getValue();
+                slots.put(activeSlot, DIRTY);
             }
             else if (yPos(e)) {
-                yCoords.add(e.getValue());
+                coords.get(activeSlot)[1] = e.getValue();
+                traces.get(activeSlot).add(coords.get(activeSlot).clone());
+                slots.put(activeSlot, CLEAN);
+            }
+            else if (slots.get(activeSlot) == DIRTY) {
+                traces.get(activeSlot).add(coords.get(activeSlot).clone());
+                slots.put(activeSlot, CLEAN);
             }
         }
 
-        for (int i = 0; i < xCoords.size() && i < yCoords.size(); i++) {
-            coords.add(new int[] {xCoords.get(i), yCoords.get(i)});
+        for (int i = 0; i < traces.size(); i++) {
+            Log.v("ReportEvent", "Trace: " + i);
+            for (int[] coord: traces.valueAt(i)) {
+                Log.v("ReportEvent", "Val: " + Arrays.toString(coord));
+            }
         }
-        return  coords;
+        return traces;
+    }
+
+    private boolean slot(GetEvent e) {
+        return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_SLOT"));
     }
 
     private boolean xPos(GetEvent e) {

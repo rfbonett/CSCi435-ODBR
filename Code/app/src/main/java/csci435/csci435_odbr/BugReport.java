@@ -19,7 +19,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
  * Created by Rich on 2/11/16.
  */
 public class BugReport {
-    private static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
+    public static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
     private static int MAX_ITEMS_TO_PRINT = 10;
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
@@ -115,8 +115,8 @@ public class BugReport {
             return sensorGraphs.get(s);
         }
 
-        Globals.height = Globals.height / 2;
-        Bitmap b = Bitmap.createBitmap(Globals.width, Globals.height, Bitmap.Config.ARGB_8888);
+        int height = Globals.height / 2;
+        Bitmap b = Bitmap.createBitmap(Globals.width, height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
         SensorDataList data = sensorData.get(s);
@@ -124,14 +124,14 @@ public class BugReport {
         color.setColor(Color.BLACK);
         color.setStrokeWidth(5);
         c.drawARGB(255, 200, 200, 200);
-        c.drawLine(0, 0, 0, Globals.height, color);
-        c.drawLine(0, Globals.height / 2, Globals.width, Globals.height / 2, color);
+        c.drawLine(0, 0, 0, height, color);
+        c.drawLine(0, height / 2, Globals.width, height / 2, color);
         color.setStrokeWidth(3);
 
         long timeMod = data.getElapsedTime(data.numItems() - 1) / Globals.width;
         timeMod = timeMod > 0 ? timeMod : 1;
         for (int k = 0; k < data.sizeOfValueArray() && k < colors.length; k++) {
-            float valueMod = data.meanValue(k) / (Globals.height / 2);
+            float valueMod = data.meanValue(k) / (height / 2);
             valueMod = valueMod > 0 ? valueMod : 1;
             color.setColor(colors[k]);
             float startX = data.getElapsedTime(0) / timeMod;
@@ -145,7 +145,6 @@ public class BugReport {
             }
         }
         sensorGraphs.put(s, b);
-        Globals.height = Globals.height * 2;
         return b;
     }
 

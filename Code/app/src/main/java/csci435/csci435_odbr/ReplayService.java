@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Brendan Otten on 4/20/2016.
@@ -49,9 +51,11 @@ public class ReplayService extends IntentService {
                 for (ReportEvent event : BugReport.getInstance().getEventList()) {
                     String device = event.getDevice();
                     for (GetEvent e : event.getInputEvents()) {
-                        if (e.getTimeMillis() - time > 0) {
-                            Thread.sleep(e.getTimeMillis() - time);
-                        }
+                        long waitfor = System.currentTimeMillis() + (e.getTimeMillis() - time);
+                        //Inefficient to be sure, but more accurate results than Thread.sleep(), and
+                        //ScheduledThreadExecutor was not playing well, ToDo: replace while block
+                        while (System.currentTimeMillis() < waitfor) {}
+
                         Log.v("ReplayService", e.getSendEvent(device));
                         os.write((e.getSendEvent(device) + "\n").getBytes("ASCII"));
                         os.flush();

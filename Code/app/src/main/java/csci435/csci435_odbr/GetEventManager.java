@@ -22,6 +22,7 @@ public class GetEventManager {
     private ArrayList<Process> processes;
     private ScreenshotManager sm;
     private HierarchyDumpManager hdm;
+    private
 
     int EV_SYN = 0;
     int EV_KEY = 1;
@@ -43,6 +44,8 @@ public class GetEventManager {
         if (recording) {
             return;
         }
+        sm.initialize();
+        hdm.initialize();
         try {
             for (String device : getInputDevices()) {
                 service.submit(new GetEventTask(device));
@@ -65,6 +68,8 @@ public class GetEventManager {
         } catch (Exception e) {
             Log.v("GetEventManager", "Error stopping GetEvent process: " + e.getMessage());
         }
+        sm.destroy();
+        hdm.destroy();
     }
 
     private ArrayList<String> getInputDevices(){
@@ -79,9 +84,11 @@ public class GetEventManager {
         private String device;
         private ReportEvent event;
         private int id_num;
+        private int downCount;
 
         public GetEventTask(String device) {
             this.device = device;
+            downCount = 0;
             Log.v("GetEventTask", "Starting input collection for device: " + device);
             try {
                 Process su = Runtime.getRuntime().exec("su", null, null);
@@ -104,21 +111,27 @@ public class GetEventManager {
                     Globals.time_last_event = System.currentTimeMillis();
                     GetEvent getevent = new GetEvent(res);
                     event.addGetEvent(getevent);
-                    Log.v("GetEvent", getevent.toString(device));
+                    Log.v("GetEvent", getevent.readable(device));
                     if (fingerDown(getevent)) {
-                        event.addScreenshot(sm.takeScreenshot());
-                        event.addHierarchyDump(hdm.takeHierarchyDump());
+                        if (downCount == 0) {
+                            event.addScreenshot(sm.takeScreenshot());
+                            event.addHierarchyDump(hdm.takeHierarchyDump());
+                        }
+                        ++downCount;
                         Log.v("GetEventTouch", "FingerDown");
                     }
                     else if (fingerUp(getevent)) {
+                        --downCount;
                         Log.v("GetEventTouch", "FingerUp");
-                        do {
-                            is.read(res);
-                            getevent = new GetEvent(res);
-                            event.addGetEvent(getevent);
-                        } while (getevent.getCode() != SYN_REPORT);
-                        BugReport.getInstance().addEvent(event);
-                        event = new ReportEvent(device);
+                        if (downCount == 0) {
+                            do {
+                                is.read(res);
+                                getevent = new GetEvent(res);
+                                event.addGetEvent(getevent);
+                            } while (getevent.getCode() != SYN_REPORT);
+                            BugReport.getInstance().addEvent(event);
+                            event = new ReportEvent(device);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -137,7 +150,7 @@ public class GetEventManager {
                     return e.getCode() == value && e.getValue() != 0xffffffff;
                 }
             }
-            else if(!GetEventDeviceInfo.getInstance().isTypeA()) {
+            else {
                 if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_DOWN) {
                     return true;
                 }
@@ -146,7 +159,7 @@ public class GetEventManager {
         }
 
         private boolean fingerUp(GetEvent e) {
-            if(GetEventDeviceInfo.getInstance().isTypeA() || GetEventDeviceInfo.getInstance().isMultiTouchB()){
+            if(GetEventDeviceInfo.getInstance().isMultiTouchA() || GetEventDeviceInfo.getInstance().isMultiTouchB()){
                 Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
                 if(value == null){
                     return false;
@@ -155,7 +168,7 @@ public class GetEventManager {
                     return e.getCode() == value && e.getValue() == 0xffffffff;
                 }
             }
-            else if(!GetEventDeviceInfo.getInstance().isTypeA()) {
+            else {
                 if (e.getType() == EV_KEY && e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == TOUCH_UP) {
                     return true;
                 }
@@ -192,6 +205,10 @@ class GetEvent {
 
     public String toString(String device) {
         return String.format("[%d.%06d] %s: %04x %04x %08x", seconds, microseconds, device, type, code, value);
+    }
+
+    public String readable(String device) {
+        return String.format("[%d.%06d] %s: %d %d %d", seconds, microseconds, device, type, code, value);
     }
 
     public String getSendEvent(String device) {

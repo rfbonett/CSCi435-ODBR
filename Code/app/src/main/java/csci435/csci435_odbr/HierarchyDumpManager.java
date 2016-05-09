@@ -33,7 +33,18 @@ public class HierarchyDumpManager {
     private Process process;
 
     public HierarchyDumpManager() {
-        initialize();
+        dump_index = 0;
+        directory = "sdcard/HierarchyDumps/";
+        filename = "dump" + dump_index + ".xml";
+        File dir = new File(directory);
+        if (dir.exists()) {
+            for (File f : dir.listFiles()) {
+                f.delete();
+            }
+        }
+        else {
+            dir.mkdir();
+        }
     }
 
 
@@ -83,19 +94,7 @@ public class HierarchyDumpManager {
      * Initializes the manager, starting a new SuperUser process and ExecutorService
      */
     public void initialize() {
-        dump_index = 0;
-        directory = "sdcard/HierarchyDumps/";
-        filename = "dump" + dump_index + ".xml";
         service = Executors.newCachedThreadPool();
-        File dir = new File(directory);
-        if (dir.exists()) {
-            for (File f : dir.listFiles()) {
-                f.delete();
-            }
-        }
-        else {
-            dir.mkdir();
-        }
         try {
             process = Runtime.getRuntime().exec("su", null, null);
         } catch (Exception e) {Log.e("HierarchyDumpTask", "Could not start process! Check su permissions.");}
@@ -113,6 +112,7 @@ public class HierarchyDumpManager {
             os.close();
             process.waitFor();
             process.destroy();
+            service.shutdown();
         } catch (Exception e) {Log.v("HierarchyDumpManager", "Could not destroy: " + e.getMessage());}
     }
 }

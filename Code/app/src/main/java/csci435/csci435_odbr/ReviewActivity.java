@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.support.v4.view.ViewPager;
@@ -50,7 +52,6 @@ public class ReviewActivity extends FragmentActivity {
     private ViewPager viewPager;
     private ToggleButton sensorDataButton;
     private ToggleButton userEventsButton;
-    private int verticalSpacer = 360;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,11 @@ public class ReviewActivity extends FragmentActivity {
         userEventsButton = (ToggleButton) findViewById(R.id.userEventsButton);
         displaySensorData(sensorDataButton);
 
-        Globals.availableHeightForImage = Globals.height - verticalSpacer;
+        int titleHeight = findViewById(R.id.titleLayout).getHeight();
+        int toggleHeight = findViewById(R.id.pageToggle).getHeight();
+        int buttonHeight = findViewById(R.id.submitButton).getHeight();
+
+        Globals.availableHeightForImage = Globals.height - (titleHeight + toggleHeight + buttonHeight);
 
         for (ReportEvent e : BugReport.getInstance().getEventList()) {
             String device = e.getDevice();
@@ -154,49 +159,46 @@ public class ReviewActivity extends FragmentActivity {
             Bitmap screenBitmap = e.getScreenshot().getBitmap();
 
             if (screenBitmap != null) {
-                screenshot.setImageBitmap(screenBitmap);
+
+                Canvas c = new Canvas(screenBitmap);
+                Paint color = new Paint();
+                color.setStyle(Paint.Style.STROKE);
+                color.setStrokeWidth(5);
+
+                SparseArray<ArrayList<int[]>> traces = BugReport.getInstance().getEventAtIndex(pos).getInputCoordinates();
+                for (int trace = 0; trace < traces.size(); trace++) {
+                    ArrayList<int[]> coords = traces.valueAt(trace);
+                    color.setColor(BugReport.colors[trace % BugReport.colors.length]);
+
+                    int x = scaleX(coords.get(0)[0]);
+                    int y = scaleY(coords.get(0)[1]);
+                    c.drawCircle(x, y, 10, color);
+                    x = scaleX(coords.get(coords.size() - 1)[0]);
+                    y = scaleY(coords.get(coords.size() - 1)[1]);
+                    c.drawCircle(x, y, 10, color);
+
+                    for (int i = 1; i < coords.size() - 1; i++) {
+                        int xStart = scaleX(coords.get(i)[0]);
+                        int yStart = scaleY(coords.get(i)[1]);
+                        int xEnd = scaleX(coords.get(i + 1)[0]);
+                        int yEnd = scaleY(coords.get(i + 1)[1]);
+                        c.drawLine(xStart, yStart, xEnd, yEnd, color);
+                    }
+                }
+
+                int scaledWidth = (int) (screenBitmap.getWidth() * ((float) Globals.availableHeightForImage / (float) screenBitmap.getHeight()));
+                Bitmap bScaled = Bitmap.createScaledBitmap(screenBitmap, scaledWidth, Globals.availableHeightForImage, true);
+                screenshot.setImageBitmap(bScaled);
             }
-
-            Bitmap b = ((BitmapDrawable)screenshot.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
-            int scaledWidth = (int) (b.getWidth() * ((float) Globals.availableHeightForImage / (float) b.getHeight()));
-            Bitmap bScaled = Bitmap.createScaledBitmap(b, scaledWidth, Globals.availableHeightForImage, true);
-            Canvas c = new Canvas(bScaled);
-            Paint color = new Paint();
-            color.setColor(Color.YELLOW);
-            color.setStyle(Paint.Style.STROKE);
-            color.setStrokeWidth(5);
-            int bWidth = bScaled.getWidth();
-            int bHeight = bScaled.getHeight();
-
-            ArrayList<int[]> coords = BugReport.getInstance().getEventAtIndex(pos).getInputCoordinates();
-            int x = coords.get(0)[0];
-            int y = coords.get(0)[1];
-            int[] point = getTransformedBoundsInScreen(bWidth, bHeight, x, y);
-            c.drawCircle(point[0], point[1], 10, color);
-            x = coords.get(coords.size() - 1)[0];
-            y = coords.get(coords.size() - 1)[1];
-            point = getTransformedBoundsInScreen(bWidth, bHeight, x, y);
-            c.drawCircle(point[0], point[1], 10, color);
-
-            for (int i = 1; i < coords.size() - 1; i++) {
-                int xStart = coords.get(i)[0];
-                int yStart = coords.get(i)[1];
-                int xEnd = coords.get(i + 1)[0];
-                int yEnd = coords.get(i + 1)[1];
-                int[] pointStart = getTransformedBoundsInScreen(bWidth, bHeight, xStart, yStart);
-                int[] pointEnd = getTransformedBoundsInScreen(bWidth, bHeight, xEnd, yEnd);
-                c.drawLine(pointStart[0], pointStart[1], pointEnd[0], pointEnd[1], color);
-            }
-
-            screenshot.setImageBitmap(bScaled);
             return rootView;
         }
 
-        public int[] getTransformedBoundsInScreen(int bwidth, int bheight, int width, int height) {
-            int[] center = new int[2];
-            center[0] = width * bwidth / Globals.width;
-            center[1] = height * bheight / Globals.height;
-            return center;
+        private int scaleX(int val) {
+            return (int) ((float) val * (float) Globals.width / (float) GetEventDeviceInfo.getInstance().getMaxX());
+        }
+
+        private int scaleY(int val) {
+            return (int) ((float) val * (float) Globals.height / (float) GetEventDeviceInfo.getInstance().getMaxY());
         }
 
     }
