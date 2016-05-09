@@ -21,6 +21,8 @@ public class GetEventDeviceInfo {
     ArrayList<String> abs_name_list = new ArrayList<String>();
     ArrayList<String> key_name_list = new ArrayList<String>();
     private boolean typeA = false;
+    private boolean typeMultiA = false;
+    private boolean typeMultiB = false;
 
     public static GetEventDeviceInfo getInstance() {
         return ourInstance;
@@ -44,6 +46,8 @@ public class GetEventDeviceInfo {
     public boolean isTypeA(){
         return typeA;
     }
+    public boolean isMultitouchA(){return typeMultiA;}
+    public boolean isMultitouchB(){return typeMultiB;}
 
     public void setDeviceData() {
         Log.v("GetEventDeviceInfo", "settingInfo");
@@ -188,6 +192,14 @@ public class GetEventDeviceInfo {
 
             if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") == null ){
                 typeA = true;
+            }
+            else{
+                if(device_info_hashmap.get("ABS_MT_SLOT") != null){
+                    typeMultiB = true;
+                }
+                else{
+                    typeMultiA = true;
+                }
             }
 
         } catch (Exception e) {
