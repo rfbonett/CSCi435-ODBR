@@ -167,8 +167,10 @@ public class ReviewActivity extends FragmentActivity {
 
                 SparseArray<ArrayList<int[]>> traces = BugReport.getInstance().getEventAtIndex(pos).getInputCoordinates();
                 for (int trace = 0; trace < traces.size(); trace++) {
+                    Log.v("Review Activity", "TRying to draw");
                     ArrayList<int[]> coords = traces.valueAt(trace);
                     color.setColor(BugReport.colors[trace % BugReport.colors.length]);
+
 
                     int x = scaleX(coords.get(0)[0]);
                     int y = scaleY(coords.get(0)[1]);
@@ -176,13 +178,13 @@ public class ReviewActivity extends FragmentActivity {
                     x = scaleX(coords.get(coords.size() - 1)[0]);
                     y = scaleY(coords.get(coords.size() - 1)[1]);
                     c.drawCircle(x, y, 10, color);
-
                     for (int i = 1; i < coords.size() - 1; i++) {
                         int xStart = scaleX(coords.get(i)[0]);
                         int yStart = scaleY(coords.get(i)[1]);
                         int xEnd = scaleX(coords.get(i + 1)[0]);
                         int yEnd = scaleY(coords.get(i + 1)[1]);
                         c.drawLine(xStart, yStart, xEnd, yEnd, color);
+                        Log.v("ReviewActivity", xStart + ", " + yStart + ", " + xEnd + ", " + yEnd);
                     }
                 }
 

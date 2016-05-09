@@ -111,6 +111,7 @@ public class LaunchAppActivity extends Activity {
         });
 
         GetEventDeviceInfo.getInstance().setDeviceData();
+        showDeviceLimitations();
 
     }
 
@@ -169,6 +170,28 @@ public class LaunchAppActivity extends Activity {
             }
         });
         prompt.setNegativeButton("Cancel", null);
+        prompt.show();
+    }
+
+    private void showDeviceLimitations(){
+        AlertDialog.Builder prompt = new AlertDialog.Builder(this);
+        String device = "";
+        String msg = "";
+        if(GetEventDeviceInfo.getInstance().isTypeSingleTouch()){
+            device = "Single Touch Device";
+            msg = "  - Clicks\n  - Long Clicks\n  - Single Pointer Swipes";
+        }
+        else if(GetEventDeviceInfo.getInstance().isMultiTouchA()){
+            device = "Multitouch Device Type A";
+            msg = "  - Clicks\n  - Long Clicks\n  - Multiple Pointer Swipes";
+        }
+        else if(GetEventDeviceInfo.getInstance().isMultiTouchB()){
+            device = "Multitouch Device Type B";
+            msg = "  - Clicks\n  - Long Clicks\n  - Multiple Pointer Swipes";
+        }
+        prompt.setTitle("Your device is: " + device);
+        prompt.setPositiveButton("Ok", null);
+        prompt.setMessage("This means your device supports:\n" + msg);
         prompt.show();
     }
 

@@ -130,6 +130,15 @@ public class ReportEvent {
 
         coords.put(activeSlot, new int[] {-1, -1});
         traces.put(activeSlot, new ArrayList<int[]>());
+
+        if(GetEventDeviceInfo.getInstance().isTypeSingleTouch()){
+            activeSlot = 0;
+            if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
+                coords.put(activeSlot, new int[] {-1, -1});
+                traces.put(activeSlot, new ArrayList<int[]>());
+            }
+        }
+
         for (GetEvent e : inputs) {
             if (slot(e)) {
                 activeSlot = e.getValue();
@@ -163,7 +172,9 @@ public class ReportEvent {
     }
 
     private boolean slot(GetEvent e) {
-        return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_SLOT"));
+        try{
+            return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_SLOT"));
+        } catch (Exception exc) {return false;}
     }
 
     private boolean xPos(GetEvent e) {
