@@ -11,9 +11,14 @@ import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Brendan Otten on 4/20/2016.
+ * Replay service that iterates over the ReportEvents and utilizes sendevent to send the getEvent lines to re-enact
+ * the input traces. Just a feature to allow the tester to replay the events they put in, gives a visual representation
+ * for how the developer will be able to re-enact their reported bug
  */
 public class ReplayService extends IntentService {
 
@@ -49,10 +54,11 @@ public class ReplayService extends IntentService {
                 for (ReportEvent event : BugReport.getInstance().getEventList()) {
                     String device = event.getDevice();
                     for (GetEvent e : event.getInputEvents()) {
-                        if (e.getTimeMillis() - time > 0) {
-                            Thread.sleep(e.getTimeMillis() - time);
-                        }
-                        Log.v("ReplayService", e.getSendEvent(device));
+                        long waitfor = System.currentTimeMillis() + (e.getTimeMillis() - time);
+                        //Inefficient to be sure, but more accurate results than Thread.sleep(), and
+                        //ScheduledThreadExecutor was not playing well, ToDo: replace while block
+                        while (System.currentTimeMillis() < waitfor) {}
+
                         os.write((e.getSendEvent(device) + "\n").getBytes("ASCII"));
                         os.flush();
                         time = e.getTimeMillis();
@@ -61,8 +67,7 @@ public class ReplayService extends IntentService {
                 os.close();
                 su_replay.waitFor();
                 Thread.sleep(wait_time);
-            } catch (Exception e) {Log.v("ReplayService", "Unable to replay event: " + cmd);}
-
+            } catch (Exception e) {Log.e("ReplayService", "Unable to replay event: " + cmd);}
 
             Intent record_intent = new Intent(ReplayService.this, RecordActivity.class);
             record_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

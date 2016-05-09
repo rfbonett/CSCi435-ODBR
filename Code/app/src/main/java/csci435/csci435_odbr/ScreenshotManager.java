@@ -27,11 +27,11 @@ public class ScreenshotManager {
     private int screenshot_index;
     private Process process;
 
+
     public ScreenshotManager() {
         screenshot_index = 0;
         directory = "sdcard/Screenshots/";
         filename = "screenshot" + screenshot_index + ".png";
-        service = Executors.newCachedThreadPool();
         File dir = new File(directory);
         if (dir.exists()) {
             for (File f : dir.listFiles()) {
@@ -41,9 +41,22 @@ public class ScreenshotManager {
         else {
             dir.mkdir();
         }
+    }
+
+
+    public void initialize() {
+        service = Executors.newCachedThreadPool();
         try {
             process = Runtime.getRuntime().exec("su", null, null);
         } catch (Exception e) {Log.e("ScreenshotTask", "Could not start process! Check su permissions.");}
+    }
+
+
+    public void destroy() {
+        try {
+            service.shutdown();
+            process.destroy();
+        } catch (Exception e) {Log.e("ScreenshotManager", "Could not destroy process: " + e.getMessage());}
     }
 
     /**
@@ -82,8 +95,6 @@ public class ScreenshotManager {
     }
 }
 
-
-
 /**
  * A Screenshot object consists of a filename and functionality to access the image
  */
@@ -99,7 +110,7 @@ class Screenshot {
         File screenshotFile = new File(filename);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeFile(screenshotFile.getAbsolutePath(), options);
+        return BitmapFactory.decodeFile(screenshotFile.getAbsolutePath(), options).copy(Bitmap.Config.ARGB_8888, true);
     }
 
 

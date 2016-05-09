@@ -35,6 +35,7 @@ public class SensorDataManager implements SensorEventListener {
     public void startRecording() {
         for (Sensor s : Globals.sensors) {
             Globals.sMgr.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
+            lastLoggedData.put(s, new float[] {});
         }
     }
 
@@ -52,7 +53,7 @@ public class SensorDataManager implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (!Arrays.equals(lastLoggedData.get(event.sensor), event.values)) {
             BugReport.getInstance().addSensorData(event.sensor, event);
-            lastLoggedData.put(event.sensor, event.values);
+            lastLoggedData.put(event.sensor, event.values.clone());
         }
     }
 

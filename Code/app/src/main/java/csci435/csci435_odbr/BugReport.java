@@ -17,9 +17,11 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * Created by Rich on 2/11/16.
+ * Singleton class containing all information for a specific bug report. It will hold all sensor data as well as a list
+ * of report events which contain their specified coordinates and times of events.
  */
 public class BugReport {
-    private static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
+    public static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
     private static int MAX_ITEMS_TO_PRINT = 10;
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
@@ -40,6 +42,7 @@ public class BugReport {
         clearReport();
     }
 
+    //resets the data, called after report is submitted
     public void clearReport() {
         sensorData.clear();
         sensorGraphs.clear();
@@ -55,7 +58,7 @@ public class BugReport {
         eventList.add(e);
     }
 
-
+    //adds a sensor 'event' to a specific sensor
     public void addSensorData(Sensor s, SensorEvent e) {
         if (!sensorData.containsKey(s)) {
             sensorData.put(s, new SensorDataList());
@@ -76,29 +79,7 @@ public class BugReport {
      * @return
      */
 
-    public JSONObject toJSON() {
-        //Log Title, Reporter Name and Description
-        Log.v("BugReport", "Reporter: " + reporterName);
-        Log.v("BugReport", "Title: " + title);
-        Log.v("BugReport", "What Should Happen: " + desiredOutcome);
-        Log.v("BugReport", "What Does Happen: " + actualOutcome);
 
-        //Log Sensor Data, each sensor capped at MAX_ITEMS_TO_PRINT
-        for (Sensor s : sensorData.keySet()) {
-            Log.v("BugReport", "|*************************************************|");
-            Log.v("BugReport", "Data for Sensor: " + s.getName());
-            SensorDataList data = sensorData.get(s);
-            long timeStart = data.getTime(0);
-            for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
-                Log.v("BugReport", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + makeSensorDataReadable(data.getValues(i)));
-            }
-            int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
-            Log.v("BugReport", "And " + (printed > 0 ? printed : 0) + " more");
-            Log.v("BugReport", "|*************************************************|");
-        }
-
-        return new JSONObject();
-    }
 
 
     private String makeSensorDataReadable(float[] input) {
@@ -115,8 +96,8 @@ public class BugReport {
             return sensorGraphs.get(s);
         }
 
-        Globals.height = Globals.height / 2;
-        Bitmap b = Bitmap.createBitmap(Globals.width, Globals.height, Bitmap.Config.ARGB_8888);
+        int height = Globals.height / 2;
+        Bitmap b = Bitmap.createBitmap(Globals.width, height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
         SensorDataList data = sensorData.get(s);
@@ -124,14 +105,14 @@ public class BugReport {
         color.setColor(Color.BLACK);
         color.setStrokeWidth(5);
         c.drawARGB(255, 200, 200, 200);
-        c.drawLine(0, 0, 0, Globals.height, color);
-        c.drawLine(0, Globals.height / 2, Globals.width, Globals.height / 2, color);
+        c.drawLine(0, 0, 0, height, color);
+        c.drawLine(0, height / 2, Globals.width, height / 2, color);
         color.setStrokeWidth(3);
 
         long timeMod = data.getElapsedTime(data.numItems() - 1) / Globals.width;
         timeMod = timeMod > 0 ? timeMod : 1;
         for (int k = 0; k < data.sizeOfValueArray() && k < colors.length; k++) {
-            float valueMod = data.meanValue(k) / (Globals.height / 2);
+            float valueMod = data.meanValue(k) / (height / 2);
             valueMod = valueMod > 0 ? valueMod : 1;
             color.setColor(colors[k]);
             float startX = data.getElapsedTime(0) / timeMod;
@@ -145,7 +126,6 @@ public class BugReport {
             }
         }
         sensorGraphs.put(s, b);
-        Globals.height = Globals.height * 2;
         return b;
     }
 
@@ -210,12 +190,11 @@ class SensorDataList {
         return timestamps.get(index) - timestamps.get(0);
     }
 
-
     public float meanValue(int index) {
         return valueSums[index] / numItems;
     }
 
-    public float stDev(int index) {
+    /*public float stDev(int index) {
         float stdev = 0;
         float mean = meanValue(index);
         for (int i = 0; i < numItems; i++) {
@@ -224,6 +203,7 @@ class SensorDataList {
         }
         return (float) Math.sqrt(stdev / numItems);
     }
+    */
 
     public float[] getValues(int index) {
         return values.get(index);

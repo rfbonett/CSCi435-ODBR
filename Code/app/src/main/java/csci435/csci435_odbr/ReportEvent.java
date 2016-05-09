@@ -1,23 +1,24 @@
 package csci435.csci435_odbr;
 
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
  * Created by Rich on 4/22/16.
+ * A Report Event is our classification for a singular event. Each Report Event will have a screenshot, a hierarchy,
+ * and then multiple getevent lines associated with it until the trace reaches a point where that specific report event
+ * has finished. The Report Event interacts with the GetEventDeviceInfo to get appropriate data on the device and the
+ * managers as well to get feeds of data.
  */
 public class ReportEvent {
     short EV_ABS = 3;
-    Integer ABS_X;
-    Integer ABS_Y;
-    Integer ABS_MT_POSITION_X;
-    Integer ABS_MT_POSITION_Y;
-    Integer ABS_MT_TRACKING_ID;
-    Integer ABS_MT_PRESSURE;
 
     private long timeUntilNextEvent;
     private Screenshot screenShot;
@@ -26,10 +27,9 @@ public class ReportEvent {
     private String device;
     int idNum;
 
-    public ReportEvent(String device, HashMap<String, Integer> hashmap) {
+    public ReportEvent(String device) {
         this.device = device;
         inputs = new ArrayList<GetEvent>();
-        setAbsValues(hashmap);
     }
 
     public void addScreenshot(Screenshot s) {
@@ -88,16 +88,6 @@ public class ReportEvent {
         return "widget";
     }
 
-    private void setAbsValues(HashMap<String, Integer> hashmap){
-        ABS_MT_POSITION_X = hashmap.get("ABS_MT_POSITION_X");
-        ABS_MT_POSITION_Y = hashmap.get("ABS_MT_POSITION_Y");
-        ABS_MT_TRACKING_ID = hashmap.get("ABS_MT_TRACKING_ID");
-        ABS_MT_PRESSURE = hashmap.get("ABS_MT_PRESSURE");
-        ABS_X = hashmap.get("ABS_X");
-        ABS_Y = hashmap.get("ABS_Y");
-
-    }
-
     public Screenshot getScreenshot() {
         return screenShot;
     }
@@ -128,30 +118,78 @@ public class ReportEvent {
         return device;
     }
 
-    public ArrayList<int[]> getInputCoordinates() {
-        ArrayList<int[]> coords = new ArrayList<int[]>();
-        ArrayList<Integer> xCoords = new ArrayList<Integer>();
-        ArrayList<Integer> yCoords = new ArrayList<Integer>();
-        for (GetEvent e : inputs) {
-            if (xPos(e)) {
-                xCoords.add(e.getValue());
-            }
-            else if (yPos(e)) {
-                yCoords.add(e.getValue());
+    /**
+     * Retrieve a list of input traces, accounts for a lack of X || Y in the output of specific ABS reports
+     * @return a list of lists, where each list contains the coordinates for one touch input
+     */
+    public SparseArray<ArrayList<int[]>> getInputCoordinates() {
+        SparseArray<ArrayList<int[]>> traces = new SparseArray<ArrayList<int[]>>();
+        SparseArray<int[]> coords = new SparseArray<int[]>();
+        SparseIntArray slots = new SparseIntArray();
+        int activeSlot = 0;
+
+        int NOT_FOUND = -1;
+        int CLEAN = 0;
+        int DIRTY = 1;
+
+        coords.put(activeSlot, new int[] {-1, -1});
+        traces.put(activeSlot, new ArrayList<int[]>());
+
+        if(GetEventDeviceInfo.getInstance().isTypeSingleTouch()){
+            activeSlot = 0;
+            if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
+                coords.put(activeSlot, new int[] {-1, -1});
+                traces.put(activeSlot, new ArrayList<int[]>());
             }
         }
 
-        for (int i = 0; i < xCoords.size() && i < yCoords.size(); i++) {
-            coords.add(new int[] {xCoords.get(i), yCoords.get(i)});
+        for (GetEvent e : inputs) {
+            if (slot(e)) {
+                activeSlot = e.getValue();
+                if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
+                    coords.put(activeSlot, new int[] {-1, -1});
+                    traces.put(activeSlot, new ArrayList<int[]>());
+                }
+            }
+            if (xPos(e)) {
+                coords.get(activeSlot)[0] = e.getValue();
+                slots.put(activeSlot, DIRTY);
+            }
+            else if (yPos(e)) {
+                coords.get(activeSlot)[1] = e.getValue();
+                traces.get(activeSlot).add(coords.get(activeSlot).clone());
+                slots.put(activeSlot, CLEAN);
+            }
+            else if (slots.get(activeSlot) == DIRTY) {
+                traces.get(activeSlot).add(coords.get(activeSlot).clone());
+                slots.put(activeSlot, CLEAN);
+            }
         }
-        return  coords;
+        
+        return traces;
+    }
+
+    /**
+     * Methods used to determine if the getevent code matches a specific parameter, i.e. if it is a slot, an x coordinate
+     * or a y coordinate
+     * @param e
+     * @return
+     */
+    private boolean slot(GetEvent e) {
+        try{
+            return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_SLOT"));
+        } catch (Exception exc) {return false;}
     }
 
     private boolean xPos(GetEvent e) {
-        return e.getType() == EV_ABS && (e.getCode() == ABS_X || e.getCode() == ABS_MT_POSITION_X);
+        try {
+            return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_X") || e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_X"));
+        } catch (Exception exc) {return false;}
     }
 
     private boolean yPos(GetEvent e) {
-        return e.getType() == EV_ABS && (e.getCode() == ABS_Y || e.getCode() == ABS_MT_POSITION_Y);
+        try {
+            return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_POSITION_Y") || e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_Y"));
+        } catch (Exception exc) {return false;}
     }
 }

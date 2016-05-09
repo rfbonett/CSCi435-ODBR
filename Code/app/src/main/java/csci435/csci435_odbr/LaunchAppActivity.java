@@ -109,6 +109,8 @@ public class LaunchAppActivity extends Activity {
                 return false;
             }
         });
+
+
     }
 
     private void getInstalledApplications() {
@@ -169,6 +171,28 @@ public class LaunchAppActivity extends Activity {
         prompt.show();
     }
 
+    private void showDeviceLimitations(){
+        AlertDialog.Builder prompt = new AlertDialog.Builder(this);
+        String device = "";
+        String msg = "";
+        if(GetEventDeviceInfo.getInstance().isTypeSingleTouch()){
+            device = "Single Touch Device";
+            msg = "  - Clicks\n  - Long Clicks\n  - Single Pointer Swipes";
+        }
+        else if(GetEventDeviceInfo.getInstance().isMultiTouchA()){
+            device = "Multitouch Device Type A";
+            msg = "  - Clicks\n  - Long Clicks\n  - Multiple Pointer Swipes";
+        }
+        else if(GetEventDeviceInfo.getInstance().isMultiTouchB()){
+            device = "Multitouch Device Type B";
+            msg = "  - Clicks\n  - Long Clicks\n  - Multiple Pointer Swipes";
+        }
+        prompt.setTitle("Your device is: " + device);
+        prompt.setPositiveButton("Ok", null);
+        prompt.setMessage("This means your device supports:\n" + msg);
+        prompt.show();
+    }
+
 
     /**
      * startRecording sets the Global application handle and launches RecordActivity
@@ -204,9 +228,10 @@ public class LaunchAppActivity extends Activity {
             os.close();
 
             clear_app_data.waitFor();
-            Log.v("Launch_app_activity", "data cleared");
 
-        } catch (Exception e){}
+        } catch (Exception e){
+            Log.e("LaunchAppActivity", "Error clearing stored app data");
+        }
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
