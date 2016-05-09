@@ -5,7 +5,6 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,7 +19,7 @@ public class GetEventDeviceInfo {
     private ArrayList<String> devices = new ArrayList<String>();
     ArrayList<String> abs_name_list = new ArrayList<String>();
     ArrayList<String> key_name_list = new ArrayList<String>();
-    private boolean typeA = false;
+    private boolean typeSingleTouch = false;
     private boolean typeMultiA = false;
     private boolean typeMultiB = false;
     private int maxX;
@@ -45,8 +44,8 @@ public class GetEventDeviceInfo {
         return devices;
     }
 
-    public boolean isTypeA(){
-        return typeA;
+    public boolean isTypeSingleTouch(){
+        return typeSingleTouch;
     }
     public boolean isMultiTouchA(){return typeMultiA;}
     public boolean isMultiTouchB(){return typeMultiB;}
@@ -226,7 +225,7 @@ public class GetEventDeviceInfo {
 
     private void set_device_type(){
         if(device_info_hashmap.get("ABS_MT_POSITION_X") == null && device_info_hashmap.get("ABS_MT_POSITION_Y") == null && device_info_hashmap.get("BTN_TOUCH") != null ){
-            typeA = true;
+            typeSingleTouch = true;
         }
         else{
             if(device_info_hashmap.get("ABS_MT_SLOT") != null){
