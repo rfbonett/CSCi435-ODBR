@@ -146,7 +146,6 @@ public class RecordActivity extends ActionBarActivity {
      */
     public void submitReport(View view) throws Exception {
         updateBugReport();
-        BugReport.getInstance().toJSON();
 
         //JSON model tester
         new JsonModel().tester();

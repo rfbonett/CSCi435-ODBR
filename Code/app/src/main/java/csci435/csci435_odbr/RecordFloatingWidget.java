@@ -1,28 +1,24 @@
 package csci435.csci435_odbr;
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Rich on 2/16/16.
+ * Record Floating Widget is an overlay that is a service that is displayed over the application we are reporting.
+ * The overlay allows for recording events or submitting the report. If the recording is started, it post delays to
+ * a handler to see if it should reappear. Once the time since last event has been over 3 seconds it will appear again
+ * and restart the process. Once it reappears it is responsible for sending notifications to each of the process managers
+ * to terminate their processes.
  */
 public class RecordFloatingWidget extends Service {
     WindowManager wm;
@@ -63,15 +59,26 @@ public class RecordFloatingWidget extends Service {
         sdm = new SensorDataManager();
     }
 
+    /**
+     * Hides the overlay
+     */
     public void hideOverlay() {
         wm.removeView(ll);
     }
 
+    /**
+     * Restores the overlay and stops the managers
+     */
     public void restoreOverlay() {
         wm.addView(ll, parameters);
         stopRecording();
     }
 
+    /**
+     * Launches Record Activity and destroys itself, as the service is not associated with a specific activity
+     * so the overlay would persist otherwise
+     * @param v
+     */
     public void submitReport(View v) {
         ll.setVisibility(View.GONE);
         Intent intent = new Intent();
@@ -89,6 +96,10 @@ public class RecordFloatingWidget extends Service {
     }
 
 
+    /**
+     * Starts the recording process for the events, called when the Record Inputs button is pressed
+     * @param view
+     */
     public void recordEvents(View view){
         gem.startRecording();
         sdm.startRecording();
@@ -97,7 +108,9 @@ public class RecordFloatingWidget extends Service {
         handler.post(widget_timer);
     }
 
-
+    /**
+     * Finishes the recording process for the events, called when the overlay reappears
+     */
     public void stopRecording() {
         handler.post(new Runnable() {
             @Override
@@ -108,6 +121,9 @@ public class RecordFloatingWidget extends Service {
         });
     }
 
+    /**
+     * Runnable to be posted to the handler that tests whether or not we should restore the overlay
+     */
     public Runnable widget_timer = new Runnable() {
         @Override
         public void run() {

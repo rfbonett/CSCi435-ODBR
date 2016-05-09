@@ -12,6 +12,10 @@ import java.util.HashMap;
 
 /**
  * Created by Rich on 4/22/16.
+ * A Report Event is our classification for a singular event. Each Report Event will have a screenshot, a hierarchy,
+ * and then multiple getevent lines associated with it until the trace reaches a point where that specific report event
+ * has finished. The Report Event interacts with the GetEventDeviceInfo to get appropriate data on the device and the
+ * managers as well to get feeds of data.
  */
 public class ReportEvent {
     short EV_ABS = 3;
@@ -115,7 +119,7 @@ public class ReportEvent {
     }
 
     /**
-     * Retrieve a list of input traces
+     * Retrieve a list of input traces, accounts for a lack of X || Y in the output of specific ABS reports
      * @return a list of lists, where each list contains the coordinates for one touch input
      */
     public SparseArray<ArrayList<int[]>> getInputCoordinates() {
@@ -165,6 +169,12 @@ public class ReportEvent {
         return traces;
     }
 
+    /**
+     * Methods used to determine if the getevent code matches a specific parameter, i.e. if it is a slot, an x coordinate
+     * or a y coordinate
+     * @param e
+     * @return
+     */
     private boolean slot(GetEvent e) {
         try{
             return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_SLOT"));

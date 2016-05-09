@@ -8,7 +8,8 @@ import android.content.Intent;
 
 
 /**
- * The Splash Screen is simply something nice to look at while the app configures itself.
+ * The Splash Screen is simply something nice to look at while the app configures itself. Shows a prompt once the
+ * device data has been collected and parsed based on the type of device the app is being run on.
  */
 public class SplashScreen extends ActionBarActivity {
 

@@ -134,6 +134,10 @@ public class ReviewActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Fragment for each of the screenshot, scales the Coordinates of the slot traces to the bitmap, creating one
+     * for each report event
+     */
     public static class UserEventFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
 

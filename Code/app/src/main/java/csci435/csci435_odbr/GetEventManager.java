@@ -14,6 +14,10 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by Rich on 4/25/16.
+ * Manages the GetEvent tasks. Interacts with the GetEventDeviceInfo to know which areas to cat to based on the
+ * device array list (/dev/input/eventX). The manager toggles them on whenever we want to record inputs from the
+ * record floating widget, and toggles them off whenever the overlay reappears. It is also responsible for triggering
+ * the start of the screenshot and hierarchy execution
  */
 public class GetEventManager {
 
@@ -40,6 +44,9 @@ public class GetEventManager {
         hdm = new HierarchyDumpManager();
     }
 
+    /**
+     * Method that starts the recording process and initalizes the screenshot and hierarchy managers
+     */
     public void startRecording() {
         if (recording) {
             return;
@@ -56,10 +63,11 @@ public class GetEventManager {
         }
     }
 
-
+    /**
+     * Iterates through the recording processes and stops them, also destroys the hierarchy and screenshot managers
+     */
     public void stopRecording() {
         try {
-            //Log.v("GetEventManager", "Terminating Recording Processes");
             recording = false;
             for (Process p : processes) {
                 p.getInputStream().close();
@@ -77,7 +85,12 @@ public class GetEventManager {
     }
 
 
-
+    /**
+     * A GetEventTask is a runnable that is responsible for creating multiple report events based on the output
+     * of the cat Process. Within our implementation we account for multiple fingers to be touching if the device
+     * is a multitouch device. The specific task is responsible for executing its process for cat on the specific device
+     * and then that process is added to the getEvent manager
+     */
     class GetEventTask implements Runnable {
         private byte[] res = new byte[16];
         private InputStream is;
@@ -89,8 +102,8 @@ public class GetEventManager {
         public GetEventTask(String device) {
             this.device = device;
             downCount = 0;
-            //Log.v("GetEventTask", "Starting input collection for device: " + device);
             try {
+                //starts cat for /dev/input/eventX
                 Process su = Runtime.getRuntime().exec("su", null, null);
                 OutputStream outputStream = su.getOutputStream();
                 outputStream.write(("cat " + device).getBytes("ASCII"));
@@ -106,23 +119,29 @@ public class GetEventManager {
         @Override
         public void run() {
             try {
+                //runnable that creates new report events based on the output of the cat process
                 event = new ReportEvent(device);
                 while (is.read(res) > 0) {
+                    //increments the time so the live data feed acts as an update, not just the start of the event
+                    //otherwise events of longer than 3 seconds would pose a problem
                     Globals.time_last_event = System.currentTimeMillis();
+
+                    //a getevent consists of the entire, reformatted, that the cat process grabs, all of these are
+                    //associated with a specific ReportEvent based on the parameters below.
                     GetEvent getevent = new GetEvent(res);
                     event.addGetEvent(getevent);
-                    //Log.v("GetEvent", getevent.readable(device));
+
+                    //tracks the number of fingers down and up, if 0 are down and we get a fingerDown that's the start
+                    //of one report event, it finishes once we have a fingerUp that then has 0 fingers on the screen
                     if (fingerDown(getevent)) {
                         if (downCount == 0) {
                             event.addScreenshot(sm.takeScreenshot());
                             event.addHierarchyDump(hdm.takeHierarchyDump());
                         }
                         ++downCount;
-                        //Log.v("GetEventTouch", "FingerDown");
                     }
                     else if (fingerUp(getevent)) {
                         --downCount;
-                        //Log.v("GetEventTouch", "FingerUp");
                         if (downCount == 0) {
                             do {
                                 is.read(res);
@@ -138,6 +157,12 @@ public class GetEventManager {
                 Log.v("GetEventTask", "Whoops! " + e.getMessage());
             }
         }
+
+        /**
+         * methods to determine if a getevent line is registering finger down/up based on the device type
+         * @param e: getEvent line for interpretation
+         * @return: true/false
+         */
 
         private boolean fingerDown(GetEvent e) {
 
@@ -179,6 +204,11 @@ public class GetEventManager {
     }
 }
 
+
+/**
+ * Class to convert the byte information of the cat to a replica of the getevent outputs. With this, we can then
+ * parse get event lines in the same way that we initially parse get event logs.
+ */
 class GetEvent {
     private int seconds;
     private int microseconds;

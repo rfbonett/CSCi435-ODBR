@@ -43,30 +43,26 @@ public class GetEventDeviceInfo {
     private int maxX;
     private int maxY;
 
-    //initialize the singleton
     public static GetEventDeviceInfo getInstance() {
         return ourInstance;
     }
-    //add key codes, this is just a class for a hashmap really
     public void add_code(String key, Integer value){
         device_info_hashmap.put(key, value);
     }
-    //getter from hashmap
     public Integer get_code(String key){
         return device_info_hashmap.get(key);
     }
-
-    //get the hashmap
     public HashMap<String, Integer> getMap(){
         return device_info_hashmap;
     }
-
-    //get the list of /dev/input/eventX
     public ArrayList<String> getInputDevices(){
         return devices;
     }
 
-    //methods to determine touch type
+    /**
+     * methods to determine device type
+     * @return true or false based on type
+     */
     public boolean isTypeSingleTouch(){
         return typeSingleTouch;
     }
@@ -295,6 +291,10 @@ public class GetEventDeviceInfo {
      * getevent logs do not indicate the presence of which finger/pointer is being tracked at which time
      * typeMutliTouchB: device supports multitouch and events are properly reported. Multitouch events are appropriately
      * parsed.
+     *
+     * These values are determined based on the following guidelines:
+     * --https://source.android.com/devices/input/touch-devices.html (Single vs MultiTouch)
+     * --https://www.kernel.org/doc/Documentation/input/multi-touch-protocol.txt (Multitouch A || B)
      */
     private void set_device_type(){
         if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") == null ){

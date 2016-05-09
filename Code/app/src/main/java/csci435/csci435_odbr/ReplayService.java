@@ -16,6 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Brendan Otten on 4/20/2016.
+ * Replay service that iterates over the ReportEvents and utilizes sendevent to send the getEvent lines to re-enact
+ * the input traces. Just a feature to allow the tester to replay the events they put in, gives a visual representation
+ * for how the developer will be able to re-enact their reported bug
  */
 public class ReplayService extends IntentService {
 

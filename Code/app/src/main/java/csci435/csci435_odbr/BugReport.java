@@ -17,6 +17,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * Created by Rich on 2/11/16.
+ * Singleton class containing all information for a specific bug report. It will hold all sensor data as well as a list
+ * of report events which contain their specified coordinates and times of events.
  */
 public class BugReport {
     public static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
@@ -40,6 +42,7 @@ public class BugReport {
         clearReport();
     }
 
+    //resets the data, called after report is submitted
     public void clearReport() {
         sensorData.clear();
         sensorGraphs.clear();
@@ -55,7 +58,7 @@ public class BugReport {
         eventList.add(e);
     }
 
-
+    //adds a sensor 'event' to a specific sensor
     public void addSensorData(Sensor s, SensorEvent e) {
         if (!sensorData.containsKey(s)) {
             sensorData.put(s, new SensorDataList());
@@ -76,29 +79,7 @@ public class BugReport {
      * @return
      */
 
-    public JSONObject toJSON() {
-        //Log Title, Reporter Name and Description
-        //Log.v("BugReport", "Reporter: " + reporterName);
-        //Log.v("BugReport", "Title: " + title);
-        //Log.v("BugReport", "What Should Happen: " + desiredOutcome);
-        //Log.v("BugReport", "What Does Happen: " + actualOutcome);
 
-        //Log Sensor Data, each sensor capped at MAX_ITEMS_TO_PRINT
-        for (Sensor s : sensorData.keySet()) {
-            //Log.v("BugReport", "|*************************************************|");
-            //Log.v("BugReport", "Data for Sensor: " + s.getName());
-            SensorDataList data = sensorData.get(s);
-            long timeStart = data.getTime(0);
-            for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
-                //Log.v("BugReport", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + makeSensorDataReadable(data.getValues(i)));
-            }
-            int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
-            //Log.v("BugReport", "And " + (printed > 0 ? printed : 0) + " more");
-            //Log.v("BugReport", "|*************************************************|");
-        }
-
-        return new JSONObject();
-    }
 
 
     private String makeSensorDataReadable(float[] input) {
@@ -209,12 +190,11 @@ class SensorDataList {
         return timestamps.get(index) - timestamps.get(0);
     }
 
-
     public float meanValue(int index) {
         return valueSums[index] / numItems;
     }
 
-    public float stDev(int index) {
+    /*public float stDev(int index) {
         float stdev = 0;
         float mean = meanValue(index);
         for (int i = 0; i < numItems; i++) {
@@ -223,6 +203,7 @@ class SensorDataList {
         }
         return (float) Math.sqrt(stdev / numItems);
     }
+    */
 
     public float[] getValues(int index) {
         return values.get(index);
