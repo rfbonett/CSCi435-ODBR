@@ -60,6 +60,13 @@ public class GetEventDeviceInfo {
     }
 
     public void setDeviceData() {
+
+        device_info_hashmap = new HashMap<String, Integer>();
+        key_info_hashmap = new HashMap<String, Integer>();
+        devices = new ArrayList<String>();
+        abs_name_list = new ArrayList<String>();
+        key_name_list = new ArrayList<String>();
+
         Log.v("GetEventDeviceInfo", "settingInfo");
         boolean adding = false;
         boolean btn_touch_found = false;
@@ -195,7 +202,6 @@ public class GetEventDeviceInfo {
             su.destroy();
 
             set_device_type();
-
         } catch (Exception e) {
             Log.v("Main", "Error getting input devices");
         }
@@ -219,7 +225,7 @@ public class GetEventDeviceInfo {
     }
 
     private void set_device_type(){
-        if(device_info_hashmap.get("ABS_MT_POSITION_X") != null && device_info_hashmap.get("ABS_MT_POSITION_Y") != null && device_info_hashmap.get("BTN_TOUCH") == null ){
+        if(device_info_hashmap.get("ABS_MT_POSITION_X") == null && device_info_hashmap.get("ABS_MT_POSITION_Y") == null && device_info_hashmap.get("BTN_TOUCH") != null ){
             typeA = true;
         }
         else{

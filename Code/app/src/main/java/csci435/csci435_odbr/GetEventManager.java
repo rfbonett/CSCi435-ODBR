@@ -142,12 +142,12 @@ public class GetEventManager {
         private boolean fingerDown(GetEvent e) {
 
             if(GetEventDeviceInfo.getInstance().isMultiTouchA() || GetEventDeviceInfo.getInstance().isMultiTouchB()){
-                Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
-                if(value == null){
+                Integer code = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
+                if(code == null){
                     return false;
                 }
                 else {
-                    return e.getCode() == value && e.getValue() != 0xffffffff;
+                    return e.getCode() == code && e.getValue() != 0xffffffff;
                 }
             }
             else {
@@ -160,12 +160,12 @@ public class GetEventManager {
 
         private boolean fingerUp(GetEvent e) {
             if(GetEventDeviceInfo.getInstance().isMultiTouchA() || GetEventDeviceInfo.getInstance().isMultiTouchB()){
-                Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
-                if(value == null){
+                Integer code = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
+                if(code == null){
                     return false;
                 }
                 else {
-                    return e.getCode() == value && e.getValue() == 0xffffffff;
+                    return e.getCode() == code && e.getValue() == 0xffffffff;
                 }
             }
             else {
