@@ -150,7 +150,7 @@ public class RecordActivity extends ActionBarActivity {
      * Submits the report to the server, relaunches application
      * @param view
      */
-    public void submitReport(View view) {
+    public void submitReport(View view) throws Exception {
         updateBugReport();
         BugReport.getInstance().toJSON();
 
