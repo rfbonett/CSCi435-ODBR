@@ -134,7 +134,7 @@ public class GetEventDeviceInfo {
             int keyIndex = 0;
             while ((line = res.readLine()) != null) {
                 String[] parts = line.split(" ");
-
+                //comment?
                 if (btn_touch_found) {
                     //we have the start of a key line
                     if(line.contains("KEY") && line.contains("(") && line.contains(")")){
