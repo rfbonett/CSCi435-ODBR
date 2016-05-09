@@ -1,8 +1,12 @@
 package csci435.csci435_odbr;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Context;
 import android.util.Log;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityNodeProvider;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -10,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,8 +30,59 @@ public class HierarchyDumpManager {
     private String directory;
     private String filename;
     private int dump_index;
+    private Process process;
 
     public HierarchyDumpManager() {
+        initialize();
+    }
+
+
+    /**
+     * Returns a new HierachyDump of the current view hierarchy if initialized,
+     * otherwise throws an exception
+     * @return dump of the current view hierarchy
+     * @throws Exception : manager is not initialized
+     */
+    public HierarchyDump takeHierarchyDump() throws Exception {
+        if (service != null) {
+            dump_index += 1;
+            filename = "dump" + dump_index + ".xml";
+            service.submit(new HierarchyDumpTask(directory + filename));
+            return new HierarchyDump(directory + filename);
+        }
+        throw new Exception("HierarchyDumpManager not initialized");
+    }
+
+
+    /**
+     * Uses uiautomator to take a dump of the view hierarchy, saving the xml at filename
+     */
+    class HierarchyDumpTask implements Runnable {
+
+        private String filename;
+
+        public HierarchyDumpTask(String filename) {
+            this.filename = filename;
+        }
+
+        @Override
+        public void run() {
+            OutputStream os = process.getOutputStream();
+            try {
+                os.write(("/system/bin/uiautomator dump " + filename + " & \n").getBytes("ASCII"));
+                os.flush();
+                process.waitFor();
+            } catch (Exception e) {
+                Log.e("HierarchyDumpTask", "Error taking Hierarchy Dump: " + e.getMessage());
+            }
+        }
+    }
+
+
+    /**
+     * Initializes the manager, starting a new SuperUser process and ExecutorService
+     */
+    public void initialize() {
         dump_index = 0;
         directory = "sdcard/HierarchyDumps/";
         filename = "dump" + dump_index + ".xml";
@@ -40,38 +96,32 @@ public class HierarchyDumpManager {
         else {
             dir.mkdir();
         }
-    }
-
-    public HierarchyDump takeHierarchyDump() {
-        AccessibilityNodeInfo root = AccessibilityNodeInfo.obtain();
-        dump_index += 1;
-        filename = "dump" + dump_index + ".xml";
-        service.submit(new HierarchyDumpTask(root, directory + filename));
-        return new HierarchyDump(directory + filename);
-    }
-}
-
-class HierarchyDumpTask implements Runnable {
-
-    private String filename;
-    private AccessibilityNodeInfo node;
-
-    public HierarchyDumpTask(AccessibilityNodeInfo node, String filename) {
-        this.filename = filename;
-        this.node = node;
-    }
-
-    @Override
-    public void run() {
         try {
-            AccessibilityNodeInfoDumper.dumpWindowToFile(node, new File(filename));
-        } catch (Exception e) {
-            Log.e("HierarchyDumpTask", "Error taking hierarchy dump.");
-        }
+            process = Runtime.getRuntime().exec("su", null, null);
+        } catch (Exception e) {Log.e("HierarchyDumpTask", "Could not start process! Check su permissions.");}
     }
 
+
+    /**
+     * Stops the process for the Hierarchy Dump Manager
+     */
+    public void destroy() {
+        try {
+            OutputStream os = process.getOutputStream();
+            os.write(("exit\n").getBytes("ASCII"));
+            os.flush();
+            os.close();
+            process.waitFor();
+            process.destroy();
+        } catch (Exception e) {Log.v("HierarchyDumpManager", "Could not destroy: " + e.getMessage());}
+    }
 }
 
+
+/**
+ * A HierarchyDump contains a String handle to a file storing an xml of the view hierarchy, as well
+ * as methods to interpret this hierarchy
+ */
 class HierarchyDump {
 
     private String filename;
@@ -88,9 +138,9 @@ class HierarchyDump {
 
     /**
      * Returns the deepest view containing the coordinates as a Node
-     * @param x
-     * @param y
-     * @return
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return Node for the deepest view encapsulating the input coordinates
      */
     public Node getViewAtCoordinates(int x, int y) {
         Node node = null;
@@ -104,6 +154,9 @@ class HierarchyDump {
     }
 
 
+    /*
+     * Helper function for getViewAtCoordinates, returns deepest node containing x and y
+     */
     private Node getNodeBetweenBounds(Node node, int x, int y) {
         boolean childBetweenBounds = true;
         while (childBetweenBounds) {
@@ -121,6 +174,9 @@ class HierarchyDump {
     }
 
 
+    /*
+     * Helper function for getNodeBetweenBounds, returns node's bounds as int[]
+     */
     private int[] getBounds(Node node) {
         String[] boundsAttr = (((Element) node).getAttribute("bounds")).replace("[","").split("[^0-9]");
         int[] bounds = new int[boundsAttr.length];
@@ -131,6 +187,10 @@ class HierarchyDump {
     }
 
 
+    /*
+     * Helper function for getNodeBetweenBounds, returns true if the x and y coordinates are
+     * within the bounds, false otherwise
+     */
     private boolean isBetweenBounds(int x, int y, int[] bounds) {
         return x >= bounds[0] && x <= bounds[2] && y >= bounds[1] && y <= bounds[3];
     }
