@@ -95,8 +95,6 @@ public class ScreenshotManager {
     }
 }
 
-
-
 /**
  * A Screenshot object consists of a filename and functionality to access the image
  */

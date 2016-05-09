@@ -161,13 +161,7 @@ public class ReportEvent {
                 slots.put(activeSlot, CLEAN);
             }
         }
-
-        for (int i = 0; i < traces.size(); i++) {
-            Log.v("ReportEvent", "Trace: " + i);
-            for (int[] coord: traces.valueAt(i)) {
-                Log.v("ReportEvent", "Val: " + Arrays.toString(coord));
-            }
-        }
+        
         return traces;
     }
 

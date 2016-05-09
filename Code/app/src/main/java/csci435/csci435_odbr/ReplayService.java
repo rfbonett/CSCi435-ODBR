@@ -56,7 +56,6 @@ public class ReplayService extends IntentService {
                         //ScheduledThreadExecutor was not playing well, ToDo: replace while block
                         while (System.currentTimeMillis() < waitfor) {}
 
-                        Log.v("ReplayService", e.getSendEvent(device));
                         os.write((e.getSendEvent(device) + "\n").getBytes("ASCII"));
                         os.flush();
                         time = e.getTimeMillis();
@@ -65,8 +64,7 @@ public class ReplayService extends IntentService {
                 os.close();
                 su_replay.waitFor();
                 Thread.sleep(wait_time);
-            } catch (Exception e) {Log.v("ReplayService", "Unable to replay event: " + cmd);}
-
+            } catch (Exception e) {Log.e("ReplayService", "Unable to replay event: " + cmd);}
 
             Intent record_intent = new Intent(ReplayService.this, RecordActivity.class);
             record_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

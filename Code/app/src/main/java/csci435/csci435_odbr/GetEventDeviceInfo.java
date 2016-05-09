@@ -95,7 +95,6 @@ public class GetEventDeviceInfo {
         abs_name_list = new ArrayList<String>();
         key_name_list = new ArrayList<String>();
 
-        Log.v("GetEventDeviceInfo", "settingInfo");
         boolean btn_touch_found = false;
         try {
             //start the process
@@ -119,7 +118,6 @@ public class GetEventDeviceInfo {
                             key_name_list.add(parts[i]);
                             if(parts[i].equals("BTN_TOUCH")){
                                 btn_touch_found = true;
-                                Log.v("GetEventDeviceInfo", "Button touch found");
                             }
                         }
                     }
@@ -211,7 +209,6 @@ public class GetEventDeviceInfo {
                 //if line contains ABS parse the codes from there and match them to their corresponding strings
                 if (line.contains("ABS")) {
                     GetEventDeviceInfo.getInstance().add_code(abs_name_list.get(absIndex), Integer.parseInt(parts[parts.length - 15], 16));
-                    Log.v("ABS", abs_name_list.get(absIndex) + " : " + Integer.valueOf(parts[parts.length - 15], 16));
                     if ("ABS_MT_POSITION_X".equals(abs_name_list.get(absIndex))) {
                         for (int ndx = 0; ndx < parts.length; ndx++) {
                             if ("max".equals(parts[ndx])) {
@@ -262,7 +259,7 @@ public class GetEventDeviceInfo {
 
             su.destroy();
             set_device_type();
-            Log.v("GetEventDeviceInfo", "Max X: " + maxX + "\nMax Y: " + maxY);
+            //Log.v("GetEventDeviceInfo", "Max X: " + maxX + "\nMax Y: " + maxY);
 
         } catch (Exception e) {
             Log.v("Main", "Error getting input devices");
@@ -275,9 +272,7 @@ public class GetEventDeviceInfo {
      */
     private void parseAdd(String [] parts){
         if ("add".equals(parts[0])) {
-            //transition to adding stage
             devices.add(parts[3]);
-            Log.v("GetEventManager", "device: " + parts[3]);
         }
     }
 
@@ -289,7 +284,6 @@ public class GetEventDeviceInfo {
         for (int i = 0; i < parts.length; i++) {
             if (parts[i].contains("ABS_")) {
                 abs_name_list.add(parts[i]);
-                //Log.v("ABS", "Added: "+ parts[i]);
             }
         }
     }

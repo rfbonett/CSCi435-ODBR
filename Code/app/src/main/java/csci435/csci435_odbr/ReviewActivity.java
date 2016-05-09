@@ -68,7 +68,7 @@ public class ReviewActivity extends FragmentActivity {
             Drawable icon = pm.getApplicationIcon(Globals.packageName);
             ImageView iv = (ImageView) findViewById(R.id.appIcon);
             iv.setImageDrawable(icon);
-        } catch (PackageManager.NameNotFoundException e) {}
+        } catch (PackageManager.NameNotFoundException e) {Log.e("ReviewActivity", "Package Name Not Found");}
 
         Point displaySize = new Point();
         getWindowManager().getDefaultDisplay().getRealSize(displaySize);
@@ -86,12 +86,6 @@ public class ReviewActivity extends FragmentActivity {
 
         Globals.availableHeightForImage = Globals.height - (titleHeight + toggleHeight + buttonHeight);
 
-        for (ReportEvent e : BugReport.getInstance().getEventList()) {
-            String device = e.getDevice();
-            for (GetEvent g : e.getInputEvents()) {
-                Log.v("ReviewActivity", g.toString(device));
-            }
-        }
     }
 
 
@@ -167,7 +161,6 @@ public class ReviewActivity extends FragmentActivity {
 
                 SparseArray<ArrayList<int[]>> traces = BugReport.getInstance().getEventAtIndex(pos).getInputCoordinates();
                 for (int trace = 0; trace < traces.size(); trace++) {
-                    Log.v("Review Activity", "TRying to draw");
                     ArrayList<int[]> coords = traces.valueAt(trace);
                     color.setColor(BugReport.colors[trace % BugReport.colors.length]);
 
@@ -184,7 +177,6 @@ public class ReviewActivity extends FragmentActivity {
                         int xEnd = scaleX(coords.get(i + 1)[0]);
                         int yEnd = scaleY(coords.get(i + 1)[1]);
                         c.drawLine(xStart, yStart, xEnd, yEnd, color);
-                        Log.v("ReviewActivity", xStart + ", " + yStart + ", " + xEnd + ", " + yEnd);
                     }
                 }
 

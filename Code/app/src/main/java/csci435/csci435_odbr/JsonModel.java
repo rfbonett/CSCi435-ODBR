@@ -81,9 +81,6 @@ public class JsonModel {
     }
     public void setSensorData(){
         for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
-            Log.v("JSONModel", "||||||||||||||||");
-            Log.v("JSONModel", "Data for Sensor: " + s.getName());
-            Log.v("JSONModel", "Type of Sensor: " + s.getType());
 
             SensorDataList data =  BugReport.getInstance().getSensorData().get(s);
             long timeStart = data.getTime(0);
@@ -172,9 +169,6 @@ public class JsonModel {
     //get the last event of eventList + duration
     public double getReport_end_time(){
         int last_item = BugReport.getInstance().getEventList().size() - 1;
-        //Log.v("Size of EventList", "" + BugReport.getInstance().getEventList().size());
-        //Log.v("Time of last item", "" + BugReport.getInstance().getEventList().get(last_item).getTime());
-        //Log.v("Duration of last item", "" + BugReport.getInstance().getEventList().get(last_item).getDuration());
         return BugReport.getInstance().getEventList().get(last_item).getStartTime() + BugReport.getInstance().getEventList().get(last_item).getDuration();
 
     }
@@ -182,8 +176,6 @@ public class JsonModel {
     public List<Event> setEvents() throws Exception {
         //for eventList
         for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
-            Log.v("FOR bug eventList:", "" + i);
-            Log.v("FOR bug eventList:", "" + BugReport.getInstance().getEventList().get(i).getData());
 
             Event temp = new Event();
 
@@ -195,7 +187,7 @@ public class JsonModel {
                 byte[] byteArray = stream.toByteArray();
                 temp.screenshot = new String(byteArray, "iso-8859-1");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                Log.e("JsonModel", "Error encoding byte array");
             };
 
             temp.event_start_time = BugReport.getInstance().getEventList().get(i).getStartTime();
@@ -205,7 +197,6 @@ public class JsonModel {
             String hierarchy_filename = BugReport.getInstance().getEventList().get(i).getHierarchy().getFilename();
             //get contents of hierarchy
             //http://www.java2s.com/Code/Java/File-Input-Output/ConvertInputStreamtoString.htm
-            Log.v("THIS IS HIERARCHY FILE", "hierarchy filename: " + hierarchy_filename);
             temp.hierarchy = getStringFromFile(hierarchy_filename);
 
 
@@ -241,45 +232,15 @@ public class JsonModel {
         return "Error";
     }
 
-    public int tester() throws Exception {
+    public void tester() throws Exception {
         build_device();
-
-        //Log Title, Reporter Name and Description
-        Log.v("JSON", "os_version: " + JsonModel.getInstance().getOs_version());
-        Log.v("JSON", "device_type: " + JsonModel.getInstance().getDevice_type());
-
-        Log.v("JSON", "app_name: " + app_name);
-        Log.v("JSON", "app_version: " + app_version);
-
-        Log.v("JSON", "title: " + JsonModel.getInstance().getTitle());
-        Log.v("JSON", "name: " + JsonModel.getInstance().getName());
-
-        Log.v("JSON", "description_desired_outcome: " + JsonModel.getInstance().getDescription_desired_outcome());
-        Log.v("JSON", "description_actual_outcome: " + JsonModel.getInstance().getDescription_actual_outcome());
-
-        Log.v("JSON", "report_start_time: " + JsonModel.getInstance().getReport_start_time());
-        Log.v("JSON", "report_end_time: " + JsonModel.getInstance().getReport_end_time());
-
-
-        for(int i = 0; i < eventList.size(); i++){
-            Log.v("FOR JSON eventList:", "" + i);
-            Log.v("FOR JSON eventList:", "screenshot" + eventList.get(i).screenshot);
-            Log.v("FOR JSON eventList:", "starttime" + eventList.get(i).event_start_time);
-            Log.v("FOR JSON eventList:", "endtime" + eventList.get(i).event_end_time);
-            Log.v("FOR JSON eventList:", "inputList" + eventList.get(i).inputList);
-            Log.v("FOR JSON eventList:", "desc" + eventList.get(i).description);
-            Log.v("FOR JSON eventList:", "hierarchy" + eventList.get(i).hierarchy);
-        }
         JsonModel.getInstance().JavatoJson();
-        return 1;
     }
 
-    public int JavatoJson(){
+    public void JavatoJson(){
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         System.out.println(gson.toJson(JsonModel.getInstance()));
-        return 1;
-
     }
 }
 

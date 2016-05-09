@@ -228,9 +228,10 @@ public class LaunchAppActivity extends Activity {
             os.close();
 
             clear_app_data.waitFor();
-            Log.v("Launch_app_activity", "data cleared");
 
-        } catch (Exception e){}
+        } catch (Exception e){
+            Log.e("LaunchAppActivity", "Error clearing stored app data");
+        }
 
         //Launch application to be reported
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);

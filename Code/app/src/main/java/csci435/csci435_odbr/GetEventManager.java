@@ -59,7 +59,7 @@ public class GetEventManager {
 
     public void stopRecording() {
         try {
-            Log.v("GetEventManager", "Terminating Recording Processes");
+            //Log.v("GetEventManager", "Terminating Recording Processes");
             recording = false;
             for (Process p : processes) {
                 p.getInputStream().close();
@@ -89,7 +89,7 @@ public class GetEventManager {
         public GetEventTask(String device) {
             this.device = device;
             downCount = 0;
-            Log.v("GetEventTask", "Starting input collection for device: " + device);
+            //Log.v("GetEventTask", "Starting input collection for device: " + device);
             try {
                 Process su = Runtime.getRuntime().exec("su", null, null);
                 OutputStream outputStream = su.getOutputStream();
@@ -111,18 +111,18 @@ public class GetEventManager {
                     Globals.time_last_event = System.currentTimeMillis();
                     GetEvent getevent = new GetEvent(res);
                     event.addGetEvent(getevent);
-                    Log.v("GetEvent", getevent.readable(device));
+                    //Log.v("GetEvent", getevent.readable(device));
                     if (fingerDown(getevent)) {
                         if (downCount == 0) {
                             event.addScreenshot(sm.takeScreenshot());
                             event.addHierarchyDump(hdm.takeHierarchyDump());
                         }
                         ++downCount;
-                        Log.v("GetEventTouch", "FingerDown");
+                        //Log.v("GetEventTouch", "FingerDown");
                     }
                     else if (fingerUp(getevent)) {
                         --downCount;
-                        Log.v("GetEventTouch", "FingerUp");
+                        //Log.v("GetEventTouch", "FingerUp");
                         if (downCount == 0) {
                             do {
                                 is.read(res);

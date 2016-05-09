@@ -78,23 +78,23 @@ public class BugReport {
 
     public JSONObject toJSON() {
         //Log Title, Reporter Name and Description
-        Log.v("BugReport", "Reporter: " + reporterName);
-        Log.v("BugReport", "Title: " + title);
-        Log.v("BugReport", "What Should Happen: " + desiredOutcome);
-        Log.v("BugReport", "What Does Happen: " + actualOutcome);
+        //Log.v("BugReport", "Reporter: " + reporterName);
+        //Log.v("BugReport", "Title: " + title);
+        //Log.v("BugReport", "What Should Happen: " + desiredOutcome);
+        //Log.v("BugReport", "What Does Happen: " + actualOutcome);
 
         //Log Sensor Data, each sensor capped at MAX_ITEMS_TO_PRINT
         for (Sensor s : sensorData.keySet()) {
-            Log.v("BugReport", "|*************************************************|");
-            Log.v("BugReport", "Data for Sensor: " + s.getName());
+            //Log.v("BugReport", "|*************************************************|");
+            //Log.v("BugReport", "Data for Sensor: " + s.getName());
             SensorDataList data = sensorData.get(s);
             long timeStart = data.getTime(0);
             for (int i = 0; i < MAX_ITEMS_TO_PRINT && i < data.numItems(); i++) {
-                Log.v("BugReport", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + makeSensorDataReadable(data.getValues(i)));
+                //Log.v("BugReport", "Time: " + (data.getTime(i) - timeStart) + "| " + "Data: " + makeSensorDataReadable(data.getValues(i)));
             }
             int printed = data.numItems() - MAX_ITEMS_TO_PRINT;
-            Log.v("BugReport", "And " + (printed > 0 ? printed : 0) + " more");
-            Log.v("BugReport", "|*************************************************|");
+            //Log.v("BugReport", "And " + (printed > 0 ? printed : 0) + " more");
+            //Log.v("BugReport", "|*************************************************|");
         }
 
         return new JSONObject();

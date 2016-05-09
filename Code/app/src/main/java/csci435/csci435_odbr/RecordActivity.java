@@ -116,9 +116,6 @@ public class RecordActivity extends ActionBarActivity {
         //also start the package.name app, then use the service to start inputting commands
         updateBugReport();
 
-        //startService(new Intent(this, RecordFloatingWidget.class));
-        //start SU process to clear the saved data within the application
-
         try {
             Process clear_app_data = Runtime.getRuntime().exec("su", null, null);
             String cmd = "pm clear " + Globals.packageName;
@@ -130,14 +127,11 @@ public class RecordActivity extends ActionBarActivity {
             os.close();
 
             clear_app_data.waitFor();
-            Log.v("Launch_app_activity", "data cleared");
 
-        } catch (Exception e){}
+        } catch (Exception e){Log.e("RecordActivity", "Error clearing stored app data");}
 
         Intent intent = new Intent(this, ReplayService.class);
         startService(intent);
-
-        Log.v("ReplayService", "Starting activity: " + Globals.packageName);
         Intent reportApp = getPackageManager().getLaunchIntentForPackage(Globals.packageName);
         reportApp.addCategory(Intent.CATEGORY_LAUNCHER);
         reportApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
