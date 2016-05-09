@@ -128,7 +128,7 @@ public class GetEventManager {
 
         private boolean fingerDown(GetEvent e) {
 
-            if(GetEventDeviceInfo.getInstance().isTypeA()){
+            if(GetEventDeviceInfo.getInstance().isMultiTouchA() || GetEventDeviceInfo.getInstance().isMultiTouchB()){
                 Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
                 if(value == null){
                     return false;
@@ -146,7 +146,7 @@ public class GetEventManager {
         }
 
         private boolean fingerUp(GetEvent e) {
-            if(GetEventDeviceInfo.getInstance().isTypeA()){
+            if(GetEventDeviceInfo.getInstance().isTypeA() || GetEventDeviceInfo.getInstance().isMultiTouchB()){
                 Integer value = GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID");
                 if(value == null){
                     return false;

@@ -46,8 +46,8 @@ public class GetEventDeviceInfo {
     public boolean isTypeA(){
         return typeA;
     }
-    public boolean isMultitouchA(){return typeMultiA;}
-    public boolean isMultitouchB(){return typeMultiB;}
+    public boolean isMultiTouchA(){return typeMultiA;}
+    public boolean isMultiTouchB(){return typeMultiB;}
 
     public void setDeviceData() {
         Log.v("GetEventDeviceInfo", "settingInfo");
@@ -206,4 +206,5 @@ public class GetEventDeviceInfo {
             Log.v("Main", "Error getting input devices");
         }
     }
+
 }
