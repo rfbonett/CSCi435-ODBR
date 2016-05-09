@@ -21,6 +21,18 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
 import java.io.OutputStream;
+import android.os.AsyncTask;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import java.util.Iterator;
+import org.apache.http.StatusLine;
+import java.net.HttpURLConnection;
+import org.apache.http.util.EntityUtils;
 
 /**
  * Created by danielpark on 4/21/16.
@@ -56,6 +68,18 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setEvents();
         JsonModel.getInstance().setSensorData();
+
+        //for submitting json to server
+        long millis = System.currentTimeMillis();
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("Device Type", device_type);
+        data.put("OS Version", Integer.toString(os_version));
+        data.put("Application Name", app_name);
+
+        AsyncHttpPut asyncHttpPut = new AsyncHttpPut(data);
+        asyncHttpPut.execute("http://23.92.18.210:5984/odbr/" + Long.toString(millis));
+        Log.v("Json submission", "Server received: " + Long.toString(millis));
+
     }
 
     public String setApp_version(){
@@ -274,11 +298,11 @@ public class JsonModel {
         return 1;
     }
 
-    public int JavatoJson(){
+    public String JavatoJson(){
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         System.out.println(gson.toJson(JsonModel.getInstance()));
-        return 1;
+        return gson.toJson(JsonModel.getInstance());
 
     }
 }
@@ -305,4 +329,68 @@ class Gyroscope {
     double x;
     double y;
     double z;
+}
+
+//http://stackoverflow.com/questions/7860538/android-http-post-asynctask
+class AsyncHttpPut extends AsyncTask<String, String, String> {
+    interface Listener {
+        void onResult(String result);
+    }
+    private Listener mListener;
+    private HashMap<String, String> mData = null;// post data
+
+    /**
+     * constructor
+     */
+    public AsyncHttpPut(HashMap<String, String> data) {
+        mData = data;
+    }
+    public void setListener(Listener listener) {
+        mListener = listener;
+    }
+
+    /**
+     * background
+     */
+    @Override
+    protected String doInBackground(String... params) {
+        byte[] result = null;
+        String str = "";
+        HttpClient client = new DefaultHttpClient();
+        HttpPut put = new HttpPut(params[0]);// in this case, params[0] is URL
+        try {
+            // set up put data
+            ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
+            Iterator<String> it = mData.keySet().iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                nameValuePair.add(new BasicNameValuePair(key, mData.get(key)));
+            }
+
+//            put.setEntity(new UrlEncodedFormEntity(nameValuePair, "UTF-8"));
+            HttpResponse response = client.execute(put);
+            StatusLine statusLine = response.getStatusLine();
+            if(statusLine.getStatusCode() == HttpURLConnection.HTTP_OK){
+                result = EntityUtils.toByteArray(response.getEntity());
+                str = new String(result, "UTF-8");
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+        }
+        return str;
+    }
+
+    /**
+     * on getting result
+     */
+    @Override
+    protected void onPostExecute(String result) {
+        // something...
+        if (mListener != null) {
+            mListener.onResult(result);
+        }
+    }
 }

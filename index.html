@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Daniel Park | Brendan Otten | Richard Bonett - On-Device Bug Reporting System">
+    <meta name="author" content="Daniel Park">
+
+    <title>On-Device Bug Reporting System</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="css/animate.min.css" type="text/css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/creative.css" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body id="page-top">
+
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand page-scroll" href="#page-top">On-Device Bug Reporting</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a class="page-scroll" href="#home">Demo</a>
+            </li>
+            <li>
+              <a class="page-scroll" href="#about">About</a>
+            </li>
+            <li>
+              <a class="page-scroll" href="#services">Team</a>
+            </li>
+          </ul>
+        </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <header id="home">
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1>On-Device Bug Reporting</h1>
+                <hr>
+                <p>The streamlined way for testers to get their feedback to developers with as little headache as possible!</p>
+                <a href="#about" class="btn btn-primary btn-xl page-scroll">What is this about?</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-primary" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">About the Project</h2>
+                    <hr class="light">
+                    <p>Project Description: As mobile applications have become increasingly popular computing tools, they have evolved in terms of complexity and relative number of features. In today’s highly competitive mobile application marketplaces, such as Google Play and Apple’s App Store, only high­quality, fault­free applications can be successful. As such, it is imperative that developers fix bugs encountered by testers and users quickly. However, the current state of practice for users creating reviews is through app store reviews, which in turn requires a large effort on the part of the developer in order to sift through the myriad of user responses and determine which ones represent actual bugs. Mobile application testers typically rely on loosely structured natural language bug reports to convey issues to developers, but these reports are typically lacking in important information.</p>
+
+                    <p>The SEMERU research team has taken the first step towards rectifying this problem in the form of the FUSION bug reporting mechanism. However, this mechanism currently only exists on the web. The goal of this project will be to enable on­device reporting of applications bugs using a record replay framework. The team working on this project will be responsible for implementing an Android application that is capable of recording highly accurate, low­level user input, and high­level sensor (e.g. accelerometer, gyroscope) traces. The app should then align, format and send this data to a remote server where the traces will be replayed to construct a FUSION bug bug report. There are several different technologies that the team will need to become familiar with in order to successfully complete this project, including but not limited to, the Android Platform and SDK, and client­server web technologies and databases.</p>
+
+                    <p class="text-faded">Team Members: Richard Bonett | Daniel Park | Brendan Otten </p>
+
+                    <p class="text-faded">References:</p>
+
+                    <p class="text-faded">FUSION Bug Tracking System: Moran, K., Linares­Vásquez, M., Bernal­Cárdenas, C., and Poshyvanyk, D., "Auto­Completing Bug Reports for Android Applications", in Proceedings of 10th Joint Meeting of the European Software Engineering Conference and the 23rd ACM SIGSOFT Symposium on the Foundations of Software Engineering (E SEC/FSE’15)</p>
+
+                    <p class="text-faded">FUSION website: www.fusion­android.com</p>
+
+                    <p class="text-faded">Android: http://developer.android.com/tools/help/adb.html</p>
+
+                    <p class="text-faded">RERAN: http://www.androidreran.com/ </p>
+
+                    <p class="text-faded">Web­Technologies: http://www.json.org/ | https://en.wikipedia.org/wiki/Representational_state_transfer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">The Team</h2>
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-globe wow bounceIn text-primary"></i>
+                        <h3>Richard Bonnett</h3>
+                        <p class="text-muted">GET EVENT MASTER</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-paper-plane wow bounceIn text-primary" data-wow-delay=".1s"></i>
+                        <h3>Daniel Park </h3>
+                        <p class="text-muted">i made this thing </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-thumbs-up wow bounceIn text-primary" data-wow-delay=".2s"></i>
+                        <h3>Brendan Otten</h3>
+                        <p class="text-muted">"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/jquery.fittext.js"></script>
+    <script src="js/wow.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/creative.js"></script>
+
+</body>
+
+</html>
