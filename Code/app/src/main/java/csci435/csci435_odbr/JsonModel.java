@@ -1,38 +1,28 @@
 package csci435.csci435_odbr;
 
 import android.graphics.Bitmap;
-import android.util.Base64;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
+
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.Object;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
 import java.io.OutputStream;
 import android.os.AsyncTask;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import java.util.Iterator;
-import org.apache.http.StatusLine;
+
 import java.net.HttpURLConnection;
-import org.apache.http.util.EntityUtils;
+import java.net.URL;
 
 /**
  * Created by danielpark on 4/21/16.
@@ -71,13 +61,9 @@ public class JsonModel {
 
         //for submitting json to server
         long millis = System.currentTimeMillis();
-        HashMap<String, String> data = new HashMap<String, String>();
-        data.put("Device Type", device_type);
-        data.put("OS Version", Integer.toString(os_version));
-        data.put("Application Name", app_name);
-
-        AsyncHttpPut asyncHttpPut = new AsyncHttpPut(data);
-        asyncHttpPut.execute("http://23.92.18.210:5984/odbr/" + Long.toString(millis));
+        String payload = JsonModel.getInstance().JavatoJson();
+        AsyncHttpPut asyncHttpPut = new AsyncHttpPut(payload);
+        asyncHttpPut.execute("http://23.92.18.210:5984/odbr/" + Long.toString(millis), payload);
         Log.v("Json submission", "Server received: " + Long.toString(millis));
 
     }
@@ -219,7 +205,6 @@ public class JsonModel {
             temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
             temp.description = BugReport.getInstance().getEventList().get(i).getEventDescription();
             String hierarchy_filename = BugReport.getInstance().getEventList().get(i).getHierarchy().getFilename();
-            //get contents of hierarchy
             //http://www.java2s.com/Code/Java/File-Input-Output/ConvertInputStreamtoString.htm
             temp.hierarchy = getStringFromFile(hierarchy_filename);
 
@@ -300,12 +285,11 @@ class AsyncHttpPut extends AsyncTask<String, String, String> {
         void onResult(String result);
     }
     private Listener mListener;
-    private HashMap<String, String> mData = null;// post data
-
+    private String mData;
     /**
      * constructor
      */
-    public AsyncHttpPut(HashMap<String, String> data) {
+    public AsyncHttpPut(String data) {
         mData = data;
     }
     public void setListener(Listener listener) {
@@ -317,33 +301,26 @@ class AsyncHttpPut extends AsyncTask<String, String, String> {
      */
     @Override
     protected String doInBackground(String... params) {
-        byte[] result = null;
-        String str = "";
-        HttpClient client = new DefaultHttpClient();
-        HttpPut put = new HttpPut(params[0]);// in this case, params[0] is URL
+        URL url = null;
         try {
-            // set up put data
-            ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
-            Iterator<String> it = mData.keySet().iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                nameValuePair.add(new BasicNameValuePair(key, mData.get(key)));
-            }
-
-//            put.setEntity(new UrlEncodedFormEntity(nameValuePair, "UTF-8"));
-            HttpResponse response = client.execute(put);
-            StatusLine statusLine = response.getStatusLine();
-            if(statusLine.getStatusCode() == HttpURLConnection.HTTP_OK){
-                result = EntityUtils.toByteArray(response.getEntity());
-                str = new String(result, "UTF-8");
-            }
-        }
-        catch (UnsupportedEncodingException e) {
+            url = new URL(params[0]);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+            OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
+            osw.write(params[1]);
+            osw.flush();
+            osw.close();
+            Log.v("Json submission", "gets here21: ");
+            System.err.println(connection.getResponseCode());
+            System.err.println(params[0]);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        catch (Exception e) {
-        }
-        return str;
+
+        return "1";
     }
 
     /**
