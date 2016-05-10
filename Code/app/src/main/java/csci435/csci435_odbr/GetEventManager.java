@@ -136,7 +136,9 @@ public class GetEventManager {
                     if (fingerDown(getevent)) {
                         if (downCount == 0) {
                             event.addScreenshot(sm.takeScreenshot());
-                            event.addHierarchyDump(hdm.takeHierarchyDump());
+                            try {
+                                event.addHierarchyDump(hdm.takeHierarchyDump());
+                            } catch (Exception e) {Log.e("GetEventManger", e.getMessage());}
                         }
                         ++downCount;
                     }
@@ -215,6 +217,7 @@ class GetEvent {
     private short type;
     private short code;
     private int value;
+    public byte[] test;
 
     public GetEvent(byte[] vals) {
         seconds = toInt(vals[0]) + (toInt(vals[1]) << 8) + (toInt(vals[2]) << 16) + (toInt(vals[3]) << 24);
@@ -222,6 +225,7 @@ class GetEvent {
         type = (short) (toInt(vals[8]) + (toInt(vals[9]) << 8));
         code = (short) (toInt(vals[10]) + (toInt(vals[11]) << 8));
         value = toInt(vals[12]) + (toInt(vals[13]) << 8) + (toInt(vals[14]) << 16) + (toInt(vals[15]) << 24);
+        test = vals;
     }
 
     private int toInt(byte b) {
@@ -245,6 +249,7 @@ class GetEvent {
         return String.format("sendevent %s %d %d %d", device, type, code, value);
     }
 
+
     public short getType() {
         return type;
     }
@@ -258,6 +263,8 @@ class GetEvent {
     }
 
     public long getTimeMillis() {
-        return (seconds * 1000) + (microseconds / 1000);
+        long millis = (seconds & 0x000FFFFF) * 1000;
+        millis += microseconds / 1000;
+        return millis;
     }
 }

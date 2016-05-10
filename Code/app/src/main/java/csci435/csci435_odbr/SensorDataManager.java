@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.os.Environment;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -32,9 +33,14 @@ public class SensorDataManager implements SensorEventListener {
 
     HashMap<Sensor, float[]> lastLoggedData = new HashMap<Sensor, float[]>();
 
+    public SensorDataManager(Context c) {
+        OrientationLogger ol = new OrientationLogger(c);
+    }
+
+
     public void startRecording() {
         for (Sensor s : Globals.sensors) {
-            Globals.sMgr.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
+            Globals.sMgr.registerListener(this, s, (SensorManager.SENSOR_DELAY_NORMAL)*10);
             lastLoggedData.put(s, new float[] {});
         }
     }
@@ -60,4 +66,18 @@ public class SensorDataManager implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {/* Nothing to do */}
+
+
+
+}
+class OrientationLogger extends OrientationEventListener {
+
+    public OrientationLogger(Context c) {
+        super(c);
+    }
+
+    @Override
+    public void onOrientationChanged(int orientation) {
+        BugReport.getInstance().addOrientation(System.currentTimeMillis(), orientation);
+    }
 }

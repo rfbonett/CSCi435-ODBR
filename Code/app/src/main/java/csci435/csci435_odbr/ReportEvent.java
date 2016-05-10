@@ -6,6 +6,7 @@ import android.util.SparseIntArray;
 
 import org.w3c.dom.Node;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,35 +59,24 @@ public class ReportEvent {
 
     public String getEventDescription() {
         String desc = "";
-        /*
-        if (inputs.size() < 3) {
-            int[] coords = inputs.get(0);
-            Node view = dump.getViewAtCoordinates(coords[0], coords[1]);
-            desc += "User clicked ";
-            desc += getMeaningfulDescription(view);
-            desc += " at X:" + coords[0] + " |Y: " + coords[1];
+
+        SparseArray<ArrayList<int[]>> coords = getInputCoordinates();
+        if (coords.size() > 1) {
+            desc += "Multitouch";
+        }
+
+        else if (coords.valueAt(0).size() < 3) {
+            int[] coord = coords.valueAt(0).get(0);
+            desc += "User clicked at X:" + coord[0] + " |Y: " + coord[1];
         }
         else {
-            int[] start = inputs.get(0);
-            int[] end = inputs.get(inputs.size() - 1);
+            int[] start = coords.valueAt(0).get(0);
+            int[] end = coords.valueAt(0).get(coords.valueAt(0).size() - 1);
             desc += "User swiped from X: " + start[0] + " |Y: " + start[1] + " | to X: " + end[0] + " |Y: " + end[1];
-        } */
+        }
         return desc;
     }
 
-    private String getMeaningfulDescription(Node view) {
-        if (view != null) {
-            /*for (int i = 0; i < view.getAttributes().getLength(); i++) {
-                Log.v("ReportEvent", view.getAttributes().item(i).getTextContent());
-            }
-            String s;
-            if ("".equals(s = view.getAttributes().getNamedItem("class").toString())) {
-                return s;
-            } */
-            return view.getNodeName();
-        }
-        return "widget";
-    }
 
     public Screenshot getScreenshot() {
         return screenShot;
@@ -124,57 +114,101 @@ public class ReportEvent {
      */
     public SparseArray<ArrayList<int[]>> getInputCoordinates() {
         SparseArray<ArrayList<int[]>> traces = new SparseArray<ArrayList<int[]>>();
-        SparseArray<int[]> coords = new SparseArray<int[]>();
-        SparseIntArray slots = new SparseIntArray();
-        int activeSlot = 0;
-
         int NOT_FOUND = -1;
         int CLEAN = 0;
         int DIRTY = 1;
 
-        coords.put(activeSlot, new int[] {-1, -1});
-        traces.put(activeSlot, new ArrayList<int[]>());
+        if (GetEventDeviceInfo.getInstance().isMultiTouchB()) {
+            SparseArray<int[]> coords = new SparseArray<int[]>();
+            SparseIntArray slots = new SparseIntArray();
+            int activeSlot = 0;
 
-        if(GetEventDeviceInfo.getInstance().isTypeSingleTouch()){
-            activeSlot = 0;
-            if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
-                coords.put(activeSlot, new int[] {-1, -1});
-                traces.put(activeSlot, new ArrayList<int[]>());
-            }
-        }
+            coords.put(activeSlot, new int[]{-1, -1});
+            traces.put(activeSlot, new ArrayList<int[]>());
 
-        for (GetEvent e : inputs) {
-            if (slot(e)) {
-                activeSlot = e.getValue();
-                if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
-                    coords.put(activeSlot, new int[] {-1, -1});
-                    traces.put(activeSlot, new ArrayList<int[]>());
+            for (GetEvent e : inputs) {
+                if (slot(e)) {
+                    activeSlot = e.getValue();
+                    if (slots.get(activeSlot, NOT_FOUND) == NOT_FOUND) {
+                        coords.put(activeSlot, new int[]{-1, -1});
+                        traces.put(activeSlot, new ArrayList<int[]>());
+                    }
+                }
+                if (xPos(e)) {
+                    coords.get(activeSlot)[0] = e.getValue();
+                    slots.put(activeSlot, DIRTY);
+                } else if (yPos(e)) {
+                    coords.get(activeSlot)[1] = e.getValue();
+                    traces.get(activeSlot).add(coords.get(activeSlot).clone());
+                    slots.put(activeSlot, CLEAN);
+                } else if (slots.get(activeSlot) == DIRTY) {
+                    traces.get(activeSlot).add(coords.get(activeSlot).clone());
+                    slots.put(activeSlot, CLEAN);
                 }
             }
-            if (xPos(e)) {
-                coords.get(activeSlot)[0] = e.getValue();
-                slots.put(activeSlot, DIRTY);
-            }
-            else if (yPos(e)) {
-                coords.get(activeSlot)[1] = e.getValue();
-                traces.get(activeSlot).add(coords.get(activeSlot).clone());
-                slots.put(activeSlot, CLEAN);
-            }
-            else if (slots.get(activeSlot) == DIRTY) {
-                traces.get(activeSlot).add(coords.get(activeSlot).clone());
-                slots.put(activeSlot, CLEAN);
-            }
         }
-        
+
+        else if (GetEventDeviceInfo.getInstance().isMultiTouchA() || GetEventDeviceInfo.getInstance().isTypeSingleTouch()) {
+            int state = CLEAN;
+            int[] coord = new int[2];
+            traces.put(0, new ArrayList<int[]>());
+
+            for (GetEvent e : inputs) {
+                if (down(e)) {
+                    traces.put(traces.size(), new ArrayList<int[]>());
+                }
+
+                else if (xPos(e)) {
+                    coord[0] = e.getValue();
+                    state = DIRTY;
+                }
+                else {
+                    if (yPos(e)) {
+                        coord[1] = e.getValue();
+                        state = DIRTY;
+                    }
+                    if (state == DIRTY) {
+                        ArrayList<int[]> base = traces.valueAt(0);
+                        for (int trace = 0; trace < traces.size(); trace++) {
+                            ArrayList<int[]> other = traces.valueAt(trace);
+                            if (other.size() == 0) {
+                                base = other;
+                                break;
+                            }
+                            else {
+                                int[] baseCoord = base.get(base.size() - 1);
+                                int[] otherCoord = other.get(other.size() - 1);
+                                if (distance(baseCoord[0], baseCoord[1], coord[0], coord[1]) > distance(otherCoord[0], otherCoord[1], coord[0], coord[1])) {
+                                    base = other;
+                                }
+                            }
+                        }
+                        base.add(coord.clone());
+                        state = CLEAN;
+                    }
+                }
+            }
+
+        }
+
         return traces;
     }
 
-    /**
-     * Methods used to determine if the getevent code matches a specific parameter, i.e. if it is a slot, an x coordinate
-     * or a y coordinate
-     * @param e
-     * @return
-     */
+
+    private int distance(int startX, int startY, int endX, int endY) {
+        return (int) (Math.sqrt(Math.pow(startX - endX, 2) + Math.pow(startY - endY, 2)));
+    }
+
+    private boolean down(GetEvent e) {
+        boolean res;
+        try {
+            res = e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_TRACKING_ID") && e.getValue() != -1;
+        } catch (Exception exc) {
+            res = e.getCode() == GetEventDeviceInfo.getInstance().get_code("BTN_TOUCH") && e.getValue() == 1;
+        }
+        return res;
+    }
+
     private boolean slot(GetEvent e) {
         try{
             return e.getType() == EV_ABS && (e.getCode() == GetEventDeviceInfo.getInstance().get_code("ABS_MT_SLOT"));

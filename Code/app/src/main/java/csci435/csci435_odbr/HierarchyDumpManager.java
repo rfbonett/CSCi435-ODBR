@@ -1,12 +1,6 @@
 package csci435.csci435_odbr;
 
-import android.accessibilityservice.AccessibilityService;
-import android.content.Context;
 import android.util.Log;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityManager;
-import android.view.accessibility.AccessibilityNodeInfo;
-import android.view.accessibility.AccessibilityNodeProvider;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,7 +11,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -30,7 +23,6 @@ public class HierarchyDumpManager {
     private String directory;
     private String filename;
     private int dump_index;
-    private Process process;
 
     public HierarchyDumpManager() {
         dump_index = 0;
@@ -78,11 +70,14 @@ public class HierarchyDumpManager {
 
         @Override
         public void run() {
-            OutputStream os = process.getOutputStream();
             try {
+                Process process = Runtime.getRuntime().exec("su", null, null);
+                OutputStream os = process.getOutputStream();
                 os.write(("/system/bin/uiautomator dump " + filename + " & \n").getBytes("ASCII"));
                 os.flush();
+                os.close();
                 process.waitFor();
+                process.destroy();
             } catch (Exception e) {
                 Log.e("HierarchyDumpTask", "Error taking Hierarchy Dump: " + e.getMessage());
             }
@@ -95,9 +90,6 @@ public class HierarchyDumpManager {
      */
     public void initialize() {
         service = Executors.newCachedThreadPool();
-        try {
-            process = Runtime.getRuntime().exec("su", null, null);
-        } catch (Exception e) {Log.e("HierarchyDumpTask", "Could not start process! Check su permissions.");}
     }
 
 
@@ -106,12 +98,6 @@ public class HierarchyDumpManager {
      */
     public void destroy() {
         try {
-            OutputStream os = process.getOutputStream();
-            os.write(("exit\n").getBytes("ASCII"));
-            os.flush();
-            os.close();
-            process.waitFor();
-            process.destroy();
             service.shutdown();
         } catch (Exception e) {Log.v("HierarchyDumpManager", "Could not destroy: " + e.getMessage());}
     }

@@ -56,7 +56,7 @@ public class RecordFloatingWidget extends Service {
         // Prepare Report, start Data collection
         BugReport.getInstance().clearReport();
         gem = new GetEventManager();
-        sdm = new SensorDataManager();
+        sdm = new SensorDataManager(this);
     }
 
     /**

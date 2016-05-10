@@ -111,7 +111,6 @@ public class LaunchAppActivity extends Activity {
         });
 
         GetEventDeviceInfo.getInstance().setDeviceData();
-
     }
 
     private void getInstalledApplications() {

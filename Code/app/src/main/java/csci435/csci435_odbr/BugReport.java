@@ -27,6 +27,7 @@ public class BugReport {
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
     private List<ReportEvent> eventList = new ArrayList<ReportEvent>();
+    private HashMap<Long, Integer> orientations = new HashMap<Long, Integer>();
     private String title = "";
     private String reporterName = "";
     private String desiredOutcome = "";
@@ -64,6 +65,10 @@ public class BugReport {
             sensorData.put(s, new SensorDataList());
         }
         sensorData.get(s).addData(e.timestamp, e.values.clone());
+    }
+
+    public void addOrientation(long time, int orientation) {
+        orientations.put(time, orientation);
     }
 
     public void setDesiredOutcome(String s) { desiredOutcome = s;}

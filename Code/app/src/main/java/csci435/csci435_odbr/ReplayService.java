@@ -55,10 +55,9 @@ public class ReplayService extends IntentService {
                     String device = event.getDevice();
                     for (GetEvent e : event.getInputEvents()) {
                         long waitfor = System.currentTimeMillis() + (e.getTimeMillis() - time);
+                        while (System.currentTimeMillis() < waitfor) {}
                         //Inefficient to be sure, but more accurate results than Thread.sleep(), and
                         //ScheduledThreadExecutor was not playing well, ToDo: replace while block
-                        while (System.currentTimeMillis() < waitfor) {}
-
                         os.write((e.getSendEvent(device) + "\n").getBytes("ASCII"));
                         os.flush();
                         time = e.getTimeMillis();
