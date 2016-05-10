@@ -45,7 +45,7 @@ import android.hardware.Sensor;
  *  Collaborators:
  *      --Globals: stores a handle to the application being reported
  *      --RecordActivity: launched upon selection of an app to report
- *      --CustomAdapter: Handles the display of installed applications in the list
+ *      --InstalledApplicationsAdapter: Handles the display of installed applications in the list
  */
 public class LaunchAppActivity extends Activity {
 
@@ -64,7 +64,7 @@ public class LaunchAppActivity extends Activity {
 
         //Add the list of installed applications to the ListView
         ListView lv = (ListView) findViewById(R.id.installedAppsListView);
-        final CustomAdapter adapter = new CustomAdapter(this, installedApps);
+        final InstalledApplicationsAdapter adapter = new InstalledApplicationsAdapter(this, installedApps);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,9 +110,14 @@ public class LaunchAppActivity extends Activity {
             }
         });
 
+        //Set handles to the input devices
         GetEventDeviceInfo.getInstance().setDeviceData();
     }
 
+
+    /**
+     * Builds a list of the applications on the device that can be launched
+     */
     private void getInstalledApplications() {
         installedApps = new ArrayList<RowData>();
         PackageManager pm = getPackageManager();
@@ -136,6 +141,10 @@ public class LaunchAppActivity extends Activity {
         });
     }
 
+
+    /**
+     * Sets handles to the Accelerometer and Gyroscope if they can be found
+     */
     private void getSensors() {
         SensorManager sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Globals.sMgr = sMgr;
@@ -147,6 +156,7 @@ public class LaunchAppActivity extends Activity {
             Log.e("LaunchAppActivity", "Could not find sensor");
         }
     }
+
 
     /**
      * promptStart launches a dialog to confirm the selected application for the report
@@ -168,28 +178,6 @@ public class LaunchAppActivity extends Activity {
             }
         });
         prompt.setNegativeButton("Cancel", null);
-        prompt.show();
-    }
-
-    private void showDeviceLimitations(){
-        AlertDialog.Builder prompt = new AlertDialog.Builder(this);
-        String device = "";
-        String msg = "";
-        if(GetEventDeviceInfo.getInstance().isTypeSingleTouch()){
-            device = "Single Touch Device";
-            msg = "  - Clicks\n  - Long Clicks\n  - Single Pointer Swipes";
-        }
-        else if(GetEventDeviceInfo.getInstance().isMultiTouchA()){
-            device = "Multitouch Device Type A";
-            msg = "  - Clicks\n  - Long Clicks\n  - Multiple Pointer Swipes";
-        }
-        else if(GetEventDeviceInfo.getInstance().isMultiTouchB()){
-            device = "Multitouch Device Type B";
-            msg = "  - Clicks\n  - Long Clicks\n  - Multiple Pointer Swipes";
-        }
-        prompt.setTitle("Your device is: " + device);
-        prompt.setPositiveButton("Ok", null);
-        prompt.setMessage("This means your device supports:\n" + msg);
         prompt.show();
     }
 
@@ -242,16 +230,17 @@ public class LaunchAppActivity extends Activity {
     }
 }
 
+
 /**
  * An InstalledApplicationsAdapter is an adapter for a ListView that displays an icon and name for each element
  */
-class CustomAdapter extends BaseAdapter {
+class InstalledApplicationsAdapter extends BaseAdapter {
 
     private final Context context;
     private final ArrayList<RowData> elements;
     private final ArrayList<RowData> visibleElements;
 
-    public CustomAdapter(Context context, ArrayList<RowData> elements) {
+    public InstalledApplicationsAdapter(Context context, ArrayList<RowData> elements) {
         this.context = context;
         this.elements = elements;
         this.visibleElements = new ArrayList<RowData>(elements);

@@ -100,7 +100,7 @@ public class JsonModel {
         return "error occurred";
     }
 
-    
+
     public void setSensorData(){
         for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
 
