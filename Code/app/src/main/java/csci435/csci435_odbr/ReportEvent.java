@@ -17,6 +17,11 @@ import java.util.HashMap;
  * and then multiple getevent lines associated with it until the trace reaches a point where that specific report event
  * has finished. The Report Event interacts with the GetEventDeviceInfo to get appropriate data on the device and the
  * managers as well to get feeds of data.
+ *
+ * The traces for getEvent can be classified into 3 categories:
+ *  --SingleTouchDevice
+ *  --MultiTouchTypeA
+ *  --MultiTouchTypeB
  */
 public class ReportEvent {
     short EV_ABS = 3;
@@ -43,14 +48,6 @@ public class ReportEvent {
 
     public void addGetEvent(GetEvent e) {
         inputs.add(e);
-    }
-
-    public void addIDNum(int i){
-        idNum = i;
-    }
-
-    public void setWaitTime(long t) {
-        timeUntilNextEvent = t;
     }
 
     public String getData() {
@@ -96,10 +93,6 @@ public class ReportEvent {
         return inputs.get(0).getTimeMillis();
     }
 
-    public long getWaitTime() {
-        return timeUntilNextEvent;
-    }
-
     public long getDuration() {
         return inputs.get(inputs.size() - 1).getTimeMillis() - getStartTime();
     }
@@ -118,6 +111,12 @@ public class ReportEvent {
         int CLEAN = 0;
         int DIRTY = 1;
 
+        /**
+         * Each classification needs a different style of parsing. For typeB we can rely on the previous
+         * ABS_MT_SLOT instance to designate which trace we are concerned with, using CLEAN and DIRTY variables
+         * to denote the lack of an X or Y report of ABS_MT_POSITION_X||Y. Dirty is when there is not one,
+         * clean is when there is.
+         */
         if (GetEventDeviceInfo.getInstance().isMultiTouchB()) {
             SparseArray<int[]> coords = new SparseArray<int[]>();
             SparseIntArray slots = new SparseIntArray();
@@ -147,7 +146,12 @@ public class ReportEvent {
                 }
             }
         }
-
+        /**
+         * Uses the same Clean/Dirty to handle lack of reports, taking the 'previous' x or y position as the one
+         * to associate with the coordinate values. This method however cannot rely on slots, so we use distance
+         * tracking to match certain traces to other traces. Can run into errors IF the user can put the pointers
+         * at the exact SAME location, but that is a limitation of Type A devices.
+         */
         else if (GetEventDeviceInfo.getInstance().isMultiTouchA() || GetEventDeviceInfo.getInstance().isTypeSingleTouch()) {
             int state = CLEAN;
             int[] coord = new int[2];
@@ -199,6 +203,15 @@ public class ReportEvent {
         return (int) (Math.sqrt(Math.pow(startX - endX, 2) + Math.pow(startY - endY, 2)));
     }
 
+    /**
+     * Methods that take the code from getEvent and determine whether or not the code matches a 'trigger'
+     *  --down: Start of a report event trace
+     *  --slot: slot ID of a trace
+     *  --xPos: whether or not its a X position
+     *  --yPos: whether or not its a Y position
+     * @param e
+     * @return
+     */
     private boolean down(GetEvent e) {
         boolean res;
         try {

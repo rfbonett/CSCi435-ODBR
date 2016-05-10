@@ -28,6 +28,8 @@ import android.hardware.Sensor;
 
 /**
  * Created by Rich on 2/11/16.
+ * Manages the sensors that we are going to be listening for. It allows for the start / stop of the listening process
+ * where the listening registers changes to the values. If a change is detected then the value is registered.
  */
 public class SensorDataManager implements SensorEventListener {
 
@@ -37,7 +39,9 @@ public class SensorDataManager implements SensorEventListener {
         OrientationLogger ol = new OrientationLogger(c);
     }
 
-
+    /**
+     * Method to start recording of all designated sensors
+     */
     public void startRecording() {
         for (Sensor s : Globals.sensors) {
             Globals.sMgr.registerListener(this, s, (SensorManager.SENSOR_DELAY_NORMAL)*10);
@@ -45,7 +49,9 @@ public class SensorDataManager implements SensorEventListener {
         }
     }
 
-
+    /**
+     * Method to stop recording all designated sensors
+     */
     public void stopRecording() {
         Globals.sMgr.unregisterListener(this);
     }
@@ -70,6 +76,10 @@ public class SensorDataManager implements SensorEventListener {
 
 
 }
+
+/**
+ * Listener class to register the orientation of the device, associating the orientation with times.
+ */
 class OrientationLogger extends OrientationEventListener {
 
     public OrientationLogger(Context c) {
