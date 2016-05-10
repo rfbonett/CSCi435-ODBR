@@ -4,25 +4,21 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.json.JSONObject;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
-import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * Created by Rich on 2/11/16.
- * Singleton class containing all information for a specific bug report. It will hold all sensor data as well as a list
- * of report events which contain their specified coordinates and times of events.
+ * Singleton class containing all information for a specific bug report.
+ * The BugReport contains a list of the events, a list for each sensor's data, as well as
+ * descriptions useful for the report.
  */
 public class BugReport {
     public static int colors[] = {Color.BLUE, Color.GREEN, Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA};
-    private static int MAX_ITEMS_TO_PRINT = 10;
 
     private HashMap<Sensor, SensorDataList> sensorData = new HashMap<Sensor, SensorDataList>();
     private HashMap<Sensor, Bitmap> sensorGraphs = new HashMap<Sensor, Bitmap>();
@@ -79,23 +75,14 @@ public class BugReport {
 
     public void setReporterName(String s) {reporterName = s;}
 
+
     /**
-     * Returns its data as a formatted JSON file; currently outputs data to LogCat
-     * @return
+     * Returns a Bitmap representing the sensor's data over the course of the report. The graph
+     * is formatted with a horizontal line representing the mean value and other lines representing
+     * the deviation from the mean at any given time during the report
+     * @param s the sensor
+     * @return Bitmap of the sensor data
      */
-
-
-
-
-    private String makeSensorDataReadable(float[] input) {
-        String s = "";
-        for (float f : input) {
-            s +=  f + " | ";
-        }
-        return s;
-    }
-
-
     public Bitmap drawSensorData(Sensor s) {
         if (sensorGraphs.containsKey(s)) {
             return sensorGraphs.get(s);
@@ -163,6 +150,9 @@ public class BugReport {
 }
 
 
+/**
+ * A SensorDataList contains the values of a particular sensor over time
+ */
 class SensorDataList {
     private ArrayList<Long> timestamps;
     private ArrayList<float[]> values;
@@ -199,16 +189,6 @@ class SensorDataList {
         return valueSums[index] / numItems;
     }
 
-    /*public float stDev(int index) {
-        float stdev = 0;
-        float mean = meanValue(index);
-        for (int i = 0; i < numItems; i++) {
-            float f = values.get(i)[index];
-            stdev += (f - mean) * (f - mean);
-        }
-        return (float) Math.sqrt(stdev / numItems);
-    }
-    */
 
     public float[] getValues(int index) {
         return values.get(index);

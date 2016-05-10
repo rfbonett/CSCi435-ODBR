@@ -5,7 +5,6 @@ import android.hardware.SensorManager;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Rich on 2/10/16.
@@ -20,9 +19,10 @@ public class Globals {
     public static int height;
     public static int availableHeightForImage;
     public static long time_last_event;
-    public static boolean exited = false;
-    public static boolean parsing = false;
 
+    /**
+     * Description of the data contained within each sensor's float[]
+     */
     public static SparseArray<String[]> sensorDescription = new SparseArray<String[]>();
     static {
 

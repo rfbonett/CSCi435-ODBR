@@ -1,15 +1,6 @@
 package csci435.csci435_odbr;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

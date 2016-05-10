@@ -16,7 +16,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 
 /**
- * Created by Rich on 4/24/16.
+ * The HierarchyDumpManager takes hierarchy dump requests, returning HierarchyDump objects and
+ * calling uiautomator to create a dump at the file location.
  */
 public class HierarchyDumpManager {
     private ExecutorService service;
