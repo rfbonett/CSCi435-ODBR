@@ -14,9 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.EditText;
-
 import java.io.OutputStream;
-
 
 /**
  * RecordActivity handles the visual recording and submitting the bug report

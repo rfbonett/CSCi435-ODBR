@@ -71,7 +71,9 @@ public class ScreenshotManager {
         return new Screenshot(directory + filename);
     }
 
-
+    /**
+     * Runnable task to actually start the screenshot process, stores it in png file
+     */
     class ScreenshotTask implements Runnable {
 
         private String file;

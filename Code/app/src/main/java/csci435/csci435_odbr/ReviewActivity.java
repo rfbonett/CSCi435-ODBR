@@ -95,7 +95,6 @@ public class ReviewActivity extends FragmentActivity {
         sensorDataButton.setChecked(true);
     }
 
-
     public void displayUserEvents(View v) {
         viewPager.setAdapter(new UserEventPageAdapter(getSupportFragmentManager()));
         sensorDataButton.setChecked(false);
@@ -141,6 +140,7 @@ public class ReviewActivity extends FragmentActivity {
     public static class UserEventFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
 
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -156,6 +156,10 @@ public class ReviewActivity extends FragmentActivity {
             ImageView screenshot = (ImageView) rootView.findViewById(R.id.screenshot);
             Bitmap screenBitmap = e.getScreenshot().getBitmap();
 
+            /**
+             * If we have a screencap we are going to get the bitmap version of it and draw scaled
+             * versions of our getEvent data onto it
+             */
             if (screenBitmap != null) {
 
                 Canvas c = new Canvas(screenBitmap);
@@ -226,7 +230,6 @@ public class ReviewActivity extends FragmentActivity {
         }
     }
 
-
     public static class SensorDataFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
 
@@ -259,6 +262,7 @@ public class ReviewActivity extends FragmentActivity {
                 Integer.parseInt(initPosition[1].trim()), Integer.parseInt(finalPosition[0].trim()),
                 Integer.parseInt(finalPosition[1].trim()));
     }
+
 
     private static String getSwipeText(int eventTypeId, int initPositionX, int initPositionY, int finalPositionX,
                                        int finalPositionY) {
