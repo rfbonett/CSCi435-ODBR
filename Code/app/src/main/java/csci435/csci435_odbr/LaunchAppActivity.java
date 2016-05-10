@@ -110,6 +110,7 @@ public class LaunchAppActivity extends Activity {
             }
         });
 
+        GetEventDeviceInfo.getInstance().setDeviceData();
 
     }
 
