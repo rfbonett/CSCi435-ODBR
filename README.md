@@ -21,3 +21,5 @@ Android: http://developer.android.com/tools/help/adb.html
 RERAN: http://www.androidreran.com/ 
 
 Web­Technologies: http://www.json.org/ | https://en.wikipedia.org/wiki/Representational_state_transfer
+
+Website can be accessed at: http://rfbonett.github.io/CSCi435-ODBR/
