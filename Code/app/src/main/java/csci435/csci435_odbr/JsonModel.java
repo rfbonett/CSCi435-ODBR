@@ -70,7 +70,6 @@ public class JsonModel {
         AsyncHttpPut asyncHttpPut = new AsyncHttpPut(payload);
         asyncHttpPut.execute("http://23.92.18.210:5984/odbr/" + Long.toString(millis), payload);
         Log.v("Json submission", "Server received: " + Long.toString(millis));
-
     }
 
 
@@ -100,7 +99,10 @@ public class JsonModel {
         return "error occurred";
     }
 
-    
+    /**
+     * Retrieves the sensor data and assigns it to the appropriate key for the JSON object
+     * @return
+     */
     public void setSensorData(){
         for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
 
@@ -135,72 +137,88 @@ public class JsonModel {
         }
         return;
     }
+
+    /**
+     * Retrieves the name of the application that is being tested
+     * @return
+     */
     public void setApp_name(){
         app_name = Globals.packageName;
     }
-    public String getApp_name(){
-        return app_name;
-    }
 
+    /**
+     * Finds the build model of the device being tested on
+     * @return
+     */
     public void setDevice_type(){
         device_type = android.os.Build.MODEL;
     }
-    public String getDevice_type(){
-        return device_type;
-    }
 
+    /**
+     * Finds the android OS version
+     * @return
+     */
     public void setOs_version(){
         os_version = android.os.Build.VERSION.SDK_INT;
     }
-    public int getOs_version(){
-        return os_version;
-    }
 
+    /**
+     * Sets the name of the user-inputted name
+     * @return
+     */
     public void setName(){
         name = BugReport.getInstance().getReporterName();
     }
-    public String getName(){
-        return name;
-    }
 
+    /**
+     * Sets the user inputted desired outcome field
+     * @return
+     */
     public void setDescription_desired_outcome(){
         description_desired_outcome = BugReport.getInstance().getDesiredOutcome();
     }
-    public String getDescription_desired_outcome(){
-        return description_desired_outcome;
-    }
 
+    /**
+     * Sets the user inputted desired title field
+     * @return
+     */
     public void setTitle(){
         title = BugReport.getInstance().getTitle();
     }
-    public String getTitle(){
-        return title;
-    }
 
+    /**
+     * Sets the user inputted actual outcome field
+     * @return
+     */
     public void setDescription_actual_outcome(){
         description_actual_outcome = BugReport.getInstance().getActualOutcome();
     }
-    public String getDescription_actual_outcome(){
-        return description_actual_outcome;
-    }
 
+    /**
+     * Sets the report start time (will always be 0)
+     * @return double
+     */
     public double getReport_start_time(){
         return 0;
     }
 
-    //get the last event of eventList + duration
+    /**
+     * Sets the report end time (start time of the last event of eventList + its duration)
+     * @return double
+     */
     public double getReport_end_time(){
         int last_item = BugReport.getInstance().getEventList().size() - 1;
         return BugReport.getInstance().getEventList().get(last_item).getStartTime() + BugReport.getInstance().getEventList().get(last_item).getDuration();
 
     }
 
+    /**
+     * Sets the events and their related fields
+     * @return List<Event>
+     */
     public List<Event> setEvents() throws Exception {
-        //for eventList
         for(int i = 0; i < BugReport.getInstance().getEventList().size(); i++){
-
             Event temp = new Event();
-
             //byteArray http://stackoverflow.com/questions/4989182/converting-java-bitmap-to-byte-array
             try{
                 Bitmap bmp = BugReport.getInstance().getEventList().get(i).getScreenshot().getBitmap();
@@ -219,14 +237,15 @@ public class JsonModel {
             String hierarchy_filename = BugReport.getInstance().getEventList().get(i).getHierarchy().getFilename();
             //http://www.java2s.com/Code/Java/File-Input-Output/ConvertInputStreamtoString.htm
             temp.hierarchy = getStringFromFile(hierarchy_filename);
-
-
-
             JsonModel.getInstance().eventList.add(temp);
         }
         return JsonModel.getInstance().eventList;
     }
 
+    /**
+     * Converts an InputStream to a String
+     * @return String
+     */
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -238,6 +257,10 @@ public class JsonModel {
         return sb.toString();
     }
 
+    /**
+     * Gets the contents of a file as a String
+     * @return String
+     */
     public static String getStringFromFile (String filePath) throws Exception {
         try{
             File fl = new File(filePath);
@@ -253,11 +276,19 @@ public class JsonModel {
         return "Error";
     }
 
+    /**
+     * Calls the build device function and gets a JSON representation
+     * @return
+     */
     public void tester() throws Exception {
         build_device();
         JsonModel.getInstance().JavatoJson();
     }
 
+    /**
+     * Uses GSON to turn a java object into a JSON object
+     * @return String of JSON Object
+     */
     public String JavatoJson(){
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
@@ -267,6 +298,9 @@ public class JsonModel {
     }
 }
 
+/**
+ * Various fields related to an Event in the application
+ */
 class Event {
     String screenshot;
     double event_start_time;
@@ -277,6 +311,9 @@ class Event {
     //String Orientation;
 }
 
+/**
+ * Various fields for the accelerometer stream key value in the JSON object
+ */
 class Accelerometer {
     double time;
     double x;
@@ -284,13 +321,18 @@ class Accelerometer {
     double z;
 }
 
+/**
+ * Various fields for the Gyroscope stream key value in the JSON object
+ */
 class Gyroscope {
     double time;
     double x;
     double y;
     double z;
 }
-
+/**
+ * Used to send an async HTTP put request to the designated server
+ */
 //http://stackoverflow.com/questions/7860538/android-http-post-asynctask
 class AsyncHttpPut extends AsyncTask<String, String, String> {
     interface Listener {
