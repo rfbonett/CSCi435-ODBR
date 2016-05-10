@@ -88,13 +88,11 @@ public class RecordFloatingWidget extends Service {
         onDestroy();
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         stopSelf();
     }
-
 
     /**
      * Starts the recording process for the events, called when the Record Inputs button is pressed
