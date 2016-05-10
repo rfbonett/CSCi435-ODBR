@@ -2,13 +2,10 @@ package csci435.csci435_odbr;
 
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.Process;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -241,7 +238,7 @@ class GetEvent {
         return String.format("[%d.%06d] %s: %04x %04x %08x", seconds, microseconds, device, type, code, value);
     }
 
-    public String readable(String device) {
+    public String toStringInts(String device) {
         return String.format("[%d.%06d] %s: %d %d %d", seconds, microseconds, device, type, code, value);
     }
 

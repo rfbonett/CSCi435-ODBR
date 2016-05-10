@@ -1,29 +1,32 @@
 package csci435.csci435_odbr;
 
 import android.graphics.Bitmap;
-import android.util.Base64;
+import android.hardware.Sensor;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.Object;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import android.os.AsyncTask;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by danielpark on 4/21/16.
+ * The JsonModel translates the data stored in the BugReport into JSON format, sending it off to
+ * the FUSION server.
  */
 public class JsonModel {
     private String device_type;
@@ -45,6 +48,10 @@ public class JsonModel {
         return model;
     }
 
+    /**
+     * Puts the reporting device's information into the model
+     * @throws Exception
+     */
     public void build_device() throws Exception {
         JsonModel.getInstance().setOs_version();
         JsonModel.getInstance().setDevice_type();
@@ -56,8 +63,21 @@ public class JsonModel {
         JsonModel.getInstance().setDescription_actual_outcome();
         JsonModel.getInstance().setEvents();
         JsonModel.getInstance().setSensorData();
+
+        //for submitting json to server
+        long millis = System.currentTimeMillis();
+        String payload = JsonModel.getInstance().JavatoJson();
+        AsyncHttpPut asyncHttpPut = new AsyncHttpPut(payload);
+        asyncHttpPut.execute("http://23.92.18.210:5984/odbr/" + Long.toString(millis), payload);
+        Log.v("Json submission", "Server received: " + Long.toString(millis));
+
     }
 
+
+    /**
+     * Finds the version of the application being reported and stores it in the model
+     * @return
+     */
     public String setApp_version(){
         //http://android.stackexchange.com/questions/2016/how-can-you-tell-which-version-of-an-app-is-on-your-android-phone
         //adb shell dumpsys package com.google.android.apps.photos | grep versionName
@@ -79,6 +99,8 @@ public class JsonModel {
 
         return "error occurred";
     }
+
+    
     public void setSensorData(){
         for (Sensor s :  BugReport.getInstance().getSensorData().keySet()) {
 
@@ -195,7 +217,6 @@ public class JsonModel {
             temp.inputList = BugReport.getInstance().getEventList().get(i).getInputEvents();
             temp.description = BugReport.getInstance().getEventList().get(i).getEventDescription();
             String hierarchy_filename = BugReport.getInstance().getEventList().get(i).getHierarchy().getFilename();
-            //get contents of hierarchy
             //http://www.java2s.com/Code/Java/File-Input-Output/ConvertInputStreamtoString.htm
             temp.hierarchy = getStringFromFile(hierarchy_filename);
 
@@ -237,10 +258,12 @@ public class JsonModel {
         JsonModel.getInstance().JavatoJson();
     }
 
-    public void JavatoJson(){
+    public String JavatoJson(){
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         System.out.println(gson.toJson(JsonModel.getInstance()));
+        return gson.toJson(JsonModel.getInstance());
+
     }
 }
 
@@ -266,4 +289,60 @@ class Gyroscope {
     double x;
     double y;
     double z;
+}
+
+//http://stackoverflow.com/questions/7860538/android-http-post-asynctask
+class AsyncHttpPut extends AsyncTask<String, String, String> {
+    interface Listener {
+        void onResult(String result);
+    }
+    private Listener mListener;
+    private String mData;
+    /**
+     * constructor
+     */
+    public AsyncHttpPut(String data) {
+        mData = data;
+    }
+    public void setListener(Listener listener) {
+        mListener = listener;
+    }
+
+    /**
+     * background
+     */
+    @Override
+    protected String doInBackground(String... params) {
+        URL url = null;
+        try {
+            url = new URL(params[0]);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+            OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
+            osw.write(params[1]);
+            osw.flush();
+            osw.close();
+            Log.v("Json submission", "gets here21: ");
+            System.err.println(connection.getResponseCode());
+            System.err.println(params[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "1";
+    }
+
+    /**
+     * on getting result
+     */
+    @Override
+    protected void onPostExecute(String result) {
+        // something...
+        if (mListener != null) {
+            mListener.onResult(result);
+        }
+    }
 }
