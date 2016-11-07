@@ -1,4 +1,4 @@
-# On-device Bug Reporting Application
+# On-device Record Replay for Android Applications
 
 Project Description:
 As mobile applications have become increasingly popular computing tools, they have evolved in terms of complexity and relative number of features. In today’s highly competitive mobile application marketplaces, such as Google Play and Apple’s App Store, only high­quality, fault­free applications can be successful. As such, it is imperative that developers fix bugs encountered by testers and users quickly. However, the current state of practice for users creating reviews is through app store reviews, which in turn requires a large effort on the part of the developer in order to sift through the myriad of user responses and determine which ones represent actual bugs. Mobile application testers typically rely on loosely structured natural language bug reports to convey issues to developers, but these reports are typically lacking in important information.
